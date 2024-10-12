@@ -1,101 +1,122 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div>
+      <h1 className="text-2xl font-bold mb-4">Sistema OKR</h1>
+      <section className="my-8">
+        <h2 className="text-2xl font-semibold">
+          🚀 Por que adotar OKRs?{" "}
+          <span className="text-blue-600">Seu aliado estratégico</span>
+        </h2>
+        <p className="mt-4 text-gray-700">
+          Transforme metas em conquistas tangíveis com <strong>OKRs</strong>{" "}
+          (Objectives and Key Results). Experimente uma abordagem que
+          proporciona:
+        </p>
+        <ul className="list-disc ml-8 mt-2 text-gray-700">
+          <li>🔥 Foco absoluto em prioridades 🎯</li>
+          <li>💪 Transparência organizacional 🤝</li>
+          <li>🔄 Adaptabilidade e inovação contínua 💡</li>
+          <li>🌟 Alinhamento entre equipes e objetivo comum 🌐</li>
+        </ul>
+      </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <section className="my-8">
+        <h2 className="text-2xl font-semibold">
+          🔧 Explore nosso Algoritmo{" "}
+          <span className="text-blue-600">Poder de Decisão</span>
+        </h2>
+        <p className="mt-4 text-gray-700">
+          Nosso algoritmo intuitivo para gestão de OKRs é um pilar robusto que
+          oferece:
+        </p>
+        <ul className="list-disc ml-8 mt-2 text-gray-700">
+          <li>
+            ✨ Agregação hierárquica: Compreenda o progresso a partir de
+            diversos ângulos 📊
+          </li>
+          <li>
+            ⚖️ Priorização automática: Avalie o impacto de cada objetivo 🚀
+          </li>
+          <li>
+            🔗 Gestão de dependências: Visualize e ajuste metas interligadas ⏳
+          </li>
+          <li>
+            🎯 Feedback contínuo: Afine suas estratégias com dados reais 💡
+          </li>
+        </ul>
+        <p className="mt-4 text-gray-700">
+          A matemática no coração deste sistema garante que suas metas não
+          apenas sejam acompanhadas, mas que cada ação conte. Descubra a
+          transformação de processos e colha os frutos do sucesso.
+        </p>
+      </section>
+
+      <section className="my-8">
+        <h2 className="text-2xl font-semibold">
+          💬 O que nossos clientes dizem?
+        </h2>
+        <blockquote className="mt-4 bg-gray-100 p-4 italic rounded">
+          "Desde que adotamos o sistema de OKRs desta empresa, nossa
+          produtividade disparou e nosso alinhamento melhorou drasticamente.
+          Recomendo fortemente!" -{" "}
+          <strong>Eduardo Lima, Diretor de Operações da Empresa Z</strong>
+        </blockquote>
+      </section>
+
+      <section className="my-8">
+        <h2 className="text-2xl font-semibold">
+          🤔 FAQs{" "}
+          <span className="text-blue-600">- Perguntas Transformadoras</span>
+        </h2>
+        <div className="mt-4">
+          <div className="faq-item">
+            <h3 className="faq-toggle text-blue-700 font-bold">
+              ❓ "Estou familiarizado com metas SMART. Por que devo mudar para
+              OKRs?" 👇
+            </h3>
+            <p className="faq-content text-gray-700">
+              Enquanto SMART mantém foco, OKRs dinamizam seu alcance, permitindo
+              flexibilidade e crescimento acelerado sem abrir mão da clareza.
+              Experimente a sinergia!
+            </p>
+          </div>
+
+          <div className="faq-item mt-4">
+            <h3 className="faq-toggle text-blue-700 font-bold">
+              ❓ "Como evito que OKRs se tornem apenas mais uma tarefa?" 👇
+            </h3>
+            <p className="faq-content text-gray-700">
+              Nosso sistema facilita a definição de metas impactantes e
+              transforma seu acompanhamento em um jogo motivador e estratégico.
+              Cada conquista avança um nível!
+            </p>
+          </div>
+
+          <div className="faq-item mt-4">
+            <h3 className="faq-toggle text-blue-700 font-bold">
+              ❓ "OKRs funcionam para equipes pequenas?" 👇
+            </h3>
+            <p className="faq-content text-gray-700">
+              Absolutamente! OKRs são escaláveis e adaptáveis, perfeitos para
+              focar energias coletivas em qualquer tamanho de equipe, trazendo
+              clareza e propósito.
+            </p>
+          </div>
+
+          <div className="faq-item mt-4">
+            <h3 className="faq-toggle text-blue-700 font-bold">
+              ❓ "Posso integrar OKRs com nossas ferramentas atuais?" 👇
+            </h3>
+            <p className="faq-content text-gray-700">
+              Nossa plataforma é compatível com uma ampla variedade de sistemas,
+              garantindo que você não perca o ritmo com seu stack tecnológico
+              atual.
+            </p>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
     </div>
   );
 }

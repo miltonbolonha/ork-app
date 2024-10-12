@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "nome": "Vendas",
+    "peso": 1.5,
+    "penalidade": false,
+    "indicadorPaiId": null,
+    "indicadoresFilhosIds": [2, 3]
+  },
+  {
+    "id": 2,
+    "nome": "Novos Clientes",
+    "peso": 1.0,
+    "penalidade": false,
+    "indicadorPaiId": 1,
+    "indicadoresFilhosIds": []
+  },
+  {
+    "id": 3,
+    "nome": "Retenção de Clientes",
+    "peso": 1.2,
+    "penalidade": false,
+    "indicadorPaiId": 1,
+    "indicadoresFilhosIds": []
+  },
+  {
+    "id": 4,
+    "nome": "Atendimento ao Cliente",
+    "peso": 2.0,
+    "penalidade": true,
+    "indicadorPaiId": null,
+    "indicadoresFilhosIds": [5]
+  },
+  {
+    "id": 5,
+    "nome": "Tempo de Resposta",
+    "peso": 1.0,
+    "penalidade": true,
+    "indicadorPaiId": 4,
+    "indicadoresFilhosIds": []
+  }
+]
