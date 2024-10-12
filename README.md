@@ -3,77 +3,85 @@
 ### Autor: Milton Bolonha  
 ### Afiliado: [Sua Instituição]
 
+---
+
 ## Resumo
 
-Este paper apresenta um modelo matemático atualizado e escalável para o sistema OKR (Objectives and Key Results). O modelo proposto permite que o utilizador customize o comportamento e a granularidade dos indicadores conforme necessário, mantendo a precisão na medição e a flexibilidade na agregação de dados. 
+Este paper apresenta um modelo matemático escalável para o sistema OKR (Objectives and Key Results). O modelo permite customizar o comportamento e a granularidade dos indicadores, mantendo precisão e flexibilidade na agregação de dados. Introduz-se uma pirâmide de informação que organiza os indicadores em níveis operacionais, táticos e estratégicos, permitindo escalabilidade para diferentes horizontes temporais, de diários a anuais. O modelo integra cronogramas trimestrais, semestrais e anuais, proporcionando uma visão gerencial e tática flexível.
 
-Introduz-se uma pirâmide de informação que organiza os indicadores em níveis operacionais, táticos e estratégicos, permitindo a escalabilidade do modelo para diferentes horizontes temporais, desde diários até anuais. 
-
-O modelo integra cronogramas trimestrais, semestrais e anuais, com indicadores que fluem hierarquicamente, do nível operacional ao estratégico, proporcionando uma visão gerencial e tática flexível e escalável.
+---
 
 ## 1. Introdução
 
-O sistema OKR tem se mostrado uma ferramenta essencial para o alinhamento organizacional e a medição de metas em diversas escalas. 
+O sistema OKR tem se mostrado essencial para o alinhamento organizacional e a medição de metas em diferentes escalas. Com o aumento da complexidade organizacional, a customização e escalabilidade dos OKRs se tornam cada vez mais necessárias. Este trabalho propõe um modelo flexível e preciso, com adaptação para diferentes períodos de tempo, abrangendo desde metas diárias até anuais, com integração de cronogramas trimestrais, semestrais e anuais.
 
-No entanto, com a crescente complexidade dos ambientes empresariais, há uma necessidade crescente de customização e escalabilidade na aplicação dos OKRs. Este trabalho visa preencher essa lacuna ao propor um modelo que seja, ao mesmo tempo, preciso e flexível, permitindo que cada utilizador defina como os indicadores se comportam em diferentes níveis da organização, através de uma abordagem hierárquica e composta. 
-
-O modelo também oferece a capacidade de adaptação aos diferentes períodos de tempo, escalando para horizontes diários, semanais, mensais, trimestrais, semestrais e anuais, além de garantir uma integração de cronogramas e planejamentos anuais.
+---
 
 ## 2. Definições e Notações Gerais
 
 ### 2.1 Conjuntos Básicos
 
-- **Setores** (\( S \)): Conjunto de setores organizacionais.
-- **Equipes** (\( E \)): Conjunto de equipes dentro dos setores.
-- **Membros** (\( M \)): Conjunto de membros pertencentes a uma equipe.
-- **Indicadores** (\( K \)): Conjunto de indicadores (Key Results), com customização determinada pelo utilizador.
+- **Setores** (`S`): Conjunto de setores organizacionais.
+- **Equipes** (`E`): Conjunto de equipes dentro dos setores.
+- **Membros** (`M`): Conjunto de membros pertencentes a uma equipe.
+- **Indicadores** (`K`): Conjunto de indicadores (Key Results), com customização pelo utilizador.
 
 ### 2.2 Relações
 
-- Cada setor \( s \in S \) contém um conjunto de equipes \( E_s \subseteq E \).
-- Cada equipe \( e \in E \) pertence a um setor e é composta por membros \( M_e \subseteq M \).
-- Cada membro \( m \in M \) está associado a uma equipe \( e \) e indicadores.
-- Os indicadores podem ser agrupados hierarquicamente, com indicadores filhos \( F_k \) contribuindo para indicadores pais \( k_p \).
+- Cada setor `s ∈ S` contém um conjunto de equipes `E_s ⊆ E`.
+- Cada equipe `e ∈ E` pertence a um setor e é composta por membros `M_e ⊆ M`.
+- Cada membro `m ∈ M` está associado a uma equipe e indicadores.
+- Indicadores podem ser agrupados hierarquicamente, com indicadores filhos `F_k` contribuindo para indicadores pais `k_p`.
 
 ### 2.3 Customização do Modelo
 
-O utilizador tem a liberdade de definir como os indicadores são agregados e quais os métodos de cálculo aplicáveis para cada nível da organização. A pirâmide de informação permite que indicadores operacionais sejam agregados em níveis táticos e estratégicos, permitindo diferentes composições de acordo com a necessidade de análise.
+O utilizador pode definir como os indicadores são agregados e os métodos de cálculo para cada nível da organização. A pirâmide de informação permite que indicadores operacionais sejam agregados em níveis táticos e estratégicos conforme necessário.
+
+---
 
 ## 3. Dimensão Temporal e Escalabilidade
 
 ### 3.1 Períodos de Tempo
 
-A dimensão temporal é um componente essencial da escalabilidade do modelo, permitindo a personalização em diferentes horizontes temporais:
+A escalabilidade do modelo permite personalização para diferentes horizontes temporais:
 
-- **Diário** (\( D \)): Indicadores que medem o progresso em ciclos diários.
-- **Semanal** (\( W \)): Indicadores ajustados para monitoramento semanal.
-- **Mensal** (\( Mo \)): Indicadores focados em metas mensais.
+- **Diário** (`D`): Indicadores que medem o progresso em ciclos diários.
+- **Semanal** (`W`): Indicadores ajustados para monitoramento semanal.
+- **Mensal** (`Mo`): Indicadores focados em metas mensais.
 - **Trimestral, Semestral, Anual**: Indicadores escaláveis para períodos mais longos.
 
-Os indicadores podem ser reavaliados periodicamente com base no tipo de OKR (operacional, tático ou estratégico), permitindo uma adaptação contínua dos resultados em diferentes níveis da organização, com cronogramas que podem ser ajustados trimestralmente, semestralmente e anualmente.
+Esses indicadores podem ser reavaliados periodicamente, permitindo adaptação contínua em níveis operacionais, táticos e estratégicos, com cronogramas trimestrais, semestrais e anuais.
+
+---
 
 ## 4. Planejamento e Execução Escaláveis
 
 ### 4.1 Valores Planejados e Cumpridos
 
-O modelo permite a customização de como os dados de indicadores planejados e cumpridos são armazenados e calculados para cada nível hierárquico:
+O modelo permite customizar como os dados de indicadores planejados e cumpridos são calculados em cada nível hierárquico:
 
-- **Planejado**: \( P_{m,k,t} \) representa o valor planejado por um membro \( m \) para o indicador \( k \) em um período \( t \).
-- **Cumprido**: \( C_{m,k,t,h} \) é o valor real registrado no período \( t \) e horário \( h \).
+- **Planejado**: `P_{m,k,t}` representa o valor planejado por um membro `m` para o indicador `k` em um período `t`.
+- **Cumprido**: `C_{m,k,t,h}` é o valor real registrado no período `t` e horário `h`.
 
-Os dados agregados escalam conforme os períodos temporais, e o utilizador pode determinar como esses dados são combinados em diferentes níveis da organização.
+Os dados escalam conforme os períodos temporais e o utilizador pode definir como eles são combinados nos diferentes níveis da organização.
+
+---
 
 ## 5. Indicadores Hierárquicos e Composição
 
 ### 5.1 Indicadores Hierárquicos
 
-Os indicadores são organizados em uma estrutura hierárquica. Indicadores operacionais, capturados no nível de membros ou equipes, fluem para indicadores táticos, que são compostos e agregados nos indicadores estratégicos.
+Os indicadores são organizados hierarquicamente. Indicadores operacionais fluem para indicadores táticos, que são agregados em indicadores estratégicos.
 
-Para cada indicador \( k_p \), que é pai de indicadores filhos \( F_k \), o desempenho composto é calculado como:
+Para um indicador pai `k_p`, o desempenho composto é calculado como:
 
-\[ D_{k_p,t} = \frac{\sum_{k_f \in F_k} D_{k_f,t} \times w_{k_f}}{\sum_{k_f \in F_k} w_{k_f}} \]
+```
+D_{k_p,t} = (Σ_{k_f ∈ F_k} D_{k_f,t} * w_{k_f}) / Σ_{k_f ∈ F_k} w_{k_f}
+```
 
-O modelo permite que o utilizador customize como esses pesos \( w_{k_f} \) são atribuídos e ajustados.
+O utilizador pode ajustar os pesos `w_{k_f}` conforme necessário.
+
+---
 
 ## 6. Cálculo de Desempenho e Agregação
 
@@ -81,35 +89,46 @@ O modelo permite que o utilizador customize como esses pesos \( w_{k_f} \) são 
 
 Para calcular o desempenho individual:
 
-\[ d_{m,k,t} = \frac{\sum_{h \in H} C_{m,k,t,h}}{P_{m,k,t}} \]
+```
+d_{m,k,t} = Σ_{h ∈ H} C_{m,k,t,h} / P_{m,k,t}
+```
 
 ### 6.2 Desempenho Total e Agregação
 
-O desempenho total pode ser ajustado de acordo com o peso de cada indicador. Para os gerentes e níveis superiores, os dados de desempenho podem ser apresentados como uma agregação personalizada de acordo com o que cada nível quer visualizar, seja em OKR tático ou estratégico.
+O desempenho total pode ser ajustado conforme o peso de cada indicador. Dados de desempenho são apresentados de forma agregada, de acordo com o que cada nível da organização deseja visualizar (OKR tático ou estratégico).
+
+---
 
 ## 7. Indicadores por Setor, Equipe e Membro
 
 ### 7.1 Agregação por Setor
 
-O modelo permite que o utilizador decida como os indicadores de cada setor são calculados e exibidos para o nível gerencial. O desempenho de um setor \( s \) é dado por:
+O desempenho de um setor `s` é calculado por:
 
-\[ D_{s,t} = \frac{\sum_{e \in E_s} \sum_{k \in K} D_{k,t}^{(e)}}{|E_s|} \]
+```
+D_{s,t} = Σ_{e ∈ E_s} Σ_{k ∈ K} D_{k,t}^{(e)} / |E_s|
+```
 
 ### 7.2 Equipe e Membro
 
-O desempenho de equipes e membros pode ser visualizado de forma hierárquica e ajustada conforme as prioridades e indicadores operacionais selecionados.
+O desempenho de equipes e membros pode ser visualizado de forma hierárquica, ajustada conforme os indicadores operacionais selecionados.
+
+---
 
 ## 8. Relatórios Personalizados
 
-O modelo gera relatórios adaptados para diferentes níveis hierárquicos, com customizações definidas pelo utilizador:
+O modelo gera relatórios personalizados para diferentes níveis hierárquicos:
 
-- **Nível Estratégico**: Relatórios focados em metas de longo prazo.
-- **Nível Tático**: Metas de médio prazo agregadas por setores.
+- **Nível Estratégico**: Focado em metas de longo prazo.
+- **Nível Tático**: Metas de médio prazo, agregadas por setor.
 - **Nível Operacional**: Acompanhamento granular de metas diárias e semanais.
+
+---
 
 ## 9. Conclusão
 
-O modelo matemático proposto oferece flexibilidade e escalabilidade, permitindo ao utilizador definir as regras de agregação e análise de dados conforme as necessidades organizacionais. Com uma abordagem hierárquica e a possibilidade de ajustes contínuos, o modelo garante que tanto pequenas equipes quanto grandes corporações possam utilizar OKRs de maneira eficaz e personalizada. O uso de cronogramas flexíveis, de curto a longo prazo, e a personalização dos indicadores por nível hierárquico permite que o modelo se adapte a qualquer necessidade de gestão de desempenho.
+O modelo matemático proposto oferece flexibilidade e escalabilidade, permitindo personalização nas regras de agregação e análise de dados conforme as necessidades organizacionais. Com uma estrutura hierárquica e cronogramas flexíveis, o modelo garante que equipes pequenas ou grandes corporações possam utilizar OKRs de forma eficaz e personalizada.
+
 
 
 
