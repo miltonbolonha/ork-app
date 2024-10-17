@@ -85,6 +85,7 @@ export default function IndicadoresPage() {
         penalidade,
         indicadorPaiId,
         tipo: tipoIndicador,
+        importancia: 0,
       };
       adicionarIndicador(novoIndicador);
       // Limpar os campos
