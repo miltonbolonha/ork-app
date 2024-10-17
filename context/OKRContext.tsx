@@ -5,7 +5,7 @@ import { createContext, useState, useContext, ReactNode, useMemo } from "react";
 // Interfaces
 
 export interface Indicador {
-  tipo: string;
+  tipo?: string;
   id: number;
   nome: string;
   peso: number; // Peso w_k personalizado
