@@ -1,0 +1,266 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f6f8;
+  margin: 0;
+}
+
+nav {
+    background-color: #1976d2;
+}
+
+.nav-wrapper .brand-logo {
+    font-weight: bold;
+}
+
+.tabs .tab a {
+    color: #1976d2;
+}
+
+.tabs .tab a.active {
+    color: #1976d2;
+}
+
+.tabs .indicator {
+    background-color: #1976d2;
+}
+
+.card {
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+.card .card-content {
+    padding: 20px;
+}
+
+.card .card-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* Ajuste do fundo dos cards */
+.card.blue-grey.darken-1 {
+  background-color: #1565c0; /* Cor azul mais escura para melhor contraste */
+}
+
+.input-field input[type="number"],
+.input-field input[type="range"],
+.input-field select {
+    color: #424242;
+}
+
+.input-field label {
+    color: #757575;
+}
+
+.btn {
+    background-color: #1976d2;
+}
+
+.btn:hover {
+    background-color: #1565c0;
+}
+
+.collection .collection-item .title {
+    font-weight: bold;
+    color: #1976d2;
+}
+
+table.striped th,
+table.striped td {
+    padding: 15px;
+}
+
+table.striped th {
+    background-color: #e3f2fd;
+    color: #000;
+}
+
+table.striped {
+    margin-bottom: 30px;
+}
+
+.light-background {
+    background-color: #ffffff;
+}
+
+.priority-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 12px;
+}
+
+.priority-high {
+    background-color: #e53935;
+}
+
+.priority-medium {
+    background-color: #fb8c00;
+}
+
+.priority-low {
+    background-color: #43a047;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.sidebar {
+  background-color: #1976d2;
+  min-height: 100vh;
+}
+
+.sidebar h2 {
+  color: #fff;
+}
+
+.sidebar .menu-link {
+  color: #fff;
+}
+
+.sidebar .menu-link:hover {
+  color: #bbdefb;
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+.card .card-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #424242;
+}
+
+.input-field label {
+  color: #424242;
+}
+
+.input-field input[type="text"],
+.input-field input[type="number"],
+.input-field select {
+  color: #424242;
+}
+
+input[type="checkbox"] + span {
+  color: #424242;
+}
+
+/* Correção para o label e input do Meta Pai */
+.input-field select.browser-default {
+  display: block;
+  width: 100%;
+  border: 1px solid #9e9e9e;
+  border-radius: 0;
+  height: 3rem;
+  font-size: 1rem;
+  padding: 0;
+  margin: 0 0 20px 0;
+}
+
+label[for="metaPai"] {
+  position: relative;
+  top: -16px;
+  font-size: 12px;
+  color: #9e9e9e;
+}
+
+.collapsible-header {
+  font-weight: bold;
+}
+
+.collapsible-body {
+  color: #616161;
+}
+
+.light-background {
+  background-color: #ffffff;
+}
+
+
+
+
+
+
+
+.nav-wrapper {
+  background-color: #1976d2;
+}
+
+.brand-logo {
+  font-size: 1.5rem;
+}
+
+.menu-link {
+  color: #fff !important;
+}
+
+.menu-link:hover {
+  background-color: #1565c0;
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+.card .card-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #424242;
+}
+
+.input-field label {
+  color: #424242;
+}
+
+.input-field input[type="text"],
+.input-field input[type="number"],
+.input-field select {
+  color: #424242;
+}
+
+input[type="checkbox"] + span {
+  color: #424242;
+}
+
+.input-field select {
+  display: block;
+}
+
+.collapsible-header {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.collapsible-body {
+  color: #616161;
+}
+
+.light-background {
+  background-color: #ffffff;
+}
+
+/* Correção para sobreposição dos campos */
+.input-field {
+  clear: both;
+}

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Algoritmo Bolonha</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+      }
+      h1 {
+        text-align: center;
+      }
+      h3 {
+        color: #444;
+      }
+      .container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .circular-progress {
+        position: relative;
+        margin: 0 auto;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: conic-gradient(#4caf50 0%, #4caf50 80%, #ddd 80%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: #fff;
+        text-align: center;
+      }
+      .circular-progress span {
+        font-size: 14px;
+      }
+      #metasList {
+        list-style: none;
+        padding: 0;
+      }
+      #metasList li {
+        margin: 5px 0;
+        padding: 10px;
+        background-color: #e0e7ff;
+        border-radius: 5px;
+      }
+      #resultado,
+      #perdas,
+      #influencia {
+        margin-top: 20px;
+        background-color: #e0f7fa;
+        padding: 10px;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Algoritmo de Bolonha - Cálculo de Desempenho Ponderado</h1>
+    <div class="container">
+      <h3>Adicionar Metas</h3>
+      <label>Peso:</label>
+      <input type="number" id="peso" placeholder="Peso" required />
+      <br />
+      <label>Realizado:</label>
+      <input type="number" id="realizado" placeholder="Realizado" required />
+      <br />
+      <label>Meta Planejada:</label>
+      <input type="number" id="meta" placeholder="Meta Planejada" required />
+      <br />
+      <button onclick="adicionarMeta()">Adicionar Meta</button>
+
+      <h3>Metas</h3>
+      <ul id="metasList"></ul>
+
+      <h3>Resultado</h3>
+      <div class="circular-progress" id="circularProgress">
+        0%
+        <span>%</span>
+      </div>
+      <div id="resultado"></div>
+      <div id="perdas"></div>
+      <div id="influencia"></div>
+    </div>
+
+    <script type="text/javascript">
+      let metas = [];
+
+      function adicionarMeta() {
+        const peso = parseFloat(document.getElementById("peso").value);
+        const realizado = parseFloat(
+          document.getElementById("realizado").value
+        );
+        const meta = parseFloat(document.getElementById("meta").value);
+
+        if (isNaN(peso) || isNaN(realizado) || isNaN(meta)) {
+          alert("Por favor, insira valores válidos para todos os campos.");
+          return;
+        }
+
+        if (meta === 0) {
+          alert("A meta planejada não pode ser zero.");
+          return;
+        }
+
+        metas.push({ p: peso, r: realizado, m: meta });
+        atualizarListaMetas();
+        calcularDesempenho();
+      }
+
+      function atualizarListaMetas() {
+        const metasList = document.getElementById("metasList");
+        metasList.innerHTML = "";
+
+        metas.forEach(function (meta, i) {
+          const listItem = document.createElement("li");
+          listItem.textContent = `Meta ${i + 1}: Peso = ${
+            meta.p
+          }, Realizado = ${meta.r}, Meta Planejada = ${meta.m}`;
+          metasList.appendChild(listItem);
+        });
+      }
+
+      function calcularDesempenho() {
+        const pta = metas.map((meta) => meta.p);
+        const pt = pta.reduce((acc, curr) => acc + curr, 0);
+        const realizacao = metas.map((meta) => {
+          const valor = (meta.r / meta.m) * (meta.p / pt) * 100;
+          return Math.min(valor, 100); // Limitar a realização ao máximo de 100
+        });
+
+        const t = realizacao.reduce((acc, curr) => acc + curr, 0); // Desempenho total
+
+        // Calcular perdas
+        const perdas = metas.map((meta, i) => {
+          const excesso = meta.r - meta.m;
+          return excesso > 0 ? excesso : 0;
+        });
+        const perdaTotal = perdas.reduce((acc, curr) => acc + curr, 0);
+
+        // Exibir resultado
+        document.getElementById(
+          "resultado"
+        ).innerHTML = `Desempenho Total: ${t.toFixed(2)}%`;
+        document.getElementById(
+          "perdas"
+        ).innerHTML = `Perdas: ${perdaTotal.toFixed(2)}`;
+        document.getElementById(
+          "circularProgress"
+        ).style.background = `conic-gradient(#4caf50 0%, #4caf50 ${t}%, #ddd ${t}%)`;
+        document.getElementById("circularProgress").innerHTML = `${t.toFixed(
+          2
+        )}%<span>%</span>`;
+
+        // Influência de cada meta
+        const influencia = metas.map((meta, i) => {
+          const influ = (meta.r / meta.m) * (meta.p / pt) * 100;
+          return Math.min(influ, 100); // Limitar a influência ao máximo de 100
+        });
+
+        document.getElementById(
+          "influencia"
+        ).innerHTML = `Influência de Cada Meta: ${influencia
+          .map((x, i) => `Meta ${i + 1}: ${x.toFixed(2)}%`)
+          .join(", ")}`;
+      }
+    </script>
+  </body>
+</html>

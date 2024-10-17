@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema OKR Empresarial</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .active-tab {
+            font-weight: bold;
+            border-b-2 border-blue-600;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+    <div class="flex flex-col md:flex-row">
+        <!-- Sidebar -->
+        <aside class="w-full md:w-64 bg-blue-600 text-white p-4 space-y-4">
+            <h2 class="text-xl font-bold mb-4">Sistema OKR</h2>
+            <ul>
+                <li class="tab cursor-pointer active-tab" data-tab="resumo">🏠 Resumo</li>
+                <li class="tab cursor-pointer" data-tab="custos">💸 Custos</li>
+                <li class="tab cursor-pointer" data-tab="desenvolvimento">🔧 Desenvolvimento</li>
+                <li class="tab cursor-pointer" data-tab="recursos">👥 Recursos Humanos</li>
+                <li class="tab cursor-pointer" data-tab="vendas">📈 Vendas & Marketing</li>
+            </ul>
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-grow p-6">
+            <!-- Resumo Section -->
+            <section id="resumo-tab">
+                <h2 class="text-2xl font-semibold mb-4">🏠 Dashboard Resumido</h2>
+                <div>
+                    <h3 class="text-xl font-bold">Visão Geral das Metas OKR</h3>
+                    <p>Status e progresso das metas principais e resultados-chave.</p>
+                    <!-- Adicione visualização de dados fictícios aqui -->
+                </div>
+            </section>
+
+            <!-- Custos Section -->
+            <section id="custos-tab" class="hidden">
+                <h2 class="text-2xl font-semibold mb-4">💸 Custos</h2>
+                <div>
+                    <h3 class="text-xl font-bold">Custos Operacionais</h3>
+                    <p>Análise detalhada dos custos operacionais com visualizações.</p>
+                    <!-- Adicione visualização de dados fictícios aqui -->
+                </div>
+            </section>
+
+            <!-- Desenvolvimento Section -->
+            <section id="desenvolvimento-tab" class="hidden">
+                <h2 class="text-2xl font-semibold mb-4">🔧 Desenvolvimento</h2>
+                <div>
+                    <h3 class="text-xl font-bold">Progresso de Desenvolvimento de Projeto</h3>
+                    <p>Status dos projetos, prazos e recursos.</p>
+                    <!-- Adicione visualização de dados fictícios aqui -->
+                </div>
+            </section>
+
+            <!-- Recursos Humanos Section -->
+            <section id="recursos-tab" class="hidden">
+                <h2 class="text-2xl font-semibold mb-4">👥 Recursos Humanos e Crescimento</h2>
+                <div>
+                    <h3 class="text-xl font-bold">Projeção de Crescimento de Equipe</h3>
+                    <p>Análise das necessidades de pessoal em função do crescimento.</p>
+                    <!-- Adicione visualização de dados fictícios aqui -->
+                </div>
+            </section>
+
+            <!-- Vendas & Marketing Section -->
+            <section id="vendas-tab" class="hidden">
+                <h2 class="text-2xl font-semibold mb-4">📈 Vendas & Marketing</h2>
+                <div>
+                    <h3 class="text-xl font-bold">Projeções de Vendas</h3>
+                    <p>Análises de vendas futuras e negociações ativas.</p>
+                    <!-- Adicione visualização de dados fictícios aqui -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const tabs = document.querySelectorAll('.tab');
+        const sections = document.querySelectorAll('main section');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function () {
+                tabs.forEach(t => t.classList.remove('active-tab'));
+                sections.forEach(s => s.classList.add('hidden'));
+
+                this.classList.add('active-tab');
+                document.getElementById(this.dataset.tab + '-tab').classList.remove('hidden');
+            });
+        });
+    </script>
+</body>
+
+</html>

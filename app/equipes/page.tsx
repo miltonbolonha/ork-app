@@ -1,6 +1,6 @@
 "use client";
 
-import React, { CheckIcon } from "@radix-ui/react-icons";
+import React from "react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,8 +10,7 @@ import { Modal } from "@/components/ui/modal";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatarMod";
 import { Separator } from "@/components/ui/separator";
-import { Select } from "@/components/ui/select"; // Caso você tenha um componente de Select
-import { cn } from "@/lib/utils"; // Função para concatenar classes
+import { cn } from "@/lib/utils";
 import {
   Table,
   TableHeader,
@@ -21,8 +20,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-
-import { CardStackPlusIcon } from "@radix-ui/react-icons";
+import { CheckIcon, CardStackPlusIcon } from "@radix-ui/react-icons";
 
 import {
   useOKR,
@@ -36,6 +34,9 @@ export default function EquipesPage() {
   const [showModal, setShowModal] = useState(false);
   const [nomeEquipe, setNomeEquipe] = useState("");
   const [setorEquipe, setSetorEquipe] = useState("");
+  const [tipoEquipe, setTipoEquipe] = useState<
+    "Operacional" | "Gerencia" | "Executivo"
+  >("Operacional");
   const [membrosSelecionados, setMembrosSelecionados] = useState<number[]>([]);
   const [indicadoresSelecionados, setIndicadoresSelecionados] = useState<
     number[]
@@ -104,6 +105,7 @@ export default function EquipesPage() {
     setEquipeEmEdicao(equipe);
     setNomeEquipe(equipe.nome);
     setSetorEquipe(equipe.setor);
+    setTipoEquipe(equipe.tipo);
     setMembrosSelecionados(equipe.membrosIds);
     setIndicadoresSelecionados(equipe.indicadoresIds);
     setEditModalVisible(true);
@@ -115,6 +117,7 @@ export default function EquipesPage() {
         ...equipeEmEdicao,
         nome: nomeEquipe,
         setor: setorEquipe,
+        tipo: tipoEquipe,
         membrosIds: membrosSelecionados,
         indicadoresIds: indicadoresSelecionados,
       };
@@ -123,6 +126,7 @@ export default function EquipesPage() {
       setEquipeEmEdicao(null);
       setNomeEquipe("");
       setSetorEquipe("");
+      setTipoEquipe("Operacional");
       setMembrosSelecionados([]);
       setIndicadoresSelecionados([]);
       setEditModalVisible(false);
@@ -135,6 +139,7 @@ export default function EquipesPage() {
         id: Date.now(),
         nome: nomeEquipe,
         setor: setorEquipe,
+        tipo: tipoEquipe,
         membrosIds: membrosSelecionados,
         indicadoresIds: indicadoresSelecionados,
       };
@@ -142,6 +147,7 @@ export default function EquipesPage() {
       // Limpar os campos
       setNomeEquipe("");
       setSetorEquipe("");
+      setTipoEquipe("Operacional");
       setMembrosSelecionados([]);
       setIndicadoresSelecionados([]);
       setShowModal(false);
@@ -173,7 +179,7 @@ export default function EquipesPage() {
         {/* Cabeçalho */}
         <div className="flex justify-between items-center mb-8">
           <h2 className="flex justify-end mt-6 font-bold">Equipes</h2>
-          <div className="flex justify-end mt-6 font-bold gap-1.5	">
+          <div className="flex justify-end mt-6 font-bold gap-1.5">
             <Button onClick={() => setShowModal(true)}>Adicionar Equipe</Button>
             <Button onClick={() => setShowAddMembroModal(true)}>
               Adicionar Membro
@@ -192,6 +198,9 @@ export default function EquipesPage() {
                 {equipesPorSetor[setor].map((equipe) => (
                   <Card key={equipe.id} className="p-4">
                     <CardTitle className="text-center">{equipe.nome}</CardTitle>
+                    <p className="text-center text-sm text-gray-500">
+                      Tipo: {equipe.tipo}
+                    </p>
                     <Separator className="my-4" />
 
                     <CardContent className="grid gap-4">
@@ -273,6 +282,23 @@ export default function EquipesPage() {
                 />
               </div>
               <div className="mb-4">
+                <Label htmlFor="tipoEquipe">Tipo da Equipe</Label>
+                <select
+                  id="tipoEquipe"
+                  value={tipoEquipe}
+                  onChange={(e) =>
+                    setTipoEquipe(
+                      e.target.value as "Operacional" | "Gerencia" | "Executivo"
+                    )
+                  }
+                  className="block w-full p-2 border border-gray-300 rounded-md"
+                >
+                  <option value="Operacional">Operacional</option>
+                  <option value="Gerencia">Gerencia</option>
+                  <option value="Executivo">Executivo</option>
+                </select>
+              </div>
+              <div className="mb-4">
                 <Label>Membros</Label>
                 <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border rounded">
                   {membros.map((membro) => (
@@ -349,6 +375,23 @@ export default function EquipesPage() {
                 />
               </div>
               <div className="mb-4">
+                <Label htmlFor="editTipoEquipe">Tipo da Equipe</Label>
+                <select
+                  id="editTipoEquipe"
+                  value={tipoEquipe}
+                  onChange={(e) =>
+                    setTipoEquipe(
+                      e.target.value as "Operacional" | "Gerencia" | "Executivo"
+                    )
+                  }
+                  className="block w-full p-2 border border-gray-300 rounded-md"
+                >
+                  <option value="Operacional">Operacional</option>
+                  <option value="Gerencia">Gerencia</option>
+                  <option value="Executivo">Executivo</option>
+                </select>
+              </div>
+              <div className="mb-4">
                 <Label>Membros</Label>
                 <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border rounded">
                   {membros.map((membro) => (
@@ -421,8 +464,8 @@ export default function EquipesPage() {
             {membros.map((membro) => {
               const metas = getMetasByMembro(membro.id);
               return (
-                <>
-                  <TableRow key={membro.id}>
+                <React.Fragment key={membro.id}>
+                  <TableRow>
                     <TableCell>{membro.nome}</TableCell>
                     <TableCell>
                       {metas.length > 0 ? (
@@ -483,7 +526,7 @@ export default function EquipesPage() {
                       </TableRow>
                     );
                   })}
-                </>
+                </React.Fragment>
               );
             })}
           </TableBody>

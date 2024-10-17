@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard de Desempenho</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(135deg, #2c3e50, #4ca1af);
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+
+      header {
+        background-color: #34495e;
+        padding: 15px 20px;
+        text-align: center;
+        color: #fff;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      h1 {
+        margin: 0;
+      }
+
+      .main {
+        padding: 30px;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin: 20px;
+        flex-basis: calc(33.333% - 40px);
+        min-width: 300px;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      .card h2 {
+        margin-top: 0;
+      }
+
+      .add-meta input[type="number"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      .add-meta button {
+        padding: 10px;
+        background-color: #4ca1af;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s ease;
+      }
+
+      .add-meta button:hover {
+        background-color: #3c8e9e;
+      }
+
+      .meta-card {
+        background-color: #f7f7f7;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .progress-container {
+        margin-top: 20px;
+      }
+
+      .progressBar {
+        height: 20px;
+        background: #4ca1af;
+        text-align: center;
+        line-height: 20px;
+        width: 0;
+        border-radius: 5px;
+      }
+
+      canvas {
+        width: 100% !important;
+        max-width: 450px;
+        margin: 0 auto;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Dashboard de Desempenho</h1>
+    </header>
+    <div class="main">
+      <div class="card add-meta">
+        <h2>Adicionar Meta</h2>
+        <label for="peso">Peso:</label>
+        <input type="number" id="peso" placeholder="Peso" required />
+        <label for="realizado">Realizado:</label>
+        <input type="number" id="realizado" placeholder="Realizado" required />
+        <label for="meta">Meta Planejada:</label>
+        <input type="number" id="meta" placeholder="Meta Planejada" required />
+        <button onclick="adicionarMeta()">Adicionar Meta</button>
+        <h2>Metas</h2>
+        <ul id="metasList"></ul>
+      </div>
+      <div class="card">
+        <h2>Resultado</h2>
+        <canvas id="desempenhoChart"></canvas>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      let metas = [];
+
+      function adicionarMeta() {
+        const peso = parseFloat(document.getElementById("peso").value);
+        const realizado = parseFloat(
+          document.getElementById("realizado").value
+        );
+        const meta = parseFloat(document.getElementById("meta").value);
+
+        if (isNaN(peso) || isNaN(realizado) || isNaN(meta)) {
+          alert("Por favor, insira valores válidos para todos os campos.");
+          return;
+        }
+
+        if (meta === 0) {
+          alert("A meta planejada não pode ser zero.");
+          return;
+        }
+
+        metas.push({ p: peso, r: realizado, m: meta });
+
+        atualizarListaMetas();
+        renderizarGrafico();
+      }
+
+      function atualizarListaMetas() {
+        const metasList = document.getElementById("metasList");
+        metasList.innerHTML = "";
+
+        metas.forEach(function (meta, i) {
+          const listItem = document.createElement("li");
+          listItem.classList.add("meta-card");
+          listItem.innerHTML = `
+          Meta ${i + 1}: 
+          <div>Peso = ${meta.p}</div>
+          <div style="color: #4caf50;">Realizado = ${meta.r}</div>
+          <div style="color: #ff9800;">Meta Planejada = ${meta.m}</div>
+        `;
+          metasList.appendChild(listItem);
+        });
+      }
+
+      function calcularDesempenho() {
+        const totalPeso = metas.reduce((acc, meta) => acc + meta.p, 0); // Total de pesos
+        let desempenhoTotal = 0; // Desempenho total
+
+        metas.forEach((meta) => {
+          const desempenhoMeta =
+            Math.min((meta.r / meta.m) * 100, 100) * (meta.p / totalPeso);
+          desempenhoTotal += desempenhoMeta;
+        });
+
+        return Math.min(desempenhoTotal, 100);
+      }
+
+      function renderizarGrafico() {
+        const ctx = document.getElementById("desempenhoChart").getContext("2d");
+        const desempenhoFinal = calcularDesempenho();
+
+        new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: ["Desempenho", "Faltante"],
+            datasets: [
+              {
+                data: [desempenhoFinal, 100 - desempenhoFinal],
+                backgroundColor: ["#4ca1af", "#f1f1f1"],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: "top",
+              },
+            },
+          },
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        renderizarGrafico();
+      });
+    </script>
+  </body>
+</html>

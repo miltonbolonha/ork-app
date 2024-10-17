@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestão de Metas</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      h1 {
+        text-align: center;
+      }
+      .meta-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .meta-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        width: 30%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .meta-card h3 {
+        margin: 0;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+      }
+      .input-group {
+        margin-bottom: 10px;
+      }
+      .input-group label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .input-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .progress-bar {
+        background-color: #f3f3f3;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        height: 25px;
+        margin: 15px 0;
+      }
+      .progress-fill {
+        background-color: #4caf50;
+        height: 100%;
+        width: 0;
+        border-radius: 10px;
+      }
+      .progress-text {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        top: 0;
+        left: 0;
+        line-height: 25px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Algoritmo de Gestão de Metas</h1>
+
+    <div class="meta-container">
+      <div class="meta-card">
+        <h3>Meta 1</h3>
+        <div class="input-group">
+          <label for="meta1-planned">Meta Planejada:</label>
+          <input type="number" id="meta1-planned" value="100" />
+        </div>
+        <div class="input-group">
+          <label for="meta1-realized">Meta Realizada:</label>
+          <input type="number" id="meta1-realized" value="0" />
+        </div>
+        <div class="input-group">
+          <label for="meta1-priority">Prioridade:</label>
+          <input type="number" id="meta1-priority" value="2" min="1" max="3" />
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="meta1-progress"></div>
+          <span class="progress-text" id="meta1-progress-text">0%</span>
+        </div>
+      </div>
+
+      <div class="meta-card">
+        <h3>Meta 2</h3>
+        <div class="input-group">
+          <label for="meta2-planned">Meta Planejada:</label>
+          <input type="number" id="meta2-planned" value="200" />
+        </div>
+        <div class="input-group">
+          <label for="meta2-realized">Meta Realizada:</label>
+          <input type="number" id="meta2-realized" value="0" />
+        </div>
+        <div class="input-group">
+          <label for="meta2-priority">Prioridade:</label>
+          <input type="number" id="meta2-priority" value="3" min="1" max="3" />
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="meta2-progress"></div>
+          <span class="progress-text" id="meta2-progress-text">0%</span>
+        </div>
+      </div>
+
+      <div class="meta-card">
+        <h3>Meta 3</h3>
+        <div class="input-group">
+          <label for="meta3-planned">Meta Planejada:</label>
+          <input type="number" id="meta3-planned" value="150" />
+        </div>
+        <div class="input-group">
+          <label for="meta3-realized">Meta Realizada:</label>
+          <input type="number" id="meta3-realized" value="0" />
+        </div>
+        <div class="input-group">
+          <label for="meta3-priority">Prioridade:</label>
+          <input type="number" id="meta3-priority" value="1" min="1" max="3" />
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="meta3-progress"></div>
+          <span class="progress-text" id="meta3-progress-text">0%</span>
+        </div>
+      </div>
+    </div>
+
+    <button onclick="calcularDesempenho()">Calcular Desempenho Total</button>
+    <h2>Desempenho Total: <span id="total-performance">0%</span></h2>
+
+    <script>
+      function calcularDesempenho() {
+        const metas = [
+          {
+            planned: parseFloat(document.getElementById("meta1-planned").value),
+            realized: parseFloat(
+              document.getElementById("meta1-realized").value
+            ),
+            priority: parseInt(document.getElementById("meta1-priority").value),
+            progressElement: document.getElementById("meta1-progress"),
+            progressTextElement: document.getElementById("meta1-progress-text"),
+          },
+          {
+            planned: parseFloat(document.getElementById("meta2-planned").value),
+            realized: parseFloat(
+              document.getElementById("meta2-realized").value
+            ),
+            priority: parseInt(document.getElementById("meta2-priority").value),
+            progressElement: document.getElementById("meta2-progress"),
+            progressTextElement: document.getElementById("meta2-progress-text"),
+          },
+          {
+            planned: parseFloat(document.getElementById("meta3-planned").value),
+            realized: parseFloat(
+              document.getElementById("meta3-realized").value
+            ),
+            priority: parseInt(document.getElementById("meta3-priority").value),
+            progressElement: document.getElementById("meta3-progress"),
+            progressTextElement: document.getElementById("meta3-progress-text"),
+          },
+        ];
+
+        let totalPerformance = 0;
+        let totalWeight = 0;
+
+        metas.forEach((meta) => {
+          let performance = (meta.realized / meta.planned) * 100;
+          performance = Math.min(performance, 100); // Limit the performance to 100%
+          meta.progressElement.style.width = performance + "%";
+          meta.progressTextElement.textContent = performance.toFixed(2) + "%";
+
+          totalPerformance += performance * meta.priority;
+          totalWeight += meta.priority;
+        });
+
+        const overallPerformance = totalPerformance / totalWeight;
+        document.getElementById("total-performance").textContent =
+          overallPerformance.toFixed(2) + "%";
+      }
+    </script>
+  </body>
+</html>

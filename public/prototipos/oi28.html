@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard de Desempenho - Brutalismo Web</title>
+    <style>
+      /* Estilos Brutalistas */
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #fff;
+        color: #000;
+      }
+
+      h1,
+      h2 {
+        margin: 0;
+        padding: 10px 0;
+        border-bottom: 1px solid #000;
+      }
+
+      .tabs {
+        display: flex;
+        border-bottom: 1px solid #000;
+      }
+
+      .tab {
+        padding: 10px;
+        cursor: pointer;
+        border-right: 1px solid #000;
+        font-weight: bold;
+      }
+
+      .tab.active {
+        background-color: #ddd;
+      }
+
+      .content {
+        padding: 20px 0;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      input[type="number"] {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid #000;
+        box-sizing: border-box;
+      }
+
+      button {
+        padding: 10px 15px;
+        border: 1px solid #000;
+        background-color: #fff;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      button:hover {
+        background-color: #000;
+        color: #fff;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      th,
+      td {
+        border: 1px solid #000;
+        padding: 8px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #f0f0f0;
+      }
+
+      .critical {
+        background-color: #ffcccc;
+      }
+
+      .warning {
+        background-color: #fff3cd;
+      }
+
+      .chart {
+        margin-top: 20px;
+      }
+
+      /* Responsividade */
+      @media (min-width: 600px) {
+        .flex-container {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .flex-item {
+          width: 48%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>DASHBOARD DE DESEMPENHO</h1>
+
+    <!-- Abas -->
+    <div class="tabs">
+      <div class="tab active" data-tab="metas">Metas</div>
+      <div class="tab" data-tab="desempenho">Desempenho</div>
+    </div>
+
+    <!-- Conteúdo das Abas -->
+    <div id="metas" class="content">
+      <div class="flex-container">
+        <!-- Formulário de Adição de Metas -->
+        <div class="flex-item">
+          <h2>Adicionar Meta</h2>
+          <form id="metaForm">
+            <div class="form-group">
+              <label for="peso">Peso</label>
+              <input type="number" id="peso" required />
+            </div>
+            <div class="form-group">
+              <label for="realizado">Realizado</label>
+              <input type="number" id="realizado" required />
+            </div>
+            <div class="form-group">
+              <label for="meta">Meta Planejada</label>
+              <input type="number" id="meta" required />
+            </div>
+            <button type="submit">Adicionar Meta</button>
+          </form>
+        </div>
+
+        <!-- Lista de Metas -->
+        <div class="flex-item">
+          <h2>Metas</h2>
+          <table id="metasTable">
+            <thead>
+              <tr>
+                <th>Meta</th>
+                <th>Peso</th>
+                <th>Realizado</th>
+                <th>Meta Planejada</th>
+                <th>Perda/Excesso</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Linhas de metas serão inseridas aqui -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="desempenho" class="content hidden">
+      <h2>Desempenho Total</h2>
+      <div id="desempenhoTotal" class="chart">
+        <!-- O valor percentual será exibido aqui -->
+      </div>
+
+      <h2>Desempenho por Meta</h2>
+      <div id="desempenhoMetas" class="chart">
+        <!-- Tabela ou gráfico simples -->
+      </div>
+
+      <h2>Perdas e Excessos</h2>
+      <div id="perdasExcessos" class="chart">
+        <!-- Tabela ou gráfico simples -->
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+      // Controle de Abas
+      const tabs = document.querySelectorAll(".tab");
+      const contents = document.querySelectorAll(".content");
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((t) => t.classList.remove("active"));
+          contents.forEach((c) => c.classList.add("hidden"));
+
+          tab.classList.add("active");
+          document
+            .getElementById(tab.getAttribute("data-tab"))
+            .classList.remove("hidden");
+        });
+      });
+
+      // Dados
+      let metas = [];
+
+      // Manipulação do Formulário
+      document
+        .getElementById("metaForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          adicionarMeta();
+        });
+
+      function adicionarMeta() {
+        const peso = parseFloat(document.getElementById("peso").value);
+        const realizado = parseFloat(
+          document.getElementById("realizado").value
+        );
+        const meta = parseFloat(document.getElementById("meta").value);
+
+        if (isNaN(peso) || isNaN(realizado) || isNaN(meta) || meta === 0) {
+          alert("Por favor, preencha todos os campos com valores válidos.");
+          return;
+        }
+
+        metas.push({ p: peso, r: realizado, m: meta });
+        atualizarTabelaMetas();
+        atualizarDesempenho();
+        document.getElementById("metaForm").reset();
+      }
+
+      function atualizarTabelaMetas() {
+        const tbody = document.querySelector("#metasTable tbody");
+        tbody.innerHTML = "";
+
+        const pesoMedioValor = pesoMedio();
+
+        metas.forEach((meta, index) => {
+          const perdaExcesso = meta.r - meta.m;
+          const linha = document.createElement("tr");
+
+          // Identificar cenários indesejáveis
+          let classeLinha = "";
+          if (meta.p >= pesoMedioValor && perdaExcesso < 0) {
+            // Perda em meta de alto peso
+            classeLinha = "critical";
+          } else if (meta.p <= pesoMedioValor && perdaExcesso > 0) {
+            // Excesso em meta de baixo peso
+            classeLinha = "warning";
+          }
+
+          linha.className = classeLinha;
+
+          linha.innerHTML = `
+          <td>Meta ${index + 1}</td>
+          <td>${meta.p}</td>
+          <td>${meta.r}</td>
+          <td>${meta.m}</td>
+          <td>${perdaExcesso}</td>
+          <td><button onclick="removerMeta(${index})">Remover</button></td>
+        `;
+
+          tbody.appendChild(linha);
+        });
+      }
+
+      function removerMeta(index) {
+        metas.splice(index, 1);
+        atualizarTabelaMetas();
+        atualizarDesempenho();
+      }
+
+      function pesoMedio() {
+        if (metas.length === 0) return 0;
+        const totalPeso = metas.reduce((acc, meta) => acc + meta.p, 0);
+        return totalPeso / metas.length;
+      }
+
+      function atualizarDesempenho() {
+        atualizarDesempenhoTotal();
+        atualizarDesempenhoMetas();
+        atualizarPerdasExcessos();
+      }
+
+      function atualizarDesempenhoTotal() {
+        const desempenhoTotalDiv = document.getElementById("desempenhoTotal");
+        desempenhoTotalDiv.innerHTML = "";
+
+        const desempenhoTotal = calcularDesempenhoTotal();
+
+        const percentualDiv = document.createElement("div");
+        percentualDiv.style.fontSize = "48px";
+        percentualDiv.style.fontWeight = "bold";
+        percentualDiv.textContent = `${desempenhoTotal}%`;
+
+        desempenhoTotalDiv.appendChild(percentualDiv);
+      }
+
+      function calcularDesempenhoTotal() {
+        if (metas.length === 0) return 0;
+
+        const totalPeso = metas.reduce((acc, meta) => acc + meta.p, 0);
+        let desempenhoTotal = 0;
+
+        metas.forEach((meta) => {
+          const desempenhoMeta = Math.min((meta.r / meta.m) * 100, 100);
+          desempenhoTotal += desempenhoMeta * (meta.p / totalPeso);
+        });
+
+        return Number(desempenhoTotal.toFixed(2));
+      }
+
+      function atualizarDesempenhoMetas() {
+        const desempenhoMetasDiv = document.getElementById("desempenhoMetas");
+        desempenhoMetasDiv.innerHTML = "";
+
+        const tabela = document.createElement("table");
+        tabela.innerHTML = `
+        <thead>
+          <tr>
+            <th>Meta</th>
+            <th>Desempenho (%)</th>
+          </tr>
+        </thead>
+      `;
+
+        const tbody = document.createElement("tbody");
+
+        metas.forEach((meta, index) => {
+          const desempenhoPercentual = Math.min(
+            (meta.r / meta.m) * 100,
+            100
+          ).toFixed(2);
+          const linha = document.createElement("tr");
+          linha.innerHTML = `
+          <td>Meta ${index + 1}</td>
+          <td>${desempenhoPercentual}%</td>
+        `;
+          tbody.appendChild(linha);
+        });
+
+        tabela.appendChild(tbody);
+        desempenhoMetasDiv.appendChild(tabela);
+      }
+
+      function atualizarPerdasExcessos() {
+        const perdasExcessosDiv = document.getElementById("perdasExcessos");
+        perdasExcessosDiv.innerHTML = "";
+
+        const pesoMedioValor = pesoMedio();
+
+        const tabela = document.createElement("table");
+        tabela.innerHTML = `
+        <thead>
+          <tr>
+            <th>Meta</th>
+            <th>Perda/Excesso</th>
+            <th>Peso</th>
+          </tr>
+        </thead>
+      `;
+
+        const tbody = document.createElement("tbody");
+
+        metas.forEach((meta, index) => {
+          const perdaExcesso = (meta.r - meta.m).toFixed(2);
+
+          // Identificar cenários indesejáveis
+          let classeLinha = "";
+          if (meta.p >= pesoMedioValor && perdaExcesso < 0) {
+            // Perda em meta de alto peso
+            classeLinha = "critical";
+          } else if (meta.p <= pesoMedioValor && perdaExcesso > 0) {
+            // Excesso em meta de baixo peso
+            classeLinha = "warning";
+          }
+
+          const linha = document.createElement("tr");
+          linha.className = classeLinha;
+          linha.innerHTML = `
+          <td>Meta ${index + 1}</td>
+          <td>${perdaExcesso}</td>
+          <td>${meta.p}</td>
+        `;
+
+          tbody.appendChild(linha);
+        });
+
+        tabela.appendChild(tbody);
+        perdasExcessosDiv.appendChild(tabela);
+      }
+
+      // Inicialização
+      atualizarDesempenho();
+    </script>
+  </body>
+</html>

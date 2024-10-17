@@ -16,6 +16,13 @@ import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 export default function IndicadoresPage() {
   const {
@@ -38,6 +45,9 @@ export default function IndicadoresPage() {
   const [indicadorPaiId, setIndicadorPaiId] = useState<number | undefined>(
     undefined
   );
+  const [tipoIndicador, setTipoIndicador] = useState<
+    "Operacional" | "Gerencia" | "Executivo"
+  >("Operacional");
 
   // Estado para indicador selecionado (para hierarquia)
   const [indicadorSelecionado, setIndicadorSelecionado] =
@@ -49,6 +59,7 @@ export default function IndicadoresPage() {
     setPesoIndicador(indicador.peso);
     setPenalidade(indicador.penalidade);
     setIndicadorPaiId(indicador.indicadorPaiId);
+    setTipoIndicador(indicador.tipo ?? "Operacional");
     setShowEditModal(true);
     setShowAddModal(false);
   };
@@ -60,6 +71,7 @@ export default function IndicadoresPage() {
     setPesoIndicador(1);
     setPenalidade(false);
     setIndicadorPaiId(undefined);
+    setTipoIndicador("Operacional");
     setShowAddModal(true);
     setShowEditModal(false);
   };
@@ -72,6 +84,7 @@ export default function IndicadoresPage() {
         peso: pesoIndicador,
         penalidade,
         indicadorPaiId,
+        tipo: tipoIndicador,
       };
       adicionarIndicador(novoIndicador);
       // Limpar os campos
@@ -79,6 +92,7 @@ export default function IndicadoresPage() {
       setPesoIndicador(1);
       setPenalidade(false);
       setIndicadorPaiId(undefined);
+      setTipoIndicador("Operacional");
       setShowAddModal(false);
     }
   };
@@ -91,6 +105,7 @@ export default function IndicadoresPage() {
         peso: pesoIndicador,
         penalidade,
         indicadorPaiId,
+        tipo: tipoIndicador,
       };
       editarIndicador(indicadorAtualizado);
       // Limpar os campos
@@ -99,6 +114,7 @@ export default function IndicadoresPage() {
       setPesoIndicador(1);
       setPenalidade(false);
       setIndicadorPaiId(undefined);
+      setTipoIndicador("Operacional");
       setShowEditModal(false);
     }
   };
@@ -129,8 +145,7 @@ export default function IndicadoresPage() {
   // Preparar dados para o gráfico
   const chartData = indicadores.map((indicador) => ({
     nome: indicador.nome,
-    Penalidade: indicador.penalidade ? indicador.peso : 0,
-    "Não Penalidade": !indicador.penalidade ? indicador.peso : 0,
+    Peso: indicador.peso,
   }));
 
   // Função para renderizar indicadores em formato hierárquico
@@ -147,12 +162,21 @@ export default function IndicadoresPage() {
             className="cursor-pointer hover:bg-gray-100"
             onClick={() => setIndicadorSelecionado(indicador)}
           >
-            <TableCell className="w-1/2">
+            <TableCell className="w-1/3">
               <div style={{ marginLeft: nivel * 20 }}>{indicador.nome}</div>
             </TableCell>
-            <TableCell className="w-1/4">{indicador.peso}</TableCell>
-            <TableCell className="w-1/4">
+            <TableCell className="w-1/6">{indicador.peso}</TableCell>
+            <TableCell className="w-1/6">
               {indicador.penalidade ? "Sim" : "Não"}
+            </TableCell>
+            <TableCell className="w-1/6">{indicador.tipo}</TableCell>
+            <TableCell className="w-1/6">
+              <Button
+                variant="secondary"
+                onClick={() => openEditModal(indicador)}
+              >
+                Editar
+              </Button>
             </TableCell>
           </TableRow>
           {renderizarIndicadores(indicadores, indicador.id, nivel + 1)}
@@ -196,50 +220,23 @@ export default function IndicadoresPage() {
                 <TableHead>Nome</TableHead>
                 <TableHead>Peso</TableHead>
                 <TableHead>Penalidade</TableHead>
-                <TableHead>Indicador Pai</TableHead>
+                <TableHead>Tipo</TableHead>
                 <TableHead>Ações</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
-              {indicadores.map((indicador) => {
-                const indicadorPai = indicadores.find(
-                  (ind) => ind.id === indicador.indicadorPaiId
-                );
-                return (
-                  <TableRow key={indicador.id}>
-                    <TableCell>{indicador.nome}</TableCell>
-                    <TableCell>{indicador.peso}</TableCell>
-                    <TableCell>
-                      {indicador.penalidade ? "Sim" : "Não"}
-                    </TableCell>
-                    <TableCell>
-                      {indicadorPai ? indicadorPai.nome : "-"}
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="secondary"
-                        onClick={() => openEditModal(indicador)}
-                      >
-                        Editar
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
+            <TableBody>{renderizarIndicadores(indicadores)}</TableBody>
           </Table>
         </div>
 
         {/* Gráfico de Indicadores */}
         <div className="w-1/2">
-          <h2 className="text-xl font-bold mb-4">Gráfico de Indicadores</h2>
+          <h2 className="text-xl font-bold mb-4">Peso dos Indicadores</h2>
           <BarChart width={500} height={300} data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="nome" />
             <Tooltip />
             <Legend />
-            <Bar dataKey="Penalidade" fill="#ff4d4f" />
-            <Bar dataKey="Não Penalidade" fill="#52c41a" />
+            <Bar dataKey="Peso" fill="#8884d8" />
           </BarChart>
         </div>
       </div>
@@ -276,6 +273,26 @@ export default function IndicadoresPage() {
               <Label htmlFor="penalidadeCheckbox" className="ml-2">
                 Este indicador é uma penalidade?
               </Label>
+            </div>
+            <div className="mb-4">
+              <Label htmlFor="tipoIndicador">Tipo</Label>
+              <Select
+                value={tipoIndicador}
+                onValueChange={(value) =>
+                  setTipoIndicador(
+                    value as "Operacional" | "Gerencia" | "Executivo"
+                  )
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o tipo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Operacional">Operacional</SelectItem>
+                  <SelectItem value="Gerencia">Gerencia</SelectItem>
+                  <SelectItem value="Executivo">Executivo</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="mb-4">
               <Label htmlFor="indicadorPai">Indicador Pai</Label>
@@ -345,6 +362,26 @@ export default function IndicadoresPage() {
               </Label>
             </div>
             <div className="mb-4">
+              <Label htmlFor="tipoIndicadorEdit">Tipo</Label>
+              <Select
+                value={tipoIndicador}
+                onValueChange={(value) =>
+                  setTipoIndicador(
+                    value as "Operacional" | "Gerencia" | "Executivo"
+                  )
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o tipo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Operacional">Operacional</SelectItem>
+                  <SelectItem value="Gerencia">Gerencia</SelectItem>
+                  <SelectItem value="Executivo">Executivo</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="mb-4">
               <Label htmlFor="indicadorPaiEdit">Indicador Pai</Label>
               <select
                 id="indicadorPaiEdit"
@@ -381,4 +418,8 @@ export default function IndicadoresPage() {
       )}
     </div>
   );
+}
+
+{
+  /* Gráfico de Indicadores */
 }

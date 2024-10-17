@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema OKR</title>
+  <!-- Integrando Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar {
+      min-width: 200px;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="flex flex-grow">
+    <!-- Sidebar -->
+    <aside class="sidebar bg-blue-600 text-white px-4 py-6">
+      <h2 class="text-xl font-bold mb-4">📊 Sistema OKR</h2>
+      <nav>
+        <ul>
+          <li class="mb-2"><a href="#" class="hover:text-blue-300">🏠 Dashboard</a></li>
+          <li class="mb-2"><a href="#" class="hover:text-blue-300">🎯 Metas</a></li>
+          <li class="mb-2"><a href="#" class="hover:text-blue-300">🧑‍💼 Equipes</a></li>
+          <li class="mb-2"><a href="#" class="hover:text-blue-300">📆 Relatórios</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-grow p-6">
+      <!-- Dashboard heading -->
+      <header class="flex justify-between items-center mb-8">
+        <h1 class="text-2xl font-semibold">Bem-vindo(a) ao Sistema OKR</h1>
+        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Adicionar Meta</button>
+      </header>
+
+      <!-- OKR Display -->
+      <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Card 1 -->
+        <div class="bg-white rounded shadow p-4">
+          <h3 class="text-lg font-bold">🎯 Meta: Aumentar Vendas</h3>
+          <p class="text-sm text-gray-600 mt-2">Status: Ativa</p>
+          <progress class="w-full mt-4" value="70" max="100">70%</progress>
+          <p class="text-gray-600 mt-2">Desempenho atual: 70%</p>
+          <p class="text-blue-600 mt-1">Ver Detalhes</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white rounded shadow p-4">
+          <h3 class="text-lg font-bold">🚀 Meta: Expandir Mercado</h3>
+          <p class="text-sm text-gray-600 mt-2">Status: Concluída</p>
+          <progress class="w-full mt-4" value="100" max="100">100%</progress>
+          <p class="text-gray-600 mt-2">Desempenho atual: 100%</p>
+          <p class="text-blue-600 mt-1">Ver Detalhes</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white rounded shadow p-4">
+          <h3 class="text-lg font-bold">💡 Meta: Inovar Produto</h3>
+          <p class="text-sm text-gray-600 mt-2">Status: Aguardando</p>
+          <progress class="w-full mt-4" value="0" max="100">0%</progress>
+          <p class="text-gray-600 mt-2">Desempenho atual: 0%</p>
+          <p class="text-blue-600 mt-1">Ver Detalhes</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="bg-blue-600 text-white text-center py-4 mt-8">
+    <p>© 2023 Sistema OKR. Todos os direitos reservados.</p>
+  </footer>
+</body>
+</html>

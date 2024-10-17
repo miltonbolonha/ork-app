@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Algoritmo Bolonha - Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        padding: 20px;
+      }
+      h1,
+      h3 {
+        text-align: center;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #5c6bc0;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #3f51b5;
+      }
+      .progress-container {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+      }
+      .progress {
+        width: 150px;
+        height: 150px;
+        position: relative;
+        border-radius: 50%;
+        border: 10px solid #5c6bc0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #fff;
+      }
+      .progress p {
+        position: absolute;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .details div {
+        margin: 5px 0;
+      }
+      .chart-container {
+        width: 100%;
+        margin: 20px 0;
+        position: relative;
+      }
+      .chart {
+        width: 100%;
+        height: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Algoritmo de Bolonha - Dashboard</h1>
+
+      <div class="form-group">
+        <h3>Adicionar Metas</h3>
+        <label>Peso:</label>
+        <input type="number" id="peso" placeholder="Peso" required />
+        <label>Realizado:</label>
+        <input type="number" id="realizado" placeholder="Realizado" required />
+        <label>Meta Planejada:</label>
+        <input type="number" id="meta" placeholder="Meta Planejada" required />
+        <button onclick="adicionarMeta()">Adicionar Meta</button>
+      </div>
+
+      <h3>Metas</h3>
+      <ul id="metasList"></ul>
+
+      <div class="progress-container">
+        <div class="progress" id="progressTotal">
+          <p id="totalPercentage">0%</p>
+        </div>
+      </div>
+
+      <h3>Resultado</h3>
+      <div class="details">
+        <div id="resultado">Desempenho Total: 0%</div>
+        <div id="detalhesResultado">Desempenho por Meta:</div>
+        <div id="perdas">Perdas: 0%</div>
+        <div id="influencia">Influência de Cada Meta:</div>
+      </div>
+
+      <div class="chart-container">
+        <canvas id="chart" class="chart"></canvas>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      let metas = [];
+      let chart;
+
+      function adicionarMeta() {
+        const peso = parseFloat(document.getElementById("peso").value);
+        const realizado = parseFloat(
+          document.getElementById("realizado").value
+        );
+        const meta = parseFloat(document.getElementById("meta").value);
+
+        if (isNaN(peso) || isNaN(realizado) || isNaN(meta)) {
+          alert("Por favor, insira valores válidos para todos os campos.");
+          return;
+        }
+
+        if (meta === 0) {
+          alert("A meta planejada não pode ser zero.");
+          return;
+        }
+
+        metas.push({ p: peso, r: realizado, m: meta });
+        atualizarListaMetas();
+        calcularDesempenho();
+      }
+
+      function atualizarListaMetas() {
+        const metasList = document.getElementById("metasList");
+        metasList.innerHTML = ""; // Limpa a lista
+
+        metas.forEach(function (meta, i) {
+          const listItem = document.createElement("li");
+          listItem.textContent = `Meta ${i + 1}: Peso = ${
+            meta.p
+          }, Realizado = ${meta.r}, Meta Planejada = ${meta.m}`;
+          metasList.appendChild(listItem);
+        });
+      }
+
+      function calcularDesempenho() {
+        const pt = metas.reduce((acc, meta) => acc + meta.p, 0); // Soma dos pesos
+        const tA = metas.map((meta) =>
+          Math.min(((meta.p / pt) * 100 * meta.r) / meta.m, 100)
+        ); // Desempenho por meta limitado a 100%
+        const t = tA.reduce((acc, curr) => acc + curr, 0); // Desempenho total
+
+        // Atualizar UI
+        document.getElementById(
+          "resultado"
+        ).innerHTML = `Desempenho Total: ${t.toFixed(2)}%`;
+        document.getElementById("totalPercentage").innerHTML = `${t.toFixed(
+          2
+        )}%`;
+        document.getElementById(
+          "detalhesResultado"
+        ).innerHTML = `Desempenho por Meta: ${tA
+          .map((x) => x.toFixed(2))
+          .join(", ")}%`;
+        document.getElementById("perdas").innerHTML = `Perdas: ${tA
+          .reduce((acc, curr) => acc + (curr < 100 ? 100 - curr : 0), 0)
+          .toFixed(2)}%`;
+        document.getElementById(
+          "influencia"
+        ).innerHTML = `Influência de Cada Meta: ${tA
+          .map((x) => x.toFixed(2))
+          .join(", ")}%`;
+
+        // Atualizar gráfico
+        atualizarGrafico(tA);
+      }
+
+      function atualizarGrafico(dados) {
+        const ctx = document.getElementById("chart").getContext("2d");
+        if (chart) {
+          chart.destroy();
+        }
+
+        chart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: metas.map((_, i) => `Meta ${i + 1}`),
+            datasets: [
+              {
+                label: "Desempenho por Meta (%)",
+                data: dados,
+                backgroundColor: "rgba(92, 107, 192, 0.7)",
+                borderColor: "rgba(92, 107, 192, 1)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+              },
+            },
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+          },
+        });
+      }
+    </script>
+  </body>
+</html>

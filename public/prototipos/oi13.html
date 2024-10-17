@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Algoritmo Bolonha - Dashboard de Desempenho</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      .container {
+        display: flex;
+        justify-content: space-between;
+        width: 80%;
+      }
+
+      .input-section,
+      .result-section {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin: 10px;
+        flex: 1;
+      }
+
+      .input-section {
+        margin-right: 10px;
+      }
+
+      .result-section {
+        margin-left: 10px;
+      }
+
+      input {
+        width: calc(100% - 10px);
+        padding: 8px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      #progressBar {
+        margin: 20px 0;
+        width: 200px;
+        height: 200px;
+        position: relative;
+        border-radius: 50%;
+        border: 15px solid #007bff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      #progressValue {
+        position: absolute;
+        font-size: 2em;
+        font-weight: bold;
+      }
+
+      #progressPercentage {
+        position: absolute;
+        font-size: 0.5em;
+      }
+
+      .details {
+        margin-top: 20px;
+        padding: 10px;
+      }
+
+      .details h3 {
+        margin: 10px 0;
+      }
+
+      .loss-section {
+        color: #ff5722;
+      }
+
+      .influence-section {
+        color: #4caf50;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Algoritmo de Bolonha - Dashboard de Desempenho</h1>
+    <div class="container">
+      <!-- Seção de Input -->
+      <div class="input-section">
+        <h3>Adicionar Metas</h3>
+        <label>Peso:</label>
+        <input type="number" id="peso" placeholder="Peso" required />
+        <br />
+        <label>Realizado:</label>
+        <input type="number" id="realizado" placeholder="Realizado" required />
+        <br />
+        <label>Meta Planejada:</label>
+        <input type="number" id="meta" placeholder="Meta Planejada" required />
+        <br />
+        <button onclick="adicionarMeta()">Adicionar Meta</button>
+        <h3>Metas</h3>
+        <ul id="metasList"></ul>
+      </div>
+
+      <!-- Seção de Progresso -->
+      <div id="progressBar">
+        <div id="progressValue">0</div>
+        <div id="progressPercentage">%</div>
+      </div>
+
+      <!-- Seção de Resultados -->
+      <div class="result-section">
+        <h3>Resultado</h3>
+        <div id="resultado"></div>
+        <div id="detalhesResultado" class="details"></div>
+        <div class="loss-section" id="perdas"></div>
+        <div class="influence-section" id="influencia"></div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      // Lista de metas
+      let metas = [];
+
+      // Função para adicionar uma meta na lista
+      function adicionarMeta() {
+        const peso = parseFloat(document.getElementById("peso").value);
+        const realizado = parseFloat(
+          document.getElementById("realizado").value
+        );
+        const meta = parseFloat(document.getElementById("meta").value);
+
+        if (isNaN(peso) || isNaN(realizado) || isNaN(meta)) {
+          alert("Por favor, insira valores válidos para todos os campos.");
+          return;
+        }
+
+        if (meta === 0) {
+          alert("A meta planejada não pode ser zero.");
+          return;
+        }
+
+        metas.push({ p: peso, r: realizado, m: meta });
+
+        atualizarListaMetas();
+        calcularDesempenho();
+      }
+
+      // Atualiza a lista de metas exibida
+      function atualizarListaMetas() {
+        const metasList = document.getElementById("metasList");
+        metasList.innerHTML = ""; // Limpa a lista
+
+        metas.forEach(function (meta, i) {
+          const listItem = document.createElement("li");
+          listItem.textContent = `Meta ${i + 1}: Peso = ${
+            meta.p
+          }, Realizado = ${meta.r}, Meta Planejada = ${meta.m}`;
+          metasList.appendChild(listItem);
+        });
+      }
+
+      // Função para calcular o desempenho
+      function calcularDesempenho() {
+        const pta = metas.map((meta) => meta.p);
+        const pt = pta.reduce((acc, curr) => acc + curr, 0); // Soma dos pesos
+
+        function Xs(p, r, m, pt) {
+          return ((p / pt) * 100 * r) / m;
+        }
+
+        const tA = metas.map((meta) => Xs(meta.p, meta.r, meta.m, pt));
+        const t = tA.reduce((acc, curr) => acc + curr, 0); // Desempenho total
+        const tLimitado = Math.min(t, 100); // Limitar o desempenho total a 100%
+
+        // Exibir resultado
+        document.getElementById(
+          "resultado"
+        ).innerHTML = `Desempenho Total: ${tLimitado.toFixed(2)}%`;
+        document.getElementById(
+          "detalhesResultado"
+        ).innerHTML = `Desempenho por Meta: ${tA
+          .map((x) => x.toFixed(2))
+          .join(", ")}%`;
+
+        // Atualizar progress bar
+        document.getElementById("progressValue").textContent =
+          tLimitado.toFixed(2);
+        document.getElementById(
+          "progressBar"
+        ).style.background = `conic-gradient(#007bff ${
+          tLimitado * 3.6
+        }deg, #e0e0e0 ${tLimitado * 3.6}deg)`;
+
+        // Calcular perdas e influências
+        const perdas = tA
+          .filter((value) => value > 100)
+          .reduce((acc, curr) => acc + (curr - 100), 0);
+        const influencia = tA.map((value) => Math.min(value, 100)).join(", ");
+
+        document.getElementById(
+          "perdas"
+        ).textContent = `Perdas: ${perdas.toFixed(2)}%`;
+        document.getElementById(
+          "influencia"
+        ).textContent = `Influência de Cada Meta: ${influencia}`;
+      }
+    </script>
+  </body>
+</html>

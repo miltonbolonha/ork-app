@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard de Desempenho</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(135deg, #2c3e50, #4ca1af);
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+
+      header {
+        background-color: #34495e;
+        padding: 15px 20px;
+        text-align: center;
+        color: #fff;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      h1 {
+        margin: 0;
+      }
+
+      .main {
+        padding: 30px;
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin: 20px;
+        flex: 1 1 300px;
+        max-width: 400px;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      .card h2 {
+        margin-top: 0;
+        color: #34495e;
+      }
+
+      .add-meta input[type="number"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      .add-meta label {
+        font-size: 14px;
+        color: #34495e;
+      }
+
+      .add-meta button {
+        padding: 10px;
+        background-color: #4ca1af;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
+      }
+
+      .add-meta button:hover {
+        background-color: #3c8e9e;
+      }
+
+      .meta-card {
+        background-color: #f7f7f7;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+      }
+
+      .meta-card strong {
+        color: #4ca1af;
+      }
+
+      .meta-card div {
+        margin-top: 5px;
+        font-size: 14px;
+      }
+
+      .charts-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        width: 100%;
+      }
+
+      .chart-card {
+        flex: 1 1 300px;
+        max-width: 400px;
+        margin: 20px;
+      }
+
+      .chart-wrapper {
+        position: relative;
+        height: 300px;
+      }
+
+      #totalDesempenhoValue {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 48px;
+        color: #34495e;
+        font-weight: bold;
+        pointer-events: none;
+      }
+
+      canvas {
+        width: 100% !important;
+        max-width: 400px;
+        margin: 0 auto;
+        display: block;
+      }
+
+      @media (max-width: 768px) {
+        .charts-container {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Dashboard de Desempenho</h1>
+    </header>
+    <div class="main">
+      <div class="card add-meta">
+        <h2>Adicionar Meta</h2>
+        <label for="peso">Peso:</label>
+        <input type="number" id="peso" placeholder="Peso" required />
+        <label for="realizado">Realizado:</label>
+        <input type="number" id="realizado" placeholder="Realizado" required />
+        <label for="meta">Meta Planejada:</label>
+        <input type="number" id="meta" placeholder="Meta Planejada" required />
+        <button onclick="adicionarMeta()">Adicionar Meta</button>
+        <h2>Metas</h2>
+        <ul id="metasList"></ul>
+      </div>
+      <div class="charts-container">
+        <div class="card chart-card">
+          <h2>Desempenho Total</h2>
+          <div class="chart-wrapper">
+            <canvas id="desempenhoChart"></canvas>
+            <div id="totalDesempenhoValue"></div>
+          </div>
+        </div>
+        <div class="card chart-card">
+          <h2>Desempenho por Meta</h2>
+          <canvas id="metasChart"></canvas>
+        </div>
+        <div class="card chart-card">
+          <h2>Perdas e Excessos</h2>
+          <canvas id="perdasExcessosChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      let metas = [];
+      let chartDesempenhoTotal;
+      let chartMetas;
+      let chartPerdasExcessos;
+
+      function adicionarMeta() {
+        const peso = parseFloat(document.getElementById("peso").value);
+        const realizado = parseFloat(
+          document.getElementById("realizado").value
+        );
+        const meta = parseFloat(document.getElementById("meta").value);
+
+        if (isNaN(peso) || isNaN(realizado) || isNaN(meta)) {
+          alert("Por favor, insira valores válidos para todos os campos.");
+          return;
+        }
+
+        if (meta === 0) {
+          alert("A meta planejada não pode ser zero.");
+          return;
+        }
+
+        metas.push({ p: peso, r: realizado, m: meta });
+
+        atualizarListaMetas();
+        renderizarGraficos();
+
+        // Limpar campos
+        document.getElementById("peso").value = "";
+        document.getElementById("realizado").value = "";
+        document.getElementById("meta").value = "";
+      }
+
+      function atualizarListaMetas() {
+        const metasList = document.getElementById("metasList");
+        metasList.innerHTML = "";
+
+        metas.forEach(function (meta, i) {
+          const listItem = document.createElement("li");
+          listItem.classList.add("meta-card");
+          listItem.innerHTML = `
+          <strong>Meta ${i + 1}</strong>
+          <div>Peso: ${meta.p}</div>
+          <div>Realizado: ${meta.r}</div>
+          <div>Meta Planejada: ${meta.m}</div>
+        `;
+          metasList.appendChild(listItem);
+        });
+      }
+
+      function calcularDesempenho() {
+        const totalPeso = metas.reduce((acc, meta) => acc + meta.p, 0); // Total de pesos
+        let desempenhoTotal = 0; // Desempenho total
+
+        metas.forEach((meta) => {
+          const desempenhoMeta =
+            Math.min((meta.r / meta.m) * 100, 100) * (meta.p / totalPeso);
+          desempenhoTotal += desempenhoMeta;
+        });
+
+        return Number(desempenhoTotal.toFixed(2)); // Limitar a duas casas decimais
+      }
+
+      function calcularDesempenhoPorMeta() {
+        return metas.map((meta) => {
+          const desempenhoPercentual = Math.min((meta.r / meta.m) * 100, 100);
+          return Number(desempenhoPercentual.toFixed(2)); // Limitar a duas casas decimais
+        });
+      }
+
+      function calcularPerdasExcessosPorMeta() {
+        return metas.map((meta) => {
+          const diferenca = meta.r - meta.m;
+          return Number(diferenca.toFixed(2));
+        });
+      }
+
+      function renderizarGraficos() {
+        renderizarGraficoDesempenhoTotal();
+        renderizarGraficoDesempenhoMetas();
+        renderizarGraficoPerdasExcessos();
+      }
+
+      function renderizarGraficoDesempenhoTotal() {
+        const ctx = document.getElementById("desempenhoChart").getContext("2d");
+        const desempenhoFinal = calcularDesempenho();
+        const totalDesempenhoValue = document.getElementById(
+          "totalDesempenhoValue"
+        );
+
+        if (chartDesempenhoTotal) {
+          chartDesempenhoTotal.destroy();
+        }
+
+        chartDesempenhoTotal = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: ["Desempenho Total", "Faltante"],
+            datasets: [
+              {
+                data: [desempenhoFinal, 100 - desempenhoFinal],
+                backgroundColor: ["#4ca1af", "#f1f1f1"],
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            cutout: "70%",
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                enabled: false,
+              },
+            },
+          },
+        });
+
+        // Exibir o desempenho total no centro do gráfico
+        totalDesempenhoValue.textContent = `${desempenhoFinal}%`;
+      }
+
+      function renderizarGraficoDesempenhoMetas() {
+        const ctx = document.getElementById("metasChart").getContext("2d");
+        const desempenhoMetas = calcularDesempenhoPorMeta();
+        const labels = metas.map((_, i) => `Meta ${i + 1}`);
+
+        if (chartMetas) {
+          chartMetas.destroy();
+        }
+
+        chartMetas = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Desempenho (%)",
+                data: desempenhoMetas,
+                backgroundColor: "#4ca1af",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+                ticks: {
+                  stepSize: 10,
+                  callback: function (value) {
+                    return value + "%";
+                  },
+                },
+                title: {
+                  display: true,
+                  text: "Desempenho (%)",
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    return ` ${context.parsed.y}%`;
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+
+      function renderizarGraficoPerdasExcessos() {
+        const ctx = document
+          .getElementById("perdasExcessosChart")
+          .getContext("2d");
+        const perdasExcessos = calcularPerdasExcessosPorMeta();
+        const labels = metas.map((_, i) => `Meta ${i + 1}`);
+
+        if (chartPerdasExcessos) {
+          chartPerdasExcessos.destroy();
+        }
+
+        chartPerdasExcessos = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Perdas e Excessos",
+                data: perdasExcessos,
+                backgroundColor: perdasExcessos.map((value) =>
+                  value >= 0 ? "#4caf50" : "#e74c3c"
+                ),
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: "Valor",
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    return ` ${context.parsed.y >= 0 ? "Excesso" : "Perda"}: ${
+                      context.parsed.y
+                    }`;
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        renderizarGraficos();
+      });
+    </script>
+  </body>
+</html>

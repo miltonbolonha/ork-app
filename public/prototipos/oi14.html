@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Algoritmo Bolonha</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .input-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      input {
+        width: 30%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      button {
+        padding: 10px 15px;
+        background-color: #5cb85c;
+        border: none;
+        border-radius: 4px;
+        color: white;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #4cae4c;
+      }
+
+      .metas-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 20px 0;
+      }
+
+      .card-meta {
+        background-color: #e7f3fe;
+        border: 1px solid #b3d4fc;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        padding: 10px;
+        transition: transform 0.2s;
+      }
+
+      .card-meta:hover {
+        transform: scale(1.02);
+      }
+
+      .resultado-container {
+        margin-top: 20px;
+        padding: 10px;
+      }
+
+      .progress-container {
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px;
+      }
+
+      .progress-bar {
+        height: 20px;
+        background-color: #5bc0de;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        position: relative;
+        color: #fff;
+        text-align: center;
+      }
+
+      .perdas {
+        background-color: #d9534f;
+      }
+
+      .influencia-metas {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Calculadora de Desempenho</h1>
+      <div class="input-container">
+        <input type="number" id="peso" placeholder="Peso" />
+        <input type="number" id="realizado" placeholder="Realizado" />
+        <input type="number" id="meta" placeholder="Meta Planejada" />
+        <button onclick="adicionarMeta()">Adicionar Meta</button>
+      </div>
+      <ul id="metasList" class="metas-list"></ul>
+      <div class="resultado-container">
+        <div id="resultado"></div>
+        <div id="detalhesResultado"></div>
+        <div class="progress-container">
+          <div id="progressBarTotal" class="progress-bar"></div>
+          <div id="progressBarPerdas" class="progress-bar perdas"></div>
+        </div>
+        <div id="influenciaMetas" class="influencia-metas"></div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      // O script JavaScript permanece o mesmo
+      let metas = [];
+
+      function adicionarMeta() {
+        const peso = parseFloat(document.getElementById("peso").value);
+        const realizado = parseFloat(
+          document.getElementById("realizado").value
+        );
+        const meta = parseFloat(document.getElementById("meta").value);
+
+        if (isNaN(peso) || isNaN(realizado) || isNaN(meta)) {
+          alert("Por favor, insira valores válidos para todos os campos.");
+          return;
+        }
+
+        if (meta === 0) {
+          alert("A meta planejada não pode ser zero.");
+          return;
+        }
+
+        metas.push({ p: peso, r: realizado, m: meta });
+
+        atualizarListaMetas();
+        calcularDesempenho();
+      }
+
+      function atualizarListaMetas() {
+        const metasList = document.getElementById("metasList");
+        metasList.innerHTML = "";
+
+        metas.forEach(function (meta, i) {
+          const listItem = document.createElement("li");
+          listItem.classList.add("card-meta"); // Adiciona classe de estilo
+          listItem.innerHTML = `
+            <h3>Meta ${i + 1}</h3>
+            <p>Peso: ${meta.p}</p>
+            <p>Realizado: ${meta.r}</p>
+            <p>Meta Planejada: ${meta.m}</p>
+          `;
+          metasList.appendChild(listItem);
+        });
+      }
+
+      function calcularDesempenho() {
+        const totalPeso = metas.reduce((acc, meta) => acc + meta.p, 0); // Total de pesos
+        let desempenhoTotal = 0; // Desempenho total
+        let perdas = 0; // Total de perdas
+
+        // Calcular o desempenho de cada meta e somar
+        metas.forEach((meta) => {
+          const desempenhoMeta =
+            Math.min((meta.r / meta.m) * 100, 100) * (meta.p / totalPeso); // Limitar a 100% e ponderar pelo peso
+          desempenhoTotal += desempenhoMeta; // Acumula o desempenho ponderado
+          perdas += Math.max(0, meta.p - (meta.r / meta.m) * meta.p); // Perdas são o que não foi atingido
+        });
+
+        // Normaliza o desempenho total para não exceder 100%
+        const desempenhoFinal = Math.min(desempenhoTotal, 100);
+
+        // Exibir resultado
+        document.getElementById(
+          "resultado"
+        ).innerHTML = `Desempenho Total: ${desempenhoFinal.toFixed(2)}%`;
+        document.getElementById(
+          "detalhesResultado"
+        ).innerHTML = `Desempenho por Meta: ${metas
+          .map((meta, index) => {
+            const desempenhoPorMeta = Math.min((meta.r / meta.m) * 100, 100); // Limitar a 100%
+            return `Meta ${index + 1}: ${desempenhoPorMeta.toFixed(2)}%`;
+          })
+          .join(", ")}`;
+
+        // Atualizar a barra de progresso do desempenho total
+        document.getElementById(
+          "progressBarTotal"
+        ).style.width = `${desempenhoFinal}%`;
+        document.getElementById(
+          "progressBarTotal"
+        ).textContent = `${desempenhoFinal.toFixed(2)}%`;
+
+        // Calcular e atualizar a barra de perdas
+        const perdaTotal = (perdas / totalPeso) * 100; // Normalizar as perdas em relação ao total
+        document.getElementById("progressBarPerdas").style.width = `${Math.min(
+          perdaTotal,
+          100
+        )}%`;
+        document.getElementById(
+          "progressBarPerdas"
+        ).textContent = `${perdaTotal.toFixed(2)}%`;
+
+        // Mostrar influência de cada meta
+        mostrarInfluenciaMetas();
+      }
+
+      function mostrarInfluenciaMetas() {
+        const influenciaMetas = document.getElementById("influenciaMetas");
+        influenciaMetas.innerHTML = "";
+
+        metas.forEach((meta, i) => {
+          const progressContainer = document.createElement("div");
+          progressContainer.classList.add("progressContainer");
+
+          const progressoMeta = Math.min((meta.r / meta.m) * 100, 100);
+          const progressBarMeta = document.createElement("div");
+          progressBarMeta.classList.add("progressBar");
+          progressBarMeta.style.width = `${progressoMeta}%`;
+          progressBarMeta.style.backgroundColor = `hsl(${
+            (meta.p / metas.length) * 100
+          }, 70%, 50%)`;
+          progressBarMeta.textContent = `Meta ${i + 1}: ${progressoMeta.toFixed(
+            2
+          )}%`;
+          progressContainer.appendChild(progressBarMeta);
+          influenciaMetas.appendChild(progressContainer);
+        });
+      }
+    </script>
+  </body>
+</html>

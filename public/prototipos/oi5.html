@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Algoritmo Bolonha</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 20px;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #333;
+      }
+      h3 {
+        color: #555;
+      }
+      input[type="number"] {
+        padding: 8px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: calc(100% - 18px);
+      }
+      button {
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #218838;
+      }
+      #resultado {
+        margin-top: 20px;
+        font-weight: bold;
+      }
+      .progressContainer {
+        margin-top: 20px;
+        width: 100%;
+        background-color: #e0e0e0;
+        border-radius: 4px;
+        position: relative;
+        height: 30px;
+        margin-bottom: 10px;
+      }
+      .progressBar {
+        height: 100%;
+        border-radius: 4px;
+        position: absolute;
+        text-align: center;
+        color: white;
+        font-weight: bold;
+        line-height: 30px; /* Alinha o texto verticalmente */
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Algoritmo de Bolonha - Cálculo de Desempenho Ponderado</h1>
+
+    <div>
+      <h3>Adicionar Metas</h3>
+      <label>Peso:</label>
+      <input type="number" id="peso" placeholder="Peso" required />
+      <br />
+      <label>Realizado:</label>
+      <input type="number" id="realizado" placeholder="Realizado" required />
+      <br />
+      <label>Meta Planejada:</label>
+      <input type="number" id="meta" placeholder="Meta Planejada" required />
+      <br />
+      <button onclick="adicionarMeta()">Adicionar Meta</button>
+    </div>
+
+    <h3>Metas</h3>
+    <ul id="metasList"></ul>
+
+    <h3>Resultado</h3>
+    <div id="resultado"></div>
+    <div id="detalhesResultado"></div>
+
+    <h3>Desempenho Total</h3>
+    <div class="progressContainer">
+      <div id="progressBarTotal" class="progressBar"></div>
+    </div>
+
+    <h3>Perdas</h3>
+    <div class="progressContainer">
+      <div
+        id="progressBarPerdas"
+        class="progressBar"
+        style="background-color: red"
+      ></div>
+    </div>
+
+    <h3>Influência de Cada Meta</h3>
+    <div id="influenciaMetas"></div>
+
+    <script type="text/javascript">
+      let metas = [];
+
+      function adicionarMeta() {
+        const peso = parseFloat(document.getElementById("peso").value);
+        const realizado = parseFloat(
+          document.getElementById("realizado").value
+        );
+        const meta = parseFloat(document.getElementById("meta").value);
+
+        if (isNaN(peso) || isNaN(realizado) || isNaN(meta)) {
+          alert("Por favor, insira valores válidos para todos os campos.");
+          return;
+        }
+
+        if (meta === 0) {
+          alert("A meta planejada não pode ser zero.");
+          return;
+        }
+
+        metas.push({ p: peso, r: realizado, m: meta });
+
+        atualizarListaMetas();
+        calcularDesempenho();
+      }
+
+      function atualizarListaMetas() {
+        const metasList = document.getElementById("metasList");
+        metasList.innerHTML = "";
+
+        metas.forEach(function (meta, i) {
+          const listItem = document.createElement("li");
+          listItem.textContent = `Meta ${i + 1}: Peso = ${
+            meta.p
+          }, Realizado = ${meta.r}, Meta Planejada = ${meta.m}`;
+          metasList.appendChild(listItem);
+        });
+      }
+
+      function calcularDesempenho() {
+        const pt = metas.reduce((acc, meta) => acc + meta.p, 0); // Total de pesos
+        let t = 0; // Desempenho total
+        let totalPesos = 0; // Para calcular perdas
+
+        // Limitações e cálculo do desempenho
+        const tA = metas.map((meta) => {
+          const desempenho = ((meta.p / pt) * 100 * meta.r) / meta.m;
+          const desempenhoLimitado = Math.min(desempenho, 100); // Limita o desempenho a 100%
+          totalPesos += meta.p;
+          t += desempenhoLimitado;
+          return desempenhoLimitado;
+        });
+
+        const perdas = tA.map((desempenho, i) => {
+          return Math.max(desempenho - 100, 0); // Perda é a parte que ultrapassa 100
+        });
+
+        // Exibir resultado
+        document.getElementById(
+          "resultado"
+        ).innerHTML = `Desempenho Total: ${t.toFixed(2)}%`;
+        document.getElementById(
+          "detalhesResultado"
+        ).innerHTML = `Desempenho por Meta: ${tA
+          .map((x) => x.toFixed(2))
+          .join(", ")}%`;
+
+        // Atualizar a barra de progresso do desempenho total
+        const totalLimite = Math.min(t, 100);
+        document.getElementById(
+          "progressBarTotal"
+        ).style.width = `${totalLimite}%`;
+        document.getElementById(
+          "progressBarTotal"
+        ).textContent = `${totalLimite.toFixed(2)}%`;
+
+        // Calcular e atualizar a barra de perdas
+        const perdaTotal = perdas.reduce((acc, curr) => acc + curr, 0);
+        document.getElementById("progressBarPerdas").style.width = `${Math.min(
+          perdaTotal,
+          100
+        )}%`;
+        document.getElementById(
+          "progressBarPerdas"
+        ).textContent = `${perdaTotal.toFixed(2)}%`;
+
+        // Mostrar influência de cada meta
+        mostrarInfluenciaMetas(tA);
+      }
+
+      function mostrarInfluenciaMetas(desempenhos) {
+        const influenciaMetas = document.getElementById("influenciaMetas");
+        influenciaMetas.innerHTML = "";
+
+        metas.forEach((meta, i) => {
+          const progressContainer = document.createElement("div");
+          progressContainer.classList.add("progressContainer");
+
+          const progressoMeta = Math.min(desempenhos[i], 100);
+          const progressBarMeta = document.createElement("div");
+          progressBarMeta.classList.add("progressBar");
+          progressBarMeta.style.width = `${progressoMeta}%`;
+          progressBarMeta.style.backgroundColor = `hsl(${
+            (meta.p / metas.length) * 360
+          }, 100%, 50%)`;
+          progressBarMeta.textContent = `Meta ${i + 1}: ${progressoMeta.toFixed(
+            2
+          )}%`;
+
+          progressContainer.appendChild(progressBarMeta);
+          influenciaMetas.appendChild(progressContainer);
+        });
+      }
+    </script>
+  </body>
+</html>

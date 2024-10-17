@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Algoritmo Bolonha</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 20px;
+      }
+      h1 {
+        color: #333;
+      }
+      label {
+        margin-right: 10px;
+      }
+      input {
+        margin-bottom: 10px;
+        padding: 5px;
+        width: 150px;
+      }
+      button {
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      li {
+        background-color: #e0e0e0;
+        margin: 5px 0;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Algoritmo de Bolonha - Cálculo de Desempenho Ponderado</h1>
+
+    <!-- Formulário para inserção de metas -->
+    <div>
+      <h3>Adicionar Metas</h3>
+      <label>Peso:</label>
+      <input type="number" id="peso" placeholder="Peso" required />
+      <br />
+      <label>Realizado:</label>
+      <input type="number" id="realizado" placeholder="Realizado" required />
+      <br />
+      <label>Meta Planejada:</label>
+      <input type="number" id="meta" placeholder="Meta Planejada" required />
+      <br />
+      <button onclick="adicionarMeta()">Adicionar Meta</button>
+    </div>
+
+    <h3>Metas</h3>
+    <ul id="metasList"></ul>
+
+    <h3>Resultado</h3>
+    <div id="resultado"></div>
+    <div id="detalhesResultado"></div>
+    <div id="perdasResultado"></div>
+
+    <script type="text/javascript">
+      // Lista de metas
+      let metas = [];
+
+      // Limite máximo de contribuição para o desempenho final
+      const LIMITE_MAXIMO_META = 100;
+
+      // Função para adicionar uma meta na lista
+      function adicionarMeta() {
+        const peso = parseFloat(document.getElementById("peso").value);
+        const realizado = parseFloat(
+          document.getElementById("realizado").value
+        );
+        const meta = parseFloat(document.getElementById("meta").value);
+
+        if (isNaN(peso) || isNaN(realizado) || isNaN(meta)) {
+          alert("Por favor, insira valores válidos para todos os campos.");
+          return;
+        }
+
+        if (meta === 0) {
+          alert("A meta planejada não pode ser zero.");
+          return;
+        }
+
+        metas.push({ p: peso, r: realizado, m: meta });
+
+        atualizarListaMetas();
+        calcularDesempenho();
+      }
+
+      // Atualiza a lista de metas exibida
+      function atualizarListaMetas() {
+        const metasList = document.getElementById("metasList");
+        metasList.innerHTML = ""; // Limpa a lista
+
+        metas.forEach(function (meta, i) {
+          const listItem = document.createElement("li");
+          listItem.textContent = `Meta ${i + 1}: Peso = ${
+            meta.p
+          }, Realizado = ${meta.r}, Meta Planejada = ${meta.m}`;
+          metasList.appendChild(listItem);
+        });
+      }
+
+      // Função para calcular o desempenho
+      function calcularDesempenho() {
+        const pta = metas.map((meta) => meta.p);
+        const pt = pta.reduce((acc, curr) => acc + curr, 0); // Soma dos pesos
+
+        function Xs(p, r, m, pt) {
+          let desempenhoMeta = ((p / pt) * 100 * r) / m;
+
+          // Limitar a influência de uma meta no desempenho final
+          if (desempenhoMeta > LIMITE_MAXIMO_META) {
+            desempenhoMeta = LIMITE_MAXIMO_META;
+          }
+
+          return desempenhoMeta;
+        }
+
+        const tA = metas.map((meta) => Xs(meta.p, meta.r, meta.m, pt));
+        const t = tA.reduce((acc, curr) => acc + curr, 0); // Desempenho total
+
+        // Calcular perdas devido à limitação
+        const perdas = metas.map((meta, i) => {
+          const original = ((meta.p / pt) * 100 * meta.r) / meta.m;
+          const limitado = Xs(meta.p, meta.r, meta.m, pt);
+          return original - limitado;
+        });
+
+        // Exibir resultado
+        document.getElementById(
+          "resultado"
+        ).innerHTML = `Desempenho Total: ${t.toFixed(2)}%`;
+        document.getElementById(
+          "detalhesResultado"
+        ).innerHTML = `Desempenho por Meta (após limitação): ${tA
+          .map((x) => x.toFixed(2))
+          .join(", ")}%`;
+        document.getElementById(
+          "perdasResultado"
+        ).innerHTML = `Perdas por Limitação: ${perdas
+          .map((p) => p.toFixed(2))
+          .join(", ")}%`;
+      }
+    </script>
+  </body>
+</html>

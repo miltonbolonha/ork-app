@@ -1,0 +1,301 @@
+Modelo Matemático do Sistema OKR
+
+### 1. **Definições e Notações**
+
+- **Indicadores-Chave (Key Results)**:
+
+  - Seja \( K \) o conjunto de todos os indicadores-chave.
+  
+  - Cada indicador \( k \in K \) possui:
+  
+    - **Peso (Prioridade)** \( w_k \in \{1, 2, 3\} \), correspondendo a Alta (1), Média (2) e Baixa (3) prioridade.
+    
+    - **Penalidade** \( p_k \), onde \( p_k = 1 \) se o indicador é uma penalidade, e \( p_k = 0 \) caso contrário.
+    
+    - **Indicador Pai** \( k_p \), que pode ser outro indicador ou nulo se não tiver pai.
+    
+    - **Conjunto de Indicadores Filhos** \( F_k \), podendo ser vazio se não houver filhos.
+
+- **Membros da Equipe**:
+
+  - Seja \( M \) o conjunto de todos os membros.
+
+- **Valores Associados**:
+
+  - **Planejado pelo Membro**: \( P_{m,k} \), o valor planejado pelo membro \( m \) para o indicador \( k \).
+
+  - **Cumprido pelo Membro**: \( C_{m,k} \), o valor realizado pelo membro \( m \) para o indicador \( k \).
+
+- **Equipes**:
+
+  - Seja \( E \) o conjunto de todas as equipes.
+  
+  - Cada equipe \( e \in E \) possui um conjunto de membros \( M_e \subseteq M \) e indicadores associados \( K_e \subseteq K \).
+
+### 2. **Cálculos Fundamentais**
+
+#### 2.1. **Desempenho Individual do Membro em um Indicador**
+
+Para cada membro \( m \) e indicador \( k \):
+
+\[
+d_{m,k} = \frac{C_{m,k}}{P_{m,k}}
+\]
+
+Onde:
+
+- \( d_{m,k} \): Desempenho do membro \( m \) no indicador \( k \).
+
+- Se \( P_{m,k} = 0 \), define-se \( d_{m,k} = 0 \) para evitar divisão por zero.
+
+#### 2.2. **Desempenho Total de um Indicador**
+
+O desempenho total de um indicador \( k \) é a soma ponderada dos desempenhos dos membros:
+
+\[
+D_k = \frac{\sum_{m \in M} C_{m,k}}{\sum_{m \in M} P_{m,k}}
+\]
+
+Onde:
+
+- \( D_k \): Desempenho total do indicador \( k \).
+
+#### 2.3. **Desempenho Ponderado pelo Peso**
+
+Considerando o peso do indicador:
+
+\[
+D_k^{(p)} = D_k \times w_k
+\]
+
+Onde:
+
+- \( D_k^{(p)} \): Desempenho do indicador \( k \) ponderado pelo seu peso \( w_k \).
+
+- O peso pode ser normalizado se necessário. Por exemplo, se deseja-se que os pesos somem 1, pode-se dividir cada peso pela soma total dos pesos.
+
+#### 2.4. **Desempenho de Indicadores com Penalidade**
+
+Para indicadores com penalidade (\( p_k = 1 \)), o desempenho impacta negativamente:
+
+\[
+D_k^{(p)} = -D_k^{(p)}
+\]
+
+#### 2.5. **Desempenho Agregado de Indicadores**
+
+O desempenho agregado de todos os indicadores é dado por:
+
+\[
+D_{\text{total}} = \sum_{k \in K} D_k^{(p)}
+\]
+
+#### 2.6. **Desempenho de Indicadores com Hierarquia**
+
+Se o indicador \( k \) possui indicadores filhos \( F_k \):
+
+\[
+D_k = \frac{\sum_{k_f \in F_k} D_{k_f} \times w_{k_f}}{\sum_{k_f \in F_k} w_{k_f}}
+\]
+
+Ou seja, o desempenho do indicador pai é a média ponderada dos desempenhos dos filhos, considerando seus pesos.
+
+### 3. **Desempenho do Membro na Equipe**
+
+Para calcular o desempenho de um membro \( m \) em uma equipe \( e \):
+
+\[
+D_{m,e} = \frac{\sum_{k \in K_e} C_{m,k}}{\sum_{k \in K_e} P_{m,k}}
+\]
+
+Onde:
+
+- \( D_{m,e} \): Desempenho do membro \( m \) na equipe \( e \).
+
+### 4. **Desempenho da Equipe**
+
+O desempenho da equipe \( e \) é a média dos desempenhos dos seus membros:
+
+\[
+D_e = \frac{1}{|M_e|} \sum_{m \in M_e} D_{m,e}
+\]
+
+Ou, se preferir considerar o total de planejado e cumprido:
+
+\[
+D_e = \frac{\sum_{m \in M_e} \sum_{k \in K_e} C_{m,k}}{\sum_{m \in M_e} \sum_{k \in K_e} P_{m,k}}
+\]
+
+### 5. **Desempenho Geral da Organização**
+
+O desempenho geral é calculado pelo desempenho total ponderado de todos os indicadores:
+
+\[
+D_{\text{org}} = \frac{\sum_{k \in K} (C_k \times w_k)}{\sum_{k \in K} (P_k \times w_k)}
+\]
+
+Onde:
+
+- \( C_k = \sum_{m \in M} C_{m,k} \)
+
+- \( P_k = \sum_{m \in M} P_{m,k} \)
+
+### 6. **Cálculo de Excedentes e Perdas**
+
+Para cada indicador \( k \):
+
+- **Excedente**:
+
+  Se \( C_k > P_k \):
+
+  \[
+  E_k = C_k - P_k
+  \]
+
+- **Perda**:
+
+  Se \( C_k < P_k \):
+
+  \[
+  L_k = P_k - C_k
+  \]
+
+### 7. **Considerações sobre Peso (Prioridade)**
+
+Os pesos podem ser normalizados para refletir a importância relativa:
+
+- Se \( w_k \in \{1, 2, 3\} \):
+
+  - Normalização dos pesos:
+
+    \[
+    w_k' = \frac{w_k}{\sum_{k \in K} w_k}
+    \]
+
+  - Usar \( w_k' \) nos cálculos de desempenho ponderado.
+
+### 8. **Modelo Vetorial**
+
+Podemos representar os valores em forma de vetores para facilitar cálculos matriciais.
+
+- **Vetor de Planejado**:
+
+  \[
+  \vec{P}_m = [P_{m,k_1}, P_{m,k_2}, \dots, P_{m,k_n}]
+  \]
+
+- **Vetor de Cumprido**:
+
+  \[
+  \vec{C}_m = [C_{m,k_1}, C_{m,k_2}, \dots, C_{m,k_n}]
+  \]
+
+- **Desempenho do Membro**:
+
+  \[
+  D_m = \frac{\vec{C}_m \cdot \vec{w}}{\vec{P}_m \cdot \vec{w}}
+  \]
+
+  Onde \( \vec{w} \) é o vetor de pesos.
+
+### 9. **Exemplo Numérico**
+
+#### Dados:
+
+- **Indicadores**:
+
+  - \( k_1 \): Peso \( w_{k_1} = 1 \), Penalidade \( p_{k_1} = 0 \)
+  
+  - \( k_2 \): Peso \( w_{k_2} = 2 \), Penalidade \( p_{k_2} = 1 \)
+
+- **Membros**:
+
+  - \( m_1 \)
+
+    - Planejado: \( P_{m_1,k_1} = 100 \), \( P_{m_1,k_2} = 200 \)
+    
+    - Cumprido: \( C_{m_1,k_1} = 110 \), \( C_{m_1,k_2} = 180 \)
+
+  - \( m_2 \)
+
+    - Planejado: \( P_{m_2,k_1} = 150 \)
+    
+    - Cumprido: \( C_{m_2,k_1} = 140 \)
+
+#### Cálculos:
+
+- **Desempenho de \( k_1 \)**:
+
+  - Planejado Total: \( P_{k_1} = P_{m_1,k_1} + P_{m_2,k_1} = 100 + 150 = 250 \)
+  
+  - Cumprido Total: \( C_{k_1} = C_{m_1,k_1} + C_{m_2,k_1} = 110 + 140 = 250 \)
+  
+  - Desempenho: \( D_{k_1} = \frac{250}{250} = 1 \)
+
+- **Desempenho Ponderado de \( k_1 \)**:
+
+  - \( D_{k_1}^{(p)} = D_{k_1} \times w_{k_1} = 1 \times 1 = 1 \)
+
+- **Desempenho de \( k_2 \)**:
+
+  - Planejado Total: \( P_{k_2} = 200 \)
+  
+  - Cumprido Total: \( C_{k_2} = 180 \)
+  
+  - Desempenho: \( D_{k_2} = \frac{180}{200} = 0{,}9 \)
+
+- **Desempenho Ponderado de \( k_2 \)**:
+
+  - Por ser penalidade, desempenho ponderado negativo:
+
+    \( D_{k_2}^{(p)} = -D_{k_2} \times w_{k_2} = -0{,}9 \times 2 = -1{,}8 \)
+
+- **Desempenho Total**:
+
+  \( D_{\text{total}} = D_{k_1}^{(p)} + D_{k_2}^{(p)} = 1 + (-1{,}8) = -0{,}8 \)
+
+  O desempenho negativo indica que as penalidades superaram os resultados positivos.
+
+- **Excedente e Perda**:
+
+  - \( k_1 \): Excedente \( E_{k_1} = 250 - 250 = 0 \)
+  
+  - \( k_2 \): Perda \( L_{k_2} = 200 - 180 = 20 \)
+
+### 10. **Interpretação dos Resultados**
+
+- **Desempenho Negativo**: Indica que as penalidades tiveram um impacto maior que os resultados positivos.
+
+- **Excedentes e Perdas**: Permitem identificar onde houve superação ou não atingimento das metas.
+
+### 11. **Considerações Adicionais**
+
+- **Normalização dos Pesos**: Para garantir que os pesos tenham o efeito desejado, a normalização pode ser necessária.
+
+- **Indicadores Hierárquicos**: O desempenho de indicadores pais depende diretamente dos desempenhos dos indicadores filhos.
+
+- **Penalidades**: Devem ser cuidadosamente calibradas para refletir o impacto real no desempenho total.
+
+---
+
+## Resumo da Lógica Matemática
+
+- **Desempenho Individual**: Calculado pela razão entre o valor cumprido e o planejado pelo membro para cada indicador.
+
+- **Desempenho do Indicador**: Soma dos cumpridos sobre soma dos planejados, considerando todos os membros.
+
+- **Peso (Prioridade)**: Afeta o desempenho ponderado dos indicadores, influenciando o desempenho total.
+
+- **Penalidades**: Os indicadores marcados como penalidade impactam negativamente o desempenho total.
+
+- **Hierarquia de Indicadores**: Os indicadores pais agregam o desempenho de seus indicadores filhos.
+
+- **Desempenho da Equipe e da Organização**: Calculados a partir dos desempenhos dos membros e indicadores, refletindo o desempenho global.
+
+- **Excedentes e Perdas**: Análise dos valores cumpridos em relação aos planejados para identificar superações ou déficits.
+
+---
+
+## Notas Finais
+
+Este modelo matemático permite quantificar de forma precisa o desempenho em diversos níveis da organização, considerando as diferentes prioridades, penalidades e hierarquias existentes nos indicadores-chave. A utilização de fórmulas claras facilita a implementação computacional e a interpretação dos resultados, auxiliando na tomada de decisões estratégicas.

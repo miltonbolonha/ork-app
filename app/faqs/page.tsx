@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import {
   Accordion,
   AccordionItem,
@@ -8,96 +8,143 @@ import {
 } from "@/components/ui/accordion";
 
 export default function FAQsPage() {
-  const faqs = [
+  // Categoria: Performance e Cálculo
+  const performanceCalculationFaqs = [
     {
-      question: "O que é o algoritmo de cálculo de desempenho?",
+      question: "Como atualmente você avalia o desempenho da sua equipe?",
       answer:
-        "O algoritmo de cálculo de desempenho usa valores planejados e cumpridos para avaliar o desempenho de membros e indicadores, considerando hierarquias, pesos e penalidades.",
-    },
-    {
-      question: "Como o desempenho individual é calculado?",
-      answer:
-        "O desempenho individual é a razão entre o valor cumprido e o valor planejado para cada indicador. Por exemplo, se planejou 100 e cumpriu 90, o desempenho é 90%.",
-    },
-    {
-      question: "O que são pesos (prioridades) no algoritmo?",
-      answer:
-        "Os pesos refletem a importância de cada indicador. Indicadores com maior prioridade têm maior impacto no desempenho total, podendo ser Alta, Média ou Baixa.",
-    },
-    {
-      question: "Como os indicadores com penalidades funcionam?",
-      answer:
-        "Indicadores com penalidade afetam negativamente o desempenho total. Se o desempenho for baixo em um indicador penalizado, isso reduzirá o desempenho final.",
-    },
-    {
-      question: "Como o algoritmo lida com hierarquia de indicadores?",
-      answer:
-        "O algoritmo calcula primeiro os indicadores filhos, e depois usa esses resultados para os indicadores pais, ponderando os resultados com base nos pesos.",
-    },
-    {
-      question: "Como excedentes e perdas são calculados?",
-      answer:
-        "Excedentes ocorrem quando o valor cumprido excede o planejado, enquanto perdas acontecem quando o valor cumprido é menor que o planejado. Esses valores indicam metas superadas ou não alcançadas.",
+        "Muitos gestores enfrentam desafios ao obter uma visão precisa do desempenho individual e coletivo, especialmente quando depende de processos manuais ou sistemas desconectados.",
     },
     {
       question:
-        "Estou familiarizado com metas SMART. Por que devo mudar para OKRs?",
+        "Você tem dificuldade em identificar áreas específicas onde o desempenho pode ser melhorado?",
       answer:
-        "Enquanto metas SMART são úteis para foco, os OKRs trazem flexibilidade e crescimento acelerado sem perder clareza. Eles dinamizam o processo, permitindo maior adaptação e inovação.",
+        "Sem ferramentas adequadas, pode ser difícil pinpointar exatamente onde estão os gargalos, o que impede ações corretivas eficazes e pode levar a metas não alcançadas.",
     },
     {
-      question: "Como evito que OKRs se tornem apenas mais uma tarefa?",
+      question:
+        "Qual o impacto na sua organização ao não analisar profundamente o desempenho?",
       answer:
-        "Nosso sistema transforma o acompanhamento de metas em um jogo estratégico, onde cada conquista se torna um avanço. O processo é motivador e ajuda a alinhar estratégias com resultados.",
+        "Isso pode resultar em perdas financeiras, baixa moral da equipe e queda na produtividade, afetando a competitividade e o crescimento da empresa.",
     },
     {
-      question: "OKRs funcionam para equipes pequenas?",
+      question: "Como nosso sistema de cálculo de desempenho pode ajudar você?",
       answer:
-        "Sim, OKRs são altamente escaláveis e podem ser adaptados para qualquer tamanho de equipe, garantindo foco, clareza e propósito, independentemente do tamanho.",
-    },
-    {
-      question: "Posso integrar OKRs com nossas ferramentas atuais?",
-      answer:
-        "Nossa plataforma é compatível com várias ferramentas, garantindo que sua equipe mantenha o fluxo de trabalho, enquanto aproveita o poder dos OKRs.",
-    },
-    {
-      question: "Por que adotar OKRs?",
-      answer:
-        "OKRs ajudam a transformar metas em conquistas tangíveis, proporcionando foco nas prioridades, adaptabilidade e inovação contínua, além de um forte alinhamento entre equipes e objetivos.",
-    },
-    {
-      question: "Como o algoritmo de OKRs gerencia dependências entre metas?",
-      answer:
-        "Nosso algoritmo visualiza e ajusta metas interligadas, permitindo que a gestão de dependências entre metas seja eficiente e previsível.",
-    },
-    {
-      question: "Como OKRs ajudam na inovação contínua?",
-      answer:
-        "OKRs incentivam ciclos de feedback contínuo, permitindo que suas estratégias sejam constantemente ajustadas com base em dados reais e oportunidades emergentes.",
-    },
-    {
-      question: "OKRs podem melhorar a transparência organizacional?",
-      answer:
-        "Sim! Com OKRs, cada equipe pode ver claramente como suas metas se alinham com os objetivos maiores da organização, aumentando a transparência e a coesão interna.",
-    },
-    {
-      question: "Como OKRs se ajustam às mudanças rápidas no mercado?",
-      answer:
-        "OKRs são flexíveis e projetados para serem adaptáveis, o que significa que você pode ajustá-los conforme as prioridades do mercado mudam, sem perder o foco nas metas principais.",
+        "Ele fornece análises detalhadas e em tempo real do desempenho, considerando hierarquias, pesos e penalidades. Isso permite identificar rapidamente áreas de melhoria, otimizar recursos e impulsionar resultados.",
     },
   ];
 
+  // Categoria: OKRs (Objectives and Key Results)
+  const okrFaqs = [
+    {
+      question: "Como você define e acompanha suas metas atualmente?",
+      answer:
+        "Muitas empresas usam métodos tradicionais que podem ser inflexíveis e não refletem as rápidas mudanças do mercado.",
+    },
+    {
+      question:
+        "Enfrenta desafios em alinhar os objetivos da equipe com os da organização?",
+      answer:
+        "Objetivos desalinhados podem causar retrabalho, desperdício de recursos e falta de direção clara para a equipe.",
+    },
+    {
+      question:
+        "Quais são as consequências de não adaptar rapidamente suas metas estratégicas?",
+      answer:
+        "A empresa pode perder oportunidades de mercado, ficar atrás dos concorrentes e não atender às necessidades dos clientes de forma eficaz.",
+    },
+    {
+      question:
+        "Como a implementação de OKRs com nosso sistema pode beneficiar sua organização?",
+      answer:
+        "Os OKRs promovem alinhamento, foco e flexibilidade. Nosso sistema facilita a definição, acompanhamento e ajuste de metas em tempo real, incentivando a inovação e a colaboração entre equipes.",
+    },
+  ];
+
+  // Categoria: Funcionalidades do Sistema
+  const systemFeaturesFaqs = [
+    {
+      question:
+        "Quão eficiente é o seu processo atual de gerenciamento de metas e desempenho?",
+      answer:
+        "Processos manuais ou sistemas desintegrados podem consumir tempo valioso e estão sujeitos a erros.",
+    },
+    {
+      question:
+        "Você encontra dificuldades ao integrar diferentes ferramentas utilizadas pela sua equipe?",
+      answer:
+        "A falta de integração pode levar à duplicação de esforços, informações inconsistentes e perda de dados importantes.",
+    },
+    {
+      question:
+        "Quais riscos você corre ao continuar com sistemas sem segurança robusta?",
+      answer:
+        "Riscos incluem vazamento de informações confidenciais, compliance comprometida e danos à reputação da empresa.",
+    },
+    {
+      question: "Como nosso sistema pode otimizar suas operações diárias?",
+      answer:
+        "Oferecemos uma plataforma integrada com recursos de segurança avançados, automação de tarefas repetitivas e facilidade de uso, liberando sua equipe para se concentrar em estratégias de crescimento.",
+    },
+    {
+      question:
+        "Você tem problemas em coordenar equipes remotas ou distribuídas globalmente?",
+      answer:
+        "Fusos horários diferentes e falta de comunicação eficaz podem levar a atrasos e desalinhamento nas metas.",
+    },
+    {
+      question:
+        "De que forma nosso sistema facilita a colaboração em equipes distribuídas?",
+      answer:
+        "Com ferramentas de comunicação integradas, notificações em tempo real e acessibilidade global, nosso sistema mantém todos conectados e alinhados, independentemente da localização.",
+    },
+  ];
+
+  // Categoria: Recursos Extras
+  const additionalResourcesFaqs = [
+    {
+      question: "Você sabe em quais momentos sua equipe é mais produtiva?",
+      answer:
+        "Sem essas informações, pode ser desafiador otimizar agendas e alocar recursos de forma eficaz.",
+    },
+    {
+      question:
+        "Qual o impacto de não aproveitar os períodos de maior produtividade da sua equipe?",
+      answer:
+        "Pode resultar em menor eficiência, prazos perdidos e oportunidades desperdiçadas, afetando os resultados gerais da empresa.",
+    },
+    {
+      question: "Como nosso sistema pode ajudar a maximizar a produtividade?",
+      answer:
+        "Analisamos dados de desempenho para identificar padrões de produtividade, permitindo que você ajuste processos e horários para obter o melhor da sua equipe.",
+    },
+  ];
+
+  // Montando a lista completa de FAQs
+  const faqs = [
+    { title: "Performance e Cálculo", data: performanceCalculationFaqs },
+    { title: "OKRs (Objectives and Key Results)", data: okrFaqs },
+    { title: "Funcionalidades do Sistema", data: systemFeaturesFaqs },
+    { title: "Recursos Extras", data: additionalResourcesFaqs },
+  ];
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">Perguntas Frequentes (FAQs)</h1>
-      <Accordion type="single" collapsible>
-        {faqs.map((faq, index) => (
-          <AccordionItem key={index} value={`faq-${index}`}>
-            <AccordionTrigger>{faq.question}</AccordionTrigger>
-            <AccordionContent>{faq.answer}</AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+      {faqs.map((faq, index) => (
+        <React.Fragment key={index}>
+          <section>
+            <h1 className="text-2xl font-bold mb-4">{faq?.title}</h1>
+            <Accordion type="single" collapsible>
+              {faq.data.map((data, idt) => (
+                <AccordionItem key={idt} value={`faq-${idt}`}>
+                  <AccordionTrigger>{data.question}</AccordionTrigger>
+                  <AccordionContent>{data.answer}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </section>
+          <br />
+        </React.Fragment>
+      ))}
     </div>
   );
 }

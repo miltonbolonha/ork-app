@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>App de Desempenho</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    />
+    <!-- Font Awesome CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f5f7fa;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-link i {
+        margin-right: 5px;
+      }
+
+      .card {
+        margin-top: 20px;
+      }
+
+      .chart-container {
+        position: relative;
+        height: 400px;
+      }
+
+      #totalDesempenhoValue {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 48px;
+        color: #34495e;
+        font-weight: bold;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <i class="fas fa-chart-line"></i> App de Desempenho
+        </a>
+      </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <div class="container mt-4">
+      <!-- Abas -->
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active"
+            id="metas-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#metas"
+            type="button"
+            role="tab"
+            aria-controls="metas"
+            aria-selected="true"
+          >
+            <i class="fas fa-list"></i> Metas
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="desempenho-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#desempenho"
+            type="button"
+            role="tab"
+            aria-controls="desempenho"
+            aria-selected="false"
+          >
+            <i class="fas fa-chart-pie"></i> Desempenho
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="myTabContent">
+        <!-- Aba Metas -->
+        <div
+          class="tab-pane fade show active"
+          id="metas"
+          role="tabpanel"
+          aria-labelledby="metas-tab"
+        >
+          <div class="row">
+            <!-- Formulário de Adição de Metas -->
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header bg-primary text-white">
+                  <i class="fas fa-plus"></i> Adicionar Meta
+                </div>
+                <div class="card-body">
+                  <form id="metaForm">
+                    <div class="mb-3">
+                      <label for="peso" class="form-label">Peso</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="peso"
+                        placeholder="Peso"
+                        required
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label for="realizado" class="form-label"
+                        >Realizado</label
+                      >
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="realizado"
+                        placeholder="Realizado"
+                        required
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label for="meta" class="form-label"
+                        >Meta Planejada</label
+                      >
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="meta"
+                        placeholder="Meta Planejada"
+                        required
+                      />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                      <i class="fas fa-save"></i> Adicionar Meta
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <!-- Lista de Metas -->
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header bg-primary text-white">
+                  <i class="fas fa-list"></i> Metas
+                </div>
+                <div class="card-body">
+                  <ul class="list-group" id="metasList"></ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aba Desempenho -->
+        <div
+          class="tab-pane fade"
+          id="desempenho"
+          role="tabpanel"
+          aria-labelledby="desempenho-tab"
+        >
+          <div class="row">
+            <!-- Gráfico de Desempenho Total -->
+            <div class="col-md-6">
+              <div class="card text-center">
+                <div class="card-header bg-primary text-white">
+                  <i class="fas fa-tachometer-alt"></i> Desempenho Total
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="desempenhoChart"></canvas>
+                    <div id="totalDesempenhoValue"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Gráfico de Desempenho por Meta -->
+            <div class="col-md-6">
+              <div class="card text-center">
+                <div class="card-header bg-primary text-white">
+                  <i class="fas fa-chart-bar"></i> Desempenho por Meta
+                </div>
+                <div class="card-body">
+                  <canvas id="metasChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <!-- Gráfico de Perdas e Excessos -->
+            <div class="col-md-12">
+              <div class="card text-center">
+                <div class="card-header bg-primary text-white">
+                  <i class="fas fa-exchange-alt"></i> Perdas e Excessos
+                </div>
+                <div class="card-body">
+                  <canvas id="perdasExcessosChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Adicione mais abas conforme necessário -->
+      </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle (inclui Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Seu Script -->
+    <script>
+      let metas = [];
+      let chartDesempenhoTotal;
+      let chartMetas;
+      let chartPerdasExcessos;
+
+      // Manipulação do formulário
+      document
+        .getElementById("metaForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          adicionarMeta();
+        });
+
+      function adicionarMeta() {
+        const peso = parseFloat(document.getElementById("peso").value);
+        const realizado = parseFloat(
+          document.getElementById("realizado").value
+        );
+        const meta = parseFloat(document.getElementById("meta").value);
+
+        if (isNaN(peso) || isNaN(realizado) || isNaN(meta)) {
+          alert("Por favor, insira valores válidos para todos os campos.");
+          return;
+        }
+
+        if (meta === 0) {
+          alert("A meta planejada não pode ser zero.");
+          return;
+        }
+
+        metas.push({ p: peso, r: realizado, m: meta });
+
+        atualizarListaMetas();
+        renderizarGraficos();
+
+        // Limpar campos
+        document.getElementById("metaForm").reset();
+      }
+
+      function atualizarListaMetas() {
+        const metasList = document.getElementById("metasList");
+        metasList.innerHTML = "";
+
+        metas.forEach(function (meta, i) {
+          const listItem = document.createElement("li");
+          listItem.classList.add("list-group-item");
+          listItem.innerHTML = `
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Meta ${i + 1}</h5>
+            <small>
+              <button class="btn btn-sm btn-danger" onclick="removerMeta(${i})">
+                <i class="fas fa-trash"></i>
+              </button>
+            </small>
+          </div>
+          <p class="mb-1">Peso: ${meta.p}</p>
+          <p class="mb-1">Realizado: ${meta.r}</p>
+          <p class="mb-1">Meta Planejada: ${meta.m}</p>
+        `;
+          metasList.appendChild(listItem);
+        });
+      }
+
+      function removerMeta(index) {
+        metas.splice(index, 1);
+        atualizarListaMetas();
+        renderizarGraficos();
+      }
+
+      function calcularDesempenho() {
+        const totalPeso = metas.reduce((acc, meta) => acc + meta.p, 0);
+        let desempenhoTotal = 0;
+
+        metas.forEach((meta) => {
+          const desempenhoMeta =
+            Math.min((meta.r / meta.m) * 100, 100) * (meta.p / totalPeso);
+          desempenhoTotal += desempenhoMeta;
+        });
+
+        return Number(desempenhoTotal.toFixed(2));
+      }
+
+      function calcularDesempenhoPorMeta() {
+        return metas.map((meta) => {
+          const desempenhoPercentual = Math.min((meta.r / meta.m) * 100, 100);
+          return Number(desempenhoPercentual.toFixed(2));
+        });
+      }
+
+      function calcularPerdasExcessosPorMeta() {
+        return metas.map((meta) => {
+          const diferenca = meta.r - meta.m;
+          return Number(diferenca.toFixed(2));
+        });
+      }
+
+      function renderizarGraficos() {
+        renderizarGraficoDesempenhoTotal();
+        renderizarGraficoDesempenhoMetas();
+        renderizarGraficoPerdasExcessos();
+      }
+
+      function renderizarGraficoDesempenhoTotal() {
+        const ctx = document.getElementById("desempenhoChart").getContext("2d");
+        const desempenhoFinal = calcularDesempenho();
+        const totalDesempenhoValue = document.getElementById(
+          "totalDesempenhoValue"
+        );
+
+        if (chartDesempenhoTotal) {
+          chartDesempenhoTotal.destroy();
+        }
+
+        chartDesempenhoTotal = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: ["Desempenho Total", "Faltante"],
+            datasets: [
+              {
+                data: [desempenhoFinal, 100 - desempenhoFinal],
+                backgroundColor: ["#4ca1af", "#f1f1f1"],
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "70%",
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                enabled: false,
+              },
+            },
+          },
+        });
+
+        totalDesempenhoValue.textContent = `${desempenhoFinal}%`;
+      }
+
+      function renderizarGraficoDesempenhoMetas() {
+        const ctx = document.getElementById("metasChart").getContext("2d");
+        const desempenhoMetas = calcularDesempenhoPorMeta();
+        const labels = metas.map((_, i) => `Meta ${i + 1}`);
+
+        if (chartMetas) {
+          chartMetas.destroy();
+        }
+
+        chartMetas = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Desempenho (%)",
+                data: desempenhoMetas,
+                backgroundColor: "#4ca1af",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+                ticks: {
+                  stepSize: 10,
+                  callback: function (value) {
+                    return value + "%";
+                  },
+                },
+                title: {
+                  display: true,
+                  text: "Desempenho (%)",
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    return ` ${context.parsed.y}%`;
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+
+      function renderizarGraficoPerdasExcessos() {
+        const ctx = document
+          .getElementById("perdasExcessosChart")
+          .getContext("2d");
+        const perdasExcessos = calcularPerdasExcessosPorMeta();
+        const labels = metas.map((_, i) => `Meta ${i + 1}`);
+
+        if (chartPerdasExcessos) {
+          chartPerdasExcessos.destroy();
+        }
+
+        chartPerdasExcessos = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Perdas e Excessos",
+                data: perdasExcessos,
+                backgroundColor: perdasExcessos.map((value) =>
+                  value >= 0 ? "#4caf50" : "#e74c3c"
+                ),
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: false,
+                title: {
+                  display: true,
+                  text: "Valor",
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    return ` ${context.parsed.y >= 0 ? "Excesso" : "Perda"}: ${
+                      context.parsed.y
+                    }`;
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        renderizarGraficos();
+      });
+    </script>
+  </body>
+</html>

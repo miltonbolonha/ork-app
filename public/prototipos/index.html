@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema OKR</title>
+  <!-- Importando Google Fontes -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+  <!-- Importando Materialize CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+  <!-- Importando Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Estilos Personalizados -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Menu Superior -->
+  <nav class="nav-wrapper blue darken-3">
+    <div class="container">
+      <a href="#" class="brand-logo">📊 Sistema OKR</a>
+      <a href="#" class="sidenav-trigger" data-target="mobile-menu">
+        <i class="material-icons">menu</i>
+      </a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="#" class="menu-link" data-target="dashboard">🏠 Dashboard</a></li>
+        <li><a href="#" class="menu-link" data-target="metas">🎯 Metas</a></li>
+        <li><a href="#" class="menu-link" data-target="equipes">🧑‍💼 Equipes</a></li>
+        <li><a href="#" class="menu-link" data-target="membros">👥 Membros</a></li>
+        <li><a href="#" class="menu-link" data-target="relatorios">📆 Relatórios</a></li>
+        <li><a href="#" class="menu-link" data-target="faqs">❓ FAQs</a></li>
+      </ul>
+      <!-- Menu Mobile -->
+      <ul class="sidenav" id="mobile-menu">
+        <li><a href="#" class="menu-link" data-target="dashboard">🏠 Dashboard</a></li>
+        <li><a href="#" class="menu-link" data-target="metas">🎯 Metas</a></li>
+        <li><a href="#" class="menu-link" data-target="equipes">🧑‍💼 Equipes</a></li>
+        <li><a href="#" class="menu-link" data-target="membros">👥 Membros</a></li>
+        <li><a href="#" class="menu-link" data-target="relatorios">📆 Relatórios</a></li>
+        <li><a href="#" class="menu-link" data-target="faqs">❓ FAQs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Conteúdo Principal -->
+  <div class="container" id="main-content">
+    <!-- Dashboard -->
+    <div id="dashboard" class="section active">
+      <header class="flex justify-between items-center mb-8">
+        <h1 class="text-2xl font-semibold">Bem-vindo(a) ao Sistema OKR</h1>
+        <button class="btn waves-effect waves-light" onclick="app.showSection('metas')">Adicionar Meta</button>
+      </header>
+      <div id="dashboardCards" class="row">
+        <!-- Cards serão inseridos dinamicamente -->
+      </div>
+    </div>
+
+    <!-- Metas -->
+    <div id="metas" class="section" style="display:none;">
+      <!-- Conteúdo da seção Metas -->
+      <h4 class="mb-4">Metas</h4>
+      <!-- Formulário de Adição de Metas -->
+      <div class="row">
+        <div class="col s12 m6">
+          <div class="card white light-background">
+            <div class="card-content">
+              <span class="card-title">Adicionar Meta</span>
+              <div class="row">
+                <form id="metaForm" class="col s12">
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input id="nome_meta" type="text" required />
+                      <label for="nome_meta">Nome da Meta</label>
+                    </div>
+                    <div class="input-field col s12">
+                      <label for="prioridade">Prioridade</label>
+                      <select id="prioridade" required>
+                        <option value="" disabled selected>Selecione a prioridade</option>
+                        <option value="1">Alta</option>
+                        <option value="2">Média</option>
+                        <option value="3">Baixa</option>
+                      </select>
+                    </div>
+                    <div class="input-field col s12">
+                      <label>
+                        <input type="checkbox" id="penalidade" />
+                        <span>Penalidade</span>
+                      </label>
+                    </div>
+                    <div class="input-field col s12">
+                      <label for="metaPai">Meta Pai</label>
+                      <select id="metaPai">
+                        <option value="" selected>Nenhuma</option>
+                        <!-- Opções serão inseridas dinamicamente -->
+                      </select>
+                    </div>
+                    <!-- Campos de Realizado e Meta Planejada -->
+                    <div class="input-field col s12" id="campoRealizado">
+                      <input id="realizado" type="number" required />
+                      <label for="realizado">Realizado</label>
+                    </div>
+                    <div class="input-field col s12" id="campoMetaPlanejada">
+                      <input id="meta" type="number" required />
+                      <label for="meta">Meta Planejada</label>
+                    </div>
+                  </div>
+                  <button class="btn waves-effect waves-light" type="submit">
+                    Adicionar Meta
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Lista de Metas -->
+        <div class="col s12 m6">
+          <div class="card white light-background">
+            <div class="card-content">
+              <span class="card-title">Metas</span>
+              <ul class="collection" id="metasList">
+                <!-- Metas listadas dinamicamente -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equipes -->
+    <!-- Mantenha a implementação existente -->
+
+    <!-- Membros -->
+    <!-- Mantenha a implementação existente -->
+
+    <!-- Relatórios -->
+    <!-- Mantenha a implementação existente -->
+
+    <!-- FAQs -->
+    <div id="faqs" class="section" style="display:none;">
+      <!-- Conteúdo da seção FAQs -->
+      <h4 class="mb-4">❓ Perguntas Frequentes (FAQs)</h4>
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header">❓ "Estou familiarizado com metas SMART. Por que devo mudar para OKRs?"</div>
+          <div class="collapsible-body"><span>As OKRs proporcionam maior agilidade e foco, permitindo alinhamento em todos os níveis da organização.</span></div>
+        </li>
+        <li>
+          <div class="collapsible-header">❓ "Como evito que OKRs se tornem apenas mais uma tarefa?"</div>
+          <div class="collapsible-body"><span>Incorpore as OKRs na cultura da empresa, envolvendo todos os membros e revisando-as regularmente.</span></div>
+        </li>
+        <!-- Adicione mais FAQs conforme fornecido -->
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Importando jQuery e Materialize JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Incluindo o Materialize JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <!-- Incluindo o arquivo JavaScript da aplicação -->
+  <script src="okrApp.js"></script>
+</body>
+</html>

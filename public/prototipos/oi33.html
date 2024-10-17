@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>App de Desempenho Aprimorado</title>
+    <!-- Importando Google Fontes -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Importando Materialize CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+
+    <!-- Estilos Personalizados -->
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: #f9fbfd;
+      }
+
+      nav {
+        background-color: #2c3e50;
+      }
+
+      .nav-wrapper .brand-logo {
+        font-weight: bold;
+      }
+
+      .tabs .tab a {
+        color: #2c3e50;
+      }
+
+      .tabs .tab a.active {
+        color: #2c3e50;
+      }
+
+      .tabs .indicator {
+        background-color: #2c3e50;
+      }
+
+      .card {
+        margin-top: 20px;
+        border-radius: 10px;
+      }
+
+      .card .card-content {
+        padding: 20px;
+      }
+
+      .card .card-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #424242;
+      }
+
+      .input-field input[type="number"],
+      .input-field select {
+        color: #424242;
+      }
+
+      .input-field label {
+        color: #757575;
+      }
+
+      .input-field input[type="number"]:focus + label,
+      .input-field select:focus + label {
+        color: #2c3e50 !important;
+      }
+
+      .input-field input[type="number"]:focus,
+      .input-field select:focus {
+        border-bottom: 1px solid #2c3e50 !important;
+        box-shadow: 0 1px 0 0 #2c3e50 !important;
+      }
+
+      .btn {
+        background-color: #2c3e50;
+      }
+
+      .btn:hover {
+        background-color: #1a242f;
+      }
+
+      .collection .collection-item .title {
+        font-weight: bold;
+        color: #2c3e50;
+      }
+
+      /* Estilos para tabelas */
+      table.striped th,
+      table.striped td {
+        padding: 15px;
+        font-size: 14px;
+      }
+
+      table.striped th {
+        background-color: #ecf0f1;
+        color: #000;
+      }
+
+      table.striped {
+        margin-bottom: 30px;
+      }
+
+      /* Ajustes para responsividade */
+      @media screen and (max-width: 600px) {
+        .tabs .tab {
+          width: 33.3333%;
+        }
+      }
+
+      /* Coloração suave e elegante */
+      .light-background {
+        background-color: #ffffff;
+      }
+
+      .priority-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 12px;
+      }
+
+      .priority-high {
+        background-color: #e74c3c;
+      }
+
+      .priority-medium {
+        background-color: #f1c40f;
+        color: #000;
+      }
+
+      .priority-low {
+        background-color: #2ecc71;
+      }
+
+      .status-icon {
+        vertical-align: middle;
+      }
+
+      .table-title {
+        font-weight: bold;
+        font-size: 18px;
+        margin: 20px 0 10px;
+      }
+
+      /* Estilo para hierarquia de metas */
+      .meta-item {
+        margin-left: 20px;
+      }
+
+      .collapsible-header {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+      }
+
+      .collapsible-body {
+        padding: 0 0 0 20px;
+      }
+
+      .icon-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        margin-left: 5px;
+      }
+
+      .icon-button i {
+        font-size: 18px;
+      }
+
+      .icon-button:hover i {
+        color: #e74c3c;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav>
+      <div class="nav-wrapper">
+        <a href="#" class="brand-logo center">App de Desempenho</a>
+      </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <div class="container">
+      <!-- Abas -->
+      <div class="row">
+        <div class="col s12">
+          <ul class="tabs tabs-fixed-width">
+            <li class="tab col s4">
+              <a class="active" href="#metas">Metas</a>
+            </li>
+            <li class="tab col s4"><a href="#desempenho">Desempenho</a></li>
+            <li class="tab col s4"><a href="#config">Configurações</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Aba Metas -->
+      <div id="metas" class="col s12">
+        <div class="row">
+          <!-- Formulário de Adição de Metas -->
+          <div class="col s12 m6">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title"
+                  ><i class="material-icons left">add_circle_outline</i
+                  >Adicionar Meta</span
+                >
+                <div class="row">
+                  <form id="metaForm" class="col s12">
+                    <div class="row">
+                      <div class="input-field col s12">
+                        <input id="nome_meta" type="text" required />
+                        <label for="nome_meta">Nome da Meta</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <select id="prioridade" required>
+                          <option value="" disabled selected>
+                            Selecione a Prioridade
+                          </option>
+                          <option value="3">Alta</option>
+                          <option value="2">Média</option>
+                          <option value="1">Baixa</option>
+                        </select>
+                        <label for="prioridade">Prioridade</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <input id="realizado" type="number" required />
+                        <label for="realizado">Realizado</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <input id="meta" type="number" required />
+                        <label for="meta">Meta Planejada</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <select id="metaPai">
+                          <option value="" disabled selected>
+                            Selecione uma Meta Pai (opcional)
+                          </option>
+                          <!-- Opções adicionadas dinamicamente -->
+                        </select>
+                        <label for="metaPai">Meta Pai</label>
+                      </div>
+                    </div>
+                    <button class="btn waves-effect waves-light" type="submit">
+                      Adicionar Meta
+                      <i class="material-icons right">send</i>
+                    </button>
+                  </form>
+                  <!-- Botões adicionais -->
+                  <div class="col s12" style="margin-top: 20px">
+                    <button
+                      class="btn waves-effect waves-light"
+                      onclick="abrirModalBatch()"
+                    >
+                      <i class="material-icons left">playlist_add</i>Adicionar
+                      Lote de Metas
+                    </button>
+                    <button
+                      class="btn waves-effect waves-light"
+                      onclick="abrirModalModelos()"
+                    >
+                      <i class="material-icons left">library_books</i>Usar
+                      Modelo de Meta
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Lista de Metas -->
+          <div class="col s12 m6">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title"
+                  ><i class="material-icons left">list</i>Metas</span
+                >
+                <ul class="collapsible" id="metasList">
+                  <!-- Metas listadas dinamicamente -->
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aba Desempenho -->
+      <div id="desempenho" class="col s12">
+        <!-- Conteúdo da aba Desempenho -->
+        <div class="row">
+          <!-- Desempenho Total -->
+          <div class="col s12">
+            <div class="card white light-background">
+              <div class="card-content center-align">
+                <span class="card-title"
+                  ><i class="material-icons left">equalizer</i>Desempenho
+                  Total</span
+                >
+                <h4 id="desempenhoTotalValue">0%</h4>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desempenho por Meta -->
+          <div class="col s12">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title"
+                  ><i class="material-icons left">assignment</i>Desempenho por
+                  Meta</span
+                >
+                <table class="striped" id="desempenhoMetasTable">
+                  <thead>
+                    <tr>
+                      <th>Meta</th>
+                      <th>Desempenho (%)</th>
+                      <th>Conclusão</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Dados inseridos dinamicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Perdas e Excessos -->
+          <div class="col s12">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title"
+                  ><i class="material-icons left">trending_down</i>Perdas e
+                  Excessos</span
+                >
+                <table class="striped" id="perdasExcessosTable">
+                  <thead>
+                    <tr>
+                      <th>Meta</th>
+                      <th>Perda/Excesso</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Dados inseridos dinamicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Histórico de Metas -->
+          <div class="col s12">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title">
+                  <i class="material-icons left">history</i>Histórico de Metas
+                  <button class="btn-small right" onclick="baixarHistorico()">
+                    <i class="material-icons left">file_download</i>Baixar
+                    Histórico
+                  </button>
+                </span>
+                <table class="striped" id="historicoMetasTable">
+                  <thead>
+                    <tr>
+                      <th>Meta</th>
+                      <th>Prioridade</th>
+                      <th>Realizado</th>
+                      <th>Meta Planejada</th>
+                      <th>Data</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Dados do histórico -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aba Configurações -->
+      <div id="config" class="col s12">
+        <div class="row">
+          <div class="col s12">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title"
+                  ><i class="material-icons left">settings</i
+                  >Configurações</span
+                >
+                <div class="row">
+                  <!-- Importar Histórico -->
+                  <div class="col s12">
+                    <h6>Importar Histórico</h6>
+                    <div class="file-field input-field">
+                      <div class="btn">
+                        <span>Arquivo</span>
+                        <input
+                          type="file"
+                          id="importHistoricoInput"
+                          accept=".json"
+                        />
+                      </div>
+                      <div class="file-path-wrapper">
+                        <input
+                          class="file-path validate"
+                          type="text"
+                          placeholder="Selecione um arquivo JSON"
+                        />
+                      </div>
+                    </div>
+                    <button
+                      class="btn waves-effect waves-light"
+                      onclick="importarHistorico()"
+                    >
+                      <i class="material-icons left">file_upload</i>Importar
+                      Histórico
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Outros ajustes de configuração podem ser adicionados aqui -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Modais -->
+    <!-- Modal para Adicionar Lote de Metas -->
+    <div id="modalBatch" class="modal">
+      <div class="modal-content">
+        <h4>Adicionar Lote de Metas</h4>
+        <div class="row">
+          <form id="batchForm" class="col s12">
+            <div class="row">
+              <div class="input-field col s12">
+                <textarea
+                  id="batchInput"
+                  class="materialize-textarea"
+                  placeholder="Insira metas no formato JSON"
+                ></textarea>
+                <label for="batchInput">Metas em Lote</label>
+                <span class="helper-text"
+                  >Formato: [{"nome": "Meta 1", "prioridade": 2, "realizado":
+                  50, "planejado": 100}, ...]</span
+                >
+              </div>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">
+              Adicionar Metas
+              <i class="material-icons right">send</i>
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat"
+          >Fechar</a
+        >
+      </div>
+    </div>
+
+    <!-- Modal para Modelos de Meta -->
+    <div id="modalModelos" class="modal">
+      <div class="modal-content">
+        <h4>Modelos de Meta</h4>
+        <ul class="collection" id="listaModelos">
+          <!-- Modelos de meta serão listados aqui -->
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat"
+          >Fechar</a
+        >
+      </div>
+    </div>
+
+    <!-- Importando Materialize JS e jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Seu Script -->
+    <script>
+      $(document).ready(function () {
+        $(".tabs").tabs();
+        $("select").formSelect();
+        $(".collapsible").collapsible();
+        $(".modal").modal();
+      });
+
+      let metas = [];
+      let historicoMetas = [];
+      let modelosMetas = [
+        { nome: "Modelo A", prioridade: 2, realizado: 0, planejado: 100 },
+        { nome: "Modelo B", prioridade: 3, realizado: 0, planejado: 200 },
+        { nome: "Modelo C", prioridade: 1, realizado: 0, planejado: 50 },
+      ];
+
+      // Carregar histórico do localStorage
+      if (localStorage.getItem("historicoMetas")) {
+        historicoMetas = JSON.parse(localStorage.getItem("historicoMetas"));
+        atualizarHistoricoMetas();
+      }
+
+      // Manipulação do formulário
+      $("#metaForm").submit(function (e) {
+        e.preventDefault();
+        adicionarMeta();
+      });
+
+      function adicionarMeta(metaObj) {
+        let nomeMeta, prioridade, realizado, metaPlanejada, metaPaiId;
+
+        if (metaObj) {
+          // Dados vindos de um objeto (batch ou modelo)
+          nomeMeta = metaObj.nome;
+          prioridade = metaObj.prioridade;
+          realizado = metaObj.realizado;
+          metaPlanejada = metaObj.planejado;
+          metaPaiId = metaObj.metaPaiId || null;
+        } else {
+          // Dados vindos do formulário
+          nomeMeta = $("#nome_meta").val();
+          prioridade = parseInt($("#prioridade").val());
+          realizado = parseFloat($("#realizado").val());
+          metaPlanejada = parseFloat($("#meta").val());
+          metaPaiId = $("#metaPai").val();
+        }
+
+        if (
+          !nomeMeta ||
+          isNaN(prioridade) ||
+          isNaN(realizado) ||
+          isNaN(metaPlanejada)
+        ) {
+          M.toast({
+            html: "Por favor, preencha todos os campos.",
+            classes: "red",
+          });
+          return;
+        }
+
+        if (metaPlanejada === 0) {
+          M.toast({
+            html: "A meta planejada não pode ser zero.",
+            classes: "red",
+          });
+          return;
+        }
+
+        const novaMeta = {
+          id: Date.now() + Math.floor(Math.random() * 1000), // Garantir ID único
+          nome: nomeMeta,
+          prioridade: prioridade,
+          realizado: realizado,
+          planejado: metaPlanejada,
+          metaPaiId: metaPaiId ? parseInt(metaPaiId) : null,
+          metasFilhas: [],
+          status: "Ativa", // Status pode ser 'Ativa', 'Concluída' ou 'Atrasada'
+        };
+
+        // Adicionar como filha na meta pai, se aplicável
+        if (novaMeta.metaPaiId) {
+          const metaPai = encontrarMetaPorId(novaMeta.metaPaiId);
+          if (metaPai) {
+            metaPai.metasFilhas.push(novaMeta);
+          }
+        } else {
+          metas.push(novaMeta);
+        }
+
+        atualizarListaMetas();
+        atualizarSelectMetaPai();
+        atualizarDesempenho();
+        atualizarDesempenhoMetas();
+        atualizarPerdasExcessos();
+
+        // Limpar campos se for do formulário
+        if (!metaObj) {
+          $("#metaForm")[0].reset();
+          $("select").formSelect();
+        }
+
+        // Notificações inteligentes
+        const desempenhoIndividual = calcularDesempenhoIndividual(novaMeta);
+        if (desempenhoIndividual < 50) {
+          M.toast({
+            html: `Atenção! O desempenho da meta "${nomeMeta}" está abaixo de 50%.`,
+            classes: "orange",
+          });
+        }
+      }
+
+      // Restante do código permanece igual até a parte das novas funcionalidades
+
+      // Importar Histórico
+      function importarHistorico() {
+        const fileInput = document.getElementById("importHistoricoInput");
+        const file = fileInput.files[0];
+        if (!file) {
+          M.toast({ html: "Por favor, selecione um arquivo.", classes: "red" });
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          try {
+            historicoMetas = JSON.parse(event.target.result);
+            localStorage.setItem(
+              "historicoMetas",
+              JSON.stringify(historicoMetas)
+            );
+            atualizarHistoricoMetas();
+            M.toast({
+              html: "Histórico importado com sucesso!",
+              classes: "green",
+            });
+          } catch (e) {
+            M.toast({
+              html: "Erro ao importar o arquivo. Certifique-se de que é um arquivo JSON válido.",
+              classes: "red",
+            });
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      // Abrir Modal para Adicionar Lote de Metas
+      function abrirModalBatch() {
+        $("#modalBatch").modal("open");
+      }
+
+      // Manipular Formulário de Lote
+      $("#batchForm").submit(function (e) {
+        e.preventDefault();
+        const batchData = $("#batchInput").val();
+        try {
+          const metasBatch = JSON.parse(batchData);
+          metasBatch.forEach((metaObj) => {
+            adicionarMeta(metaObj);
+          });
+          M.toast({
+            html: "Metas adicionadas em lote com sucesso!",
+            classes: "green",
+          });
+          $("#batchInput").val("");
+          $("#modalBatch").modal("close");
+        } catch (e) {
+          M.toast({
+            html: "Erro ao adicionar metas em lote. Verifique o formato do JSON.",
+            classes: "red",
+          });
+        }
+      });
+
+      // Abrir Modal de Modelos de Meta
+      function abrirModalModelos() {
+        $("#listaModelos").empty();
+        modelosMetas.forEach((modelo, index) => {
+          const listItem = $(`
+          <li class="collection-item">
+            <span class="title">${modelo.nome}</span>
+            <p>Prioridade: ${obterTextoPrioridade(modelo.prioridade)}<br>
+            Realizado: ${modelo.realizado}<br>
+            Planejado: ${modelo.planejado}</p>
+            <button class="btn-small" onclick="usarModelo(${index})">Usar Modelo</button>
+          </li>
+        `);
+          $("#listaModelos").append(listItem);
+        });
+        $("#modalModelos").modal("open");
+      }
+
+      function usarModelo(index) {
+        const modelo = modelosMetas[index];
+        adicionarMeta(modelo);
+        M.toast({
+          html: `Meta "${modelo.nome}" adicionada a partir do modelo.`,
+          classes: "green",
+        });
+        $("#modalModelos").modal("close");
+      }
+
+      function atualizarListaMetas() {
+        const metasList = $("#metasList");
+        metasList.empty();
+
+        metas.forEach(function (meta) {
+          adicionarMetaNaLista(meta, metasList);
+        });
+      }
+
+      function adicionarMetaNaLista(meta, lista) {
+        const prioridadeTexto = obterTextoPrioridade(meta.prioridade);
+        const prioridadeClasse = obterClassePrioridade(meta.prioridade);
+
+        const listItem = $(`
+        <li>
+          <div class="collapsible-header">
+            <i class="material-icons">expand_more</i>
+            ${meta.nome}
+            <span class="priority-badge ${prioridadeClasse}">${prioridadeTexto}</span>
+            <button class="icon-button right" onclick="removerMeta(${meta.id})">
+              <i class="material-icons red-text">delete</i>
+            </button>
+          </div>
+          <div class="collapsible-body">
+            <p>Realizado: ${meta.realizado}</p>
+            <p>Planejado: ${meta.planejado}</p>
+            <p>Perda/Excesso: ${(meta.realizado - meta.planejado).toFixed(
+              2
+            )}</p>
+          </div>
+        </li>
+      `);
+        lista.append(listItem);
+
+        // Inicializar o item collapsible
+        $(".collapsible").collapsible();
+
+        // Adicionar metas filhas
+        if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+          const sublist = $('<ul class="collapsible"></ul>');
+          meta.metasFilhas.forEach(function (metaFilha) {
+            adicionarMetaNaLista(metaFilha, sublist);
+          });
+          listItem.find(".collapsible-body").append(sublist);
+
+          // Inicializar o sublist collapsible
+          sublist.collapsible();
+        }
+      }
+
+      function atualizarSelectMetaPai() {
+        const selectMetaPai = $("#metaPai");
+        selectMetaPai.empty();
+        selectMetaPai.append(
+          '<option value="" disabled selected>Selecione uma Meta Pai (opcional)</option>'
+        );
+
+        function adicionarOpcoesMetaPai(meta, prefix = "") {
+          selectMetaPai.append(
+            `<option value="${meta.id}">${prefix}${meta.nome}</option>`
+          );
+          if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+            meta.metasFilhas.forEach(function (metaFilha) {
+              adicionarOpcoesMetaPai(metaFilha, prefix + "--");
+            });
+          }
+        }
+
+        metas.forEach(function (meta) {
+          adicionarOpcoesMetaPai(meta);
+        });
+
+        selectMetaPai.formSelect();
+      }
+
+      function encontrarMetaPorId(id, lista = metas) {
+        for (const meta of lista) {
+          if (meta.id === id) {
+            return meta;
+          } else if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+            const encontrada = encontrarMetaPorId(id, meta.metasFilhas);
+            if (encontrada) return encontrada;
+          }
+        }
+        return null;
+      }
+
+      function removerMeta(id) {
+        function removerRecursivo(id, lista) {
+          for (let i = 0; i < lista.length; i++) {
+            const meta = lista[i];
+            if (meta.id === id) {
+              // Adicionar meta removida ao histórico
+              meta.data = new Date().toLocaleString();
+              historicoMetas.push(meta);
+              localStorage.setItem(
+                "historicoMetas",
+                JSON.stringify(historicoMetas)
+              );
+
+              lista.splice(i, 1);
+              return true;
+            } else if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+              if (removerRecursivo(id, meta.metasFilhas)) return true;
+            }
+          }
+          return false;
+        }
+
+        removerRecursivo(id, metas);
+
+        atualizarListaMetas();
+        atualizarSelectMetaPai();
+        atualizarDesempenho();
+        atualizarDesempenhoMetas();
+        atualizarPerdasExcessos();
+        atualizarHistoricoMetas();
+        M.toast({ html: "Meta removida com sucesso!", classes: "green" });
+      }
+
+      function obterTextoPrioridade(prioridade) {
+        switch (prioridade) {
+          case 3:
+            return "Alta";
+          case 2:
+            return "Média";
+          case 1:
+            return "Baixa";
+          default:
+            return "";
+        }
+      }
+
+      function obterClassePrioridade(prioridade) {
+        switch (prioridade) {
+          case 3:
+            return "priority-high";
+          case 2:
+            return "priority-medium";
+          case 1:
+            return "priority-low";
+          default:
+            return "";
+        }
+      }
+
+      function calcularDesempenhoTotal() {
+        if (metas.length === 0) return 0;
+
+        const totalPeso = calcularTotalPeso(metas);
+        let desempenhoTotal = 0;
+
+        metas.forEach((meta) => {
+          desempenhoTotal += calcularContribuicaoMeta(meta, totalPeso);
+        });
+
+        return Number(desempenhoTotal.toFixed(2));
+      }
+
+      function calcularTotalPeso(lista) {
+        let total = 0;
+        lista.forEach((meta) => {
+          total += meta.prioridade;
+          if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+            total += calcularTotalPeso(meta.metasFilhas);
+          }
+        });
+        return total;
+      }
+
+      function calcularContribuicaoMeta(meta, totalPeso) {
+        const desempenhoMeta = Math.min(
+          (meta.realizado / meta.planejado) * 100,
+          100
+        );
+        const contribuicao = desempenhoMeta * (meta.prioridade / totalPeso);
+
+        let contribuicaoFilhas = 0;
+        if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+          meta.metasFilhas.forEach((metaFilha) => {
+            contribuicaoFilhas += calcularContribuicaoMeta(
+              metaFilha,
+              totalPeso
+            );
+          });
+        }
+
+        return contribuicao + contribuicaoFilhas;
+      }
+
+      function calcularDesempenhoIndividual(meta) {
+        return Number(
+          Math.min((meta.realizado / meta.planejado) * 100, 100).toFixed(2)
+        );
+      }
+
+      function calcularDesempenhoPorMeta() {
+        let desempenhoMetas = [];
+
+        function adicionarDesempenho(meta) {
+          const desempenhoIndividual = calcularDesempenhoIndividual(meta);
+          const conclusao =
+            ((meta.realizado / meta.planejado) * 100).toFixed(2) + "%";
+
+          desempenhoMetas.push({
+            nome: meta.nome,
+            desempenho: desempenhoIndividual,
+            conclusao: conclusao,
+          });
+
+          if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+            meta.metasFilhas.forEach((metaFilha) => {
+              adicionarDesempenho(metaFilha);
+            });
+          }
+        }
+
+        metas.forEach((meta) => {
+          adicionarDesempenho(meta);
+        });
+
+        return desempenhoMetas;
+      }
+
+      function atualizarDesempenho() {
+        const desempenhoTotal = calcularDesempenhoTotal();
+        $("#desempenhoTotalValue").text(`${desempenhoTotal}%`);
+      }
+
+      function atualizarDesempenhoMetas() {
+        const desempenhoMetasTableBody = $("#desempenhoMetasTable tbody");
+        desempenhoMetasTableBody.empty();
+
+        const desempenhoMetas = calcularDesempenhoPorMeta();
+
+        desempenhoMetas.forEach((item) => {
+          const row = $(`
+          <tr>
+            <td>${item.nome}</td>
+            <td>${item.desempenho}%</td>
+            <td>${item.conclusao}</td>
+          </tr>
+        `);
+          desempenhoMetasTableBody.append(row);
+        });
+      }
+
+      function atualizarPerdasExcessos() {
+        const perdasExcessosTableBody = $("#perdasExcessosTable tbody");
+        perdasExcessosTableBody.empty();
+
+        function adicionarPerdaExcesso(meta) {
+          const diferenca = (meta.realizado - meta.planejado).toFixed(2);
+          const status = diferenca >= 0 ? "Excesso" : "Perda";
+          const colorClass = diferenca >= 0 ? "green-text" : "red-text";
+
+          const row = $(`
+          <tr>
+            <td>${meta.nome}</td>
+            <td class="${colorClass}">${status}: ${diferenca}</td>
+          </tr>
+        `);
+          perdasExcessosTableBody.append(row);
+
+          if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+            meta.metasFilhas.forEach((metaFilha) => {
+              adicionarPerdaExcesso(metaFilha);
+            });
+          }
+        }
+
+        metas.forEach((meta) => {
+          adicionarPerdaExcesso(meta);
+        });
+      }
+
+      function atualizarHistoricoMetas() {
+        const historicoTableBody = $("#historicoMetasTable tbody");
+        historicoTableBody.empty();
+
+        historicoMetas.forEach((meta) => {
+          const prioridadeTexto = obterTextoPrioridade(meta.prioridade);
+          const row = $(`
+          <tr>
+            <td>${meta.nome}</td>
+            <td>${prioridadeTexto}</td>
+            <td>${meta.realizado}</td>
+            <td>${meta.planejado}</td>
+            <td>${meta.data}</td>
+          </tr>
+        `);
+          historicoTableBody.append(row);
+        });
+      }
+
+      function baixarHistorico() {
+        const historicoJson = JSON.stringify(historicoMetas, null, 2);
+        const blob = new Blob([historicoJson], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "historico_metas.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      $(document).ready(function () {
+        atualizarDesempenho();
+        atualizarDesempenhoMetas();
+        atualizarPerdasExcessos();
+      });
+    </script>
+  </body>
+</html>

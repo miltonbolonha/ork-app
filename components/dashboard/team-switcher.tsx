@@ -1,40 +1,7 @@
 "use client";
 
-// import * as React from "react";
-// import {
-//   CaretSortIcon,
-//   CheckIcon,
-//   PlusCircledIcon,
-// } from "@radix-ui/react-icons";
-
-// import { cn } from "@/lib/utils";
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import { Button } from "@/components/ui/button";
-// import {
-//   Command,
-//   CommandEmpty,
-//   CommandGroup,
-//   CommandInput,
-//   CommandItem,
-//   CommandList,
-//   CommandSeparator,
-// } from "@/components/ui/command";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-// import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
-// import {
-//   Popover,
-//   PopoverContent,
-//   PopoverTrigger,
-// } from "@/components/ui/popover";
+import * as React from "react";
+import { useOKR } from "@/context/OKRContext";
 import {
   Select,
   SelectContent,
@@ -43,348 +10,204 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const groups = [
-  {
-    label: "Personal Account",
-    teams: [
-      {
-        label: "Alicia Koch",
-        value: "personal",
-      },
-    ],
-  },
-  {
-    label: "Teams",
-    teams: [
-      {
-        label: "Acme Inc.",
-        value: "acme-inc",
-      },
-      {
-        label: "Monsters Inc.",
-        value: "monsters",
-      },
-    ],
-  },
-];
+export default function TeamSwitcher() {
+  const {
+    regioesMetropolitanas,
+    hierarchicalSelection,
+    setHierarchicalSelection,
+    getCidadesByRegiaoMetropolitana,
+    getZonasByCidade,
+    getDistritosByZona,
+    getAreasByDistrito,
+    getEquipesByArea,
+  } = useOKR();
 
-type Team = (typeof groups)[number]["teams"][number];
+  const handleRegiaoChange = (value: string) => {
+    setHierarchicalSelection({
+      regiaoMetropolitanaId: parseInt(value),
+      cidadeId: undefined,
+      zonaId: undefined,
+      distritoId: undefined,
+      areaId: undefined,
+      equipeId: undefined,
+    });
+  };
 
-type PopoverTriggerProps = React.ComponentPropsWithoutRef<
-  typeof PopoverTrigger
->;
+  const handleCidadeChange = (value: string) => {
+    setHierarchicalSelection((prev) => ({
+      ...prev,
+      cidadeId: parseInt(value),
+      zonaId: undefined,
+      distritoId: undefined,
+      areaId: undefined,
+      equipeId: undefined,
+    }));
+  };
 
-interface TeamSwitcherProps extends PopoverTriggerProps {}
+  const handleZonaChange = (value: string) => {
+    setHierarchicalSelection((prev) => ({
+      ...prev,
+      zonaId: parseInt(value),
+      distritoId: undefined,
+      areaId: undefined,
+      equipeId: undefined,
+    }));
+  };
 
-// export default function TeamSwitcher({ className }: TeamSwitcherProps) {
-//   const [open, setOpen] = React.useState(false);
-//   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
-//   const [selectedTeam, setSelectedTeam] = React.useState<Team>(
-//     groups[0].teams[0]
-//   );
+  const handleDistritoChange = (value: string) => {
+    setHierarchicalSelection((prev) => ({
+      ...prev,
+      distritoId: parseInt(value),
+      areaId: undefined,
+      equipeId: undefined,
+    }));
+  };
 
-//   return (
-//     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
-//       <Popover open={open} onOpenChange={setOpen}>
-//         <PopoverTrigger asChild>
-//           <Button
-//             variant="outline"
-//             role="combobox"
-//             aria-expanded={open}
-//             aria-label="Select a team"
-//             className={cn("w-[200px] justify-between", className)}
-//           >
-//             <Avatar className="mr-2 h-5 w-5">
-//               <AvatarImage
-//                 src={`https://avatar.vercel.sh/${selectedTeam.value}.png`}
-//                 alt={selectedTeam.label}
-//                 className="grayscale"
-//               />
-//               <AvatarFallback>SC</AvatarFallback>
-//             </Avatar>
-//             {selectedTeam.label}
-//             <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
-//           </Button>
-//         </PopoverTrigger>
-//         <PopoverContent className="w-[200px] p-0">
-//           <Command>
-//             <CommandInput placeholder="Search team..." />
-//             <CommandList>
-//               <CommandEmpty>No team found.</CommandEmpty>
-//               {groups.map((group) => (
-//                 <CommandGroup key={group.label} heading={group.label}>
-//                   {group.teams.map((team) => (
-//                     <CommandItem
-//                       key={team.value}
-//                       onSelect={() => {
-//                         setSelectedTeam(team);
-//                         setOpen(false);
-//                       }}
-//                       className="text-sm"
-//                     >
-//                       <Avatar className="mr-2 h-5 w-5">
-//                         <AvatarImage
-//                           src={`https://avatar.vercel.sh/${team.value}.png`}
-//                           alt={team.label}
-//                           className="grayscale"
-//                         />
-//                         <AvatarFallback>SC</AvatarFallback>
-//                       </Avatar>
-//                       {team.label}
-//                       <CheckIcon
-//                         className={cn(
-//                           "ml-auto h-4 w-4",
-//                           selectedTeam.value === team.value
-//                             ? "opacity-100"
-//                             : "opacity-0"
-//                         )}
-//                       />
-//                     </CommandItem>
-//                   ))}
-//                 </CommandGroup>
-//               ))}
-//             </CommandList>
-//             <CommandSeparator />
-//             <CommandList>
-//               <CommandGroup>
-//                 <DialogTrigger asChild>
-//                   <CommandItem
-//                     onSelect={() => {
-//                       setOpen(false);
-//                       setShowNewTeamDialog(true);
-//                     }}
-//                   >
-//                     <PlusCircledIcon className="mr-2 h-5 w-5" />
-//                     Create Team
-//                   </CommandItem>
-//                 </DialogTrigger>
-//               </CommandGroup>
-//             </CommandList>
-//           </Command>
-//         </PopoverContent>
-//       </Popover>
-//       <DialogContent>
-//         <DialogHeader>
-//           <DialogTitle>Create team</DialogTitle>
-//           <DialogDescription>
-//             Add a new team to manage products and customers.
-//           </DialogDescription>
-//         </DialogHeader>
-//         <div>
-//           <div className="space-y-4 py-2 pb-4">
-//             <div className="space-y-2">
-//               <Label htmlFor="name">Team name</Label>
-//               <Input id="name" placeholder="Acme Inc." />
-//             </div>
-//             <div className="space-y-2">
-//               <Label htmlFor="plan">Subscription plan</Label>
-//               <Select>
-//                 <SelectTrigger>
-//                   <SelectValue placeholder="Select a plan" />
-//                 </SelectTrigger>
-//                 <SelectContent>
-//                   <SelectItem value="free">
-//                     <span className="font-medium">Free</span> -{" "}
-//                     <span className="text-muted-foreground">
-//                       Trial for two weeks
-//                     </span>
-//                   </SelectItem>
-//                   <SelectItem value="pro">
-//                     <span className="font-medium">Pro</span> -{" "}
-//                     <span className="text-muted-foreground">
-//                       $9/month per user
-//                     </span>
-//                   </SelectItem>
-//                 </SelectContent>
-//               </Select>
-//             </div>
-//           </div>
-//         </div>
-//         <DialogFooter>
-//           <Button variant="outline" onClick={() => setShowNewTeamDialog(false)}>
-//             Cancel
-//           </Button>
-//           <Button type="submit">Continue</Button>
-//         </DialogFooter>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// }
-import * as React from "react";
-import {
-  CaretSortIcon,
-  CheckIcon,
-  PlusCircledIcon,
-} from "@radix-ui/react-icons";
+  const handleAreaChange = (value: string) => {
+    setHierarchicalSelection((prev) => ({
+      ...prev,
+      areaId: parseInt(value),
+      equipeId: undefined,
+    }));
+  };
 
-import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from "@/components/ui/command";
+  const handleEquipeChange = (value: string) => {
+    setHierarchicalSelection((prev) => ({
+      ...prev,
+      equipeId: parseInt(value),
+    }));
+  };
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  const cidades = hierarchicalSelection.regiaoMetropolitanaId
+    ? getCidadesByRegiaoMetropolitana(
+        hierarchicalSelection.regiaoMetropolitanaId
+      )
+    : [];
 
-interface Member {
-  id: number;
-  nome: string;
-}
+  const zonas = hierarchicalSelection.cidadeId
+    ? getZonasByCidade(hierarchicalSelection.cidadeId)
+    : [];
 
-interface TeamSwitcherProps {
-  membros: Member[];
-  className?: string;
-}
+  const distritos = hierarchicalSelection.zonaId
+    ? getDistritosByZona(hierarchicalSelection.zonaId)
+    : [];
 
-export default function TeamSwitcher({
-  membros,
-  className,
-}: TeamSwitcherProps) {
-  //   const [open, setOpen] = React.useState(false);
-  //   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
-  const [selectedTeam, setSelectedTeam] = React.useState<Team>(
-    groups[0].teams[0]
-  );
-  const [open, setOpen] = React.useState(false);
-  const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
-  const [selectedMember, setSelectedMember] = React.useState<Member>(
-    membros[0]
-  );
+  const areas = hierarchicalSelection.distritoId
+    ? getAreasByDistrito(hierarchicalSelection.distritoId)
+    : [];
+
+  const equipes = hierarchicalSelection.areaId
+    ? getEquipesByArea(hierarchicalSelection.areaId)
+    : [];
 
   return (
-    <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            aria-label="Select a member"
-            className={cn("w-[200px] justify-between", className)}
-          >
-            <Avatar className="mr-2 h-5 w-5">
-              <AvatarImage
-                src={`https://avatar.vercel.sh/${selectedMember.id}.png`} // Modifique a URL conforme necessário
-                alt={selectedMember.nome}
-                className="grayscale"
-              />
-              <AvatarFallback>SC</AvatarFallback>
-            </Avatar>
-            {selectedMember.nome}
-            <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
-          <Command>
-            <CommandInput placeholder="Search member..." />
-            <CommandList>
-              <CommandEmpty>No member found.</CommandEmpty>
-              <CommandGroup>
-                {membros.map((member) => (
-                  <CommandItem
-                    key={member.id}
-                    onSelect={() => {
-                      setSelectedMember(member);
-                      setOpen(false);
-                    }}
-                    className="text-sm"
-                  >
-                    <Avatar className="mr-2 h-5 w-5">
-                      <AvatarImage
-                        src={`https://avatar.vercel.sh/${member.id}.png`} // Modifique a URL conforme necessário
-                        alt={member.nome}
-                        className="grayscale"
-                      />
-                      <AvatarFallback>SC</AvatarFallback>
-                    </Avatar>
-                    {member.nome}
-                    <CheckIcon
-                      className={cn(
-                        "ml-auto h-4 w-4",
-                        selectedMember.id === member.id
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-            <CommandSeparator />
-            <CommandList>
-              <CommandGroup>
-                <DialogTrigger asChild>
-                  <CommandItem
-                    onSelect={() => {
-                      setOpen(false);
-                      setShowNewTeamDialog(true);
-                    }}
-                  >
-                    <PlusCircledIcon className="mr-2 h-5 w-5" />
-                    Create Member
-                  </CommandItem>
-                </DialogTrigger>
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Create member</DialogTitle>
-          <DialogDescription>Add a new member to the team.</DialogDescription>
-        </DialogHeader>
-        <div>
-          <div>
-            <div className="space-y-4 py-2 pb-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Team name</Label>
-                <Input id="name" placeholder="Acme Inc." />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="plan">Subscription plan</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a plan" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="free">
-                      <span className="font-medium">Free</span> -{" "}
-                      <span className="text-muted-foreground">
-                        Trial for two weeks
-                      </span>
-                    </SelectItem>
-                    <SelectItem value="pro">
-                      <span className="font-medium">Pro</span> -{" "}
-                      <span className="text-muted-foreground">
-                        $9/month per user
-                      </span>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setShowNewTeamDialog(false)}>
-            Cancel
-          </Button>
-          <Button type="submit">Continue</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <div className="flex space-x-2">
+      {/* Região Metropolitana Select */}
+      <Select
+        onValueChange={handleRegiaoChange}
+        value={hierarchicalSelection.regiaoMetropolitanaId?.toString()}
+      >
+        <SelectTrigger className="w-[200px]">
+          <SelectValue placeholder="Região Metropolitana" />
+        </SelectTrigger>
+        <SelectContent>
+          {regioesMetropolitanas.map((regiao) => (
+            <SelectItem key={regiao.id} value={regiao.id.toString()}>
+              {regiao.nome}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      {/* Cidade Select */}
+      <Select
+        onValueChange={handleCidadeChange}
+        value={hierarchicalSelection.cidadeId?.toString()}
+        disabled={!hierarchicalSelection.regiaoMetropolitanaId}
+      >
+        <SelectTrigger className="w-[200px]">
+          <SelectValue placeholder="Cidade" />
+        </SelectTrigger>
+        <SelectContent>
+          {cidades.map((cidade) => (
+            <SelectItem key={cidade.id} value={cidade.id.toString()}>
+              {cidade.nome}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      {/* Zona Select */}
+      <Select
+        onValueChange={handleZonaChange}
+        value={hierarchicalSelection.zonaId?.toString()}
+        disabled={!hierarchicalSelection.cidadeId}
+      >
+        <SelectTrigger className="w-[200px]">
+          <SelectValue placeholder="Zona" />
+        </SelectTrigger>
+        <SelectContent>
+          {zonas.map((zona) => (
+            <SelectItem key={zona.id} value={zona.id.toString()}>
+              {zona.nome}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      {/* Distrito Select */}
+      <Select
+        onValueChange={handleDistritoChange}
+        value={hierarchicalSelection.distritoId?.toString()}
+        disabled={!hierarchicalSelection.zonaId}
+      >
+        <SelectTrigger className="w-[200px]">
+          <SelectValue placeholder="Distrito" />
+        </SelectTrigger>
+        <SelectContent>
+          {distritos.map((distrito) => (
+            <SelectItem key={distrito.id} value={distrito.id.toString()}>
+              {distrito.nome}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      {/* Área Select */}
+      <Select
+        onValueChange={handleAreaChange}
+        value={hierarchicalSelection.areaId?.toString()}
+        disabled={!hierarchicalSelection.distritoId}
+      >
+        <SelectTrigger className="w-[200px]">
+          <SelectValue placeholder="Área" />
+        </SelectTrigger>
+        <SelectContent>
+          {areas.map((area) => (
+            <SelectItem key={area.id} value={area.id.toString()}>
+              {area.nome}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      {/* Equipe Select */}
+      <Select
+        onValueChange={handleEquipeChange}
+        value={hierarchicalSelection.equipeId?.toString()}
+        disabled={!hierarchicalSelection.areaId}
+      >
+        <SelectTrigger className="w-[200px]">
+          <SelectValue placeholder="Equipe" />
+        </SelectTrigger>
+        <SelectContent>
+          {equipes.map((equipe) => (
+            <SelectItem key={equipe.id} value={equipe.id.toString()}>
+              {equipe.nome}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
   );
 }

@@ -1,0 +1,457 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema OKR</title>
+  <!-- Importando Google Fontes -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+  <!-- Importando Materialize CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+  <!-- Importando Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
+
+  <!-- Estilos Personalizados -->
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f6f8;
+    }
+
+    nav {
+      background-color: #1976d2;
+    }
+
+    .nav-wrapper .brand-logo {
+      font-weight: bold;
+    }
+
+    .tabs .tab a {
+      color: #1976d2;
+    }
+
+    .tabs .tab a.active {
+      color: #1976d2;
+    }
+
+    .tabs .indicator {
+      background-color: #1976d2;
+    }
+
+    .card {
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+
+    .card .card-content {
+      padding: 20px;
+    }
+
+    .card .card-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #424242;
+    }
+
+    .input-field input[type="number"],
+    .input-field input[type="range"],
+    .input-field select {
+      color: #424242;
+    }
+
+    .input-field label {
+      color: #757575;
+    }
+
+    .btn {
+      background-color: #1976d2;
+    }
+
+    .btn:hover {
+      background-color: #1565c0;
+    }
+
+    .collection .collection-item .title {
+      font-weight: bold;
+      color: #1976d2;
+    }
+
+    table.striped th,
+    table.striped td {
+      padding: 15px;
+    }
+
+    table.striped th {
+      background-color: #e3f2fd;
+      color: #000;
+    }
+
+    table.striped {
+      margin-bottom: 30px;
+    }
+
+    .light-background {
+      background-color: #ffffff;
+    }
+
+    .priority-badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 12px;
+    }
+
+    .priority-high {
+      background-color: #e53935;
+    }
+
+    .priority-medium {
+      background-color: #fb8c00;
+    }
+
+    .priority-low {
+      background-color: #43a047;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">Sistema OKR</a>
+    </div>
+  </nav>
+
+  <!-- Conteúdo Principal -->
+  <div class="container mt-4">
+    <!-- Sidebar -->
+    <div class="row">
+      <div class="col s12">
+        <ul class="tabs tabs-fixed-width">
+          <li class="tab col s3"><a class="active" href="#dashboard">🏠 Dashboard</a></li>
+          <li class="tab col s3"><a href="#metas">🎯 Metas</a></li>
+          <li class="tab col s3"><a href="#equipes">🧑‍💼 Equipes</a></li>
+          <li class="tab col s3"><a href="#relatorios">📆 Relatórios</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Aba Dashboard -->
+    <div id="dashboard" class="col s12">
+      <div class="row">
+        <div class="col s12">
+          <div class="card white light-background">
+            <div class="card-content">
+              <span class="card-title">Bem-vindo(a) ao Sistema OKR</span>
+              <button class="btn waves-effect waves-light right">Adicionar Meta</button>
+            </div>
+          </div>
+        </div>
+        <div class="col s12 m4">
+          <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">Aumentar Vendas</span>
+              <p>Status: Ativa</p>
+              <progress class="w-full mt-4" value="70" max="100">70%</progress>
+              <p>Desempenho atual: 70%</p>
+            </div>
+            <div class="card-action">
+              <a href="#" class="white-text">Ver Detalhes</a>
+            </div>
+          </div>
+        </div>
+        <div class="col s12 m4">
+          <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">Expandir Mercado</span>
+              <p>Status: Concluída</p>
+              <progress class="w-full mt-4" value="100" max="100">100%</progress>
+              <p>Desempenho atual: 100%</p>
+            </div>
+            <div class="card-action">
+              <a href="#" class="white-text">Ver Detalhes</a>
+            </div>
+          </div>
+        </div>
+        <div class="col s12 m4">
+          <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">Inovar Produto</span>
+              <p>Status: Aguardando</p>
+              <progress class="w-full mt-4" value="0" max="100">0%</progress>
+              <p>Desempenho atual: 0%</p>
+            </div>
+            <div class="card-action">
+              <a href="#" class="white-text">Ver Detalhes</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aba Metas -->
+    <div id="metas" class="col s12">
+      <div class="row">
+        <div class="col s12 m6">
+          <div class="card white light-background">
+            <div class="card-content">
+              <span class="card-title">Adicionar Meta</span>
+              <div class="row">
+                <form id="metaForm" class="col s12">
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input id="nome_meta" type="text" required />
+                      <label for="nome_meta">Nome da Meta</label>
+                    </div>
+                    <div class="input-field col s12">
+                      <p class="range-field">
+                        <label for="prioridade">
+                          Prioridade:
+                          <span id="valorPrioridade">2</span></label>
+                        <input type="range" id="prioridade" min="1" max="3" value="2" />
+                      </p>
+                    </div>
+                    <div class="input-field col s12">
+                      <input id="realizado" type="number" required />
+                      <label for="realizado">Realizado</label>
+                    </div>
+                    <div class="input-field col s12">
+                      <input id="meta" type="number" required />
+                      <label for="meta">Meta Planejada</label>
+                    </div>
+                  </div>
+                  <button class="btn waves-effect waves-light" type="submit">
+                    Adicionar Meta
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col s12 m6">
+          <div class="card white light-background">
+            <div class="card-content">
+              <span class="card-title">Metas</span>
+              <ul class="collection" id="metasList">
+                <!-- Metas listadas dinamicamente -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aba Equipes -->
+    <div id="equipes" class="col s12">
+      <div class="row">
+        <div class="col s12">
+          <div class="card white light-background">
+            <div class="card-content">
+              <span class="card-title">Equipes</span>
+              <p>Visualize as informações da equipe e status de contribuições.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aba Relatórios -->
+    <div id="relatorios" class="col s12">
+      <div class="row">
+        <div class="col s12">
+          <div class="card white light-background">
+
+     <div class="card-content">
+              <span class="card-title">Relatórios</span>
+              <p>Acompanhe relatórios detalhados de progresso das OKRs.</p>
+              <!-- Adicionando uma tabela básica de exemplo para relatórios -->
+              <table class="striped">
+                <thead>
+                  <tr>
+                    <th>Meta</th>
+                    <th>Status</th>
+                    <th>Progresso</th>
+                    <th>Data Atualização</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Aumentar Vendas</td>
+                    <td>Ativa</td>
+                    <td>70%</td>
+                    <td>01/10/2023</td>
+                  </tr>
+                  <tr>
+                    <td>Expandir Mercado</td>
+                    <td>Concluída</td>
+                    <td>100%</td>
+                    <td>15/09/2023</td>
+                  </tr>
+                  <tr>
+                    <td>Inovar Produto</td>
+                    <td>Aguardando</td>
+                    <td>0%</td>
+                    <td>20/09/2023</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Importando Materialize JS e jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $(".tabs").tabs();
+      $("select").formSelect();
+
+      $("#prioridade").on("input change", function () {
+        $("#valorPrioridade").text($(this).val());
+      });
+    });
+
+    let metas = [];
+    let historicoMetas = [];
+
+    $("#metaForm").submit(function (e) {
+      e.preventDefault();
+      adicionarMeta();
+    });
+
+    function adicionarMeta() {
+      const nomeMeta = $("#nome_meta").val();
+      const prioridade = parseInt($("#prioridade").val());
+      const realizado = parseFloat($("#realizado").val());
+      const metaPlanejada = parseFloat($("#meta").val());
+
+      if (
+        !nomeMeta ||
+        isNaN(prioridade) ||
+        isNaN(realizado) ||
+        isNaN(metaPlanejada)
+      ) {
+        M.toast({
+          html: "Por favor, preencha todos os campos.",
+          classes: "red",
+        });
+        return;
+      }
+
+      if (metaPlanejada === 0) {
+        M.toast({
+          html: "A meta planejada não pode ser zero.",
+          classes: "red",
+        });
+        return;
+      }
+
+      const novaMeta = {
+        id: Date.now(),
+        nome: nomeMeta,
+        prioridade: prioridade,
+        realizado: realizado,
+        meta: metaPlanejada,
+      };
+
+      metas.push(novaMeta);
+      historicoMetas.push({
+        ...novaMeta,
+        data: new Date().toLocaleString(),
+      });
+
+      atualizarUI();
+      $("#metaForm")[0].reset();
+      $("#valorPrioridade").text("2");
+    }
+
+    function atualizarUI() {
+      const listaMetas = $("#metasList");
+      listaMetas.empty();
+
+      metas.forEach((meta) => {
+        const li = $(`
+          <li class="collection-item avatar">
+            <i class="material-icons circle blue">assignment</i>
+            <span class="title">${meta.nome}</span>
+            <p>
+              Realizado: ${meta.realizado} / Meta: ${meta.meta} <br />
+              Prioridade:
+              <span class="priority-badge ${
+                meta.prioridade === 1
+                  ? "priority-high"
+                  : meta.prioridade === 2
+                  ? "priority-medium"
+                  : "priority-low"
+              }">
+                ${
+                  meta.prioridade === 1
+                    ? "Alta"
+                    : meta.prioridade === 2
+                    ? "Média"
+                    : "Baixa"
+                }
+              </span>
+            </p>
+          </li>
+        `);
+        listaMetas.append(li);
+      });
+
+      calcularDesempenho();
+      atualizarHistorico();
+    }
+
+    function calcularDesempenho() {
+      const totalPeso = metas.reduce((total, meta) => total + meta.meta, 0);
+      const totalRealizado = metas.reduce(
+        (total, meta) => total + meta.realizado,
+        0
+      );
+      const desempenhoTotal =
+        totalPeso > 0 ? (totalRealizado / totalPeso) * 100 : 0;
+
+      $("#desempenhoTotalValue").text(`${desempenhoTotal.toFixed(2)}%`);
+
+      const desempenhoMetasTable = $("#desempenhoMetasTable tbody");
+      desempenhoMetasTable.empty();
+
+      metas.forEach((meta) => {
+        const desempenhoMeta = (meta.realizado / meta.meta) * 100;
+        desempenhoMetasTable.append(`
+          <tr>
+            <td>${meta.nome}</td>
+            <td>${desempenhoMeta.toFixed(2)}%</td>
+          </tr>
+        `);
+      });
+    }
+
+    function atualizarHistorico() {
+      const historicoTable = $("#historicoMetasTable tbody");
+      historicoTable.empty();
+
+      historicoMetas.forEach((meta) => {
+        historicoTable.append(`
+          <tr>
+            <td>${meta.nome}</td>
+            <td>${meta.prioridade}</td>
+            <td>${meta.realizado}</td>
+            <td>${meta.meta}</td>
+            <td>${meta.data}</td>
+          </tr>
+        `);
+      });
+    }
+  </script>
+</body>
+
+</html>

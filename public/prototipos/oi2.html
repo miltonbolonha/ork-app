@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Algoritmo Bolonha</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        padding: 20px;
+      }
+      h1 {
+        color: #4a90e2;
+      }
+      label {
+        display: inline-block;
+        width: 150px;
+        margin-bottom: 10px;
+      }
+      input {
+        padding: 5px;
+        margin-bottom: 10px;
+      }
+      button {
+        background-color: #4a90e2;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+      button:hover {
+        background-color: #357abd;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      li {
+        background-color: #eef;
+        margin-bottom: 5px;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .progress-bar {
+        width: 100%;
+        background-color: #ddd;
+        border-radius: 5px;
+        margin-top: 20px;
+        height: 25px;
+      }
+      .progress {
+        height: 100%;
+        background-color: #4caf50;
+        text-align: center;
+        line-height: 25px;
+        color: white;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Algoritmo de Bolonha - Cálculo de Desempenho Ponderado</h1>
+
+    <!-- Formulário para inserção de metas -->
+    <div>
+      <h3>Adicionar Metas</h3>
+      <label>Peso:</label>
+      <input type="number" id="peso" placeholder="Peso" required />
+      <br />
+      <label>Realizado:</label>
+      <input type="number" id="realizado" placeholder="Realizado" required />
+      <br />
+      <label>Meta Planejada:</label>
+      <input type="number" id="meta" placeholder="Meta Planejada" required />
+      <br />
+      <button onclick="adicionarMeta()">Adicionar Meta</button>
+    </div>
+
+    <h3>Metas</h3>
+    <ul id="metasList"></ul>
+
+    <h3>Resultado</h3>
+    <div id="resultado"></div>
+    <div id="detalhesResultado"></div>
+
+    <!-- Barra de progresso para o desempenho total -->
+    <div class="progress-bar">
+      <div class="progress" id="progressBar">0%</div>
+    </div>
+
+    <script type="text/javascript">
+      let metas = [];
+
+      function adicionarMeta() {
+        const peso = parseFloat(document.getElementById("peso").value);
+        const realizado = parseFloat(
+          document.getElementById("realizado").value
+        );
+        const meta = parseFloat(document.getElementById("meta").value);
+
+        if (isNaN(peso) || isNaN(realizado) || isNaN(meta)) {
+          alert("Por favor, insira valores válidos para todos os campos.");
+          return;
+        }
+
+        if (meta === 0) {
+          alert("A meta planejada não pode ser zero.");
+          return;
+        }
+
+        metas.push({ p: peso, r: realizado, m: meta });
+        atualizarListaMetas();
+        calcularDesempenho();
+      }
+
+      function atualizarListaMetas() {
+        const metasList = document.getElementById("metasList");
+        metasList.innerHTML = "";
+
+        metas.forEach(function (meta, i) {
+          const listItem = document.createElement("li");
+          listItem.textContent = `Meta ${i + 1}: Peso = ${
+            meta.p
+          }, Realizado = ${meta.r}, Meta Planejada = ${meta.m}`;
+          metasList.appendChild(listItem);
+        });
+      }
+
+      function calcularDesempenho() {
+        const pta = metas.map((meta) => meta.p);
+        const pt = pta.reduce((acc, curr) => acc + curr, 0);
+
+        function Xs(p, r, m, pt) {
+          return ((p / pt) * 100 * r) / m;
+        }
+
+        const tA = metas.map((meta) => Xs(meta.p, meta.r, meta.m, pt));
+        const t = tA.reduce((acc, curr) => acc + curr, 0);
+        const desempenhoFinal = Math.min(t, 100); // Limita o desempenho a 100%
+
+        document.getElementById(
+          "resultado"
+        ).innerHTML = `Desempenho Total: ${desempenhoFinal.toFixed(2)}%`;
+        document.getElementById(
+          "detalhesResultado"
+        ).innerHTML = `Desempenho por Meta: ${tA
+          .map((x) => x.toFixed(2))
+          .join(", ")}%`;
+
+        // Atualiza a barra de progresso
+        const progressBar = document.getElementById("progressBar");
+        progressBar.style.width = `${desempenhoFinal}%`;
+        progressBar.textContent = `${desempenhoFinal.toFixed(2)}%`;
+      }
+    </script>
+  </body>
+</html>

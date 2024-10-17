@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard de Desempenho - Brutalismo Web</title>
+    <!-- Importando CSS Reset -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/1.1.0/modern-normalize.min.css"
+    />
+    <!-- Estilos Personalizados -->
+    <style>
+      /* Estilos do Brutalismo Web */
+      body {
+        background-color: #fff;
+        color: #000;
+        font-family: "Arial Black", Gadget, sans-serif;
+        margin: 0;
+      }
+
+      header {
+        background-color: #000;
+        color: #fff;
+        text-align: center;
+        padding: 20px;
+        font-size: 32px;
+      }
+
+      .container {
+        width: 95%;
+        max-width: 1200px;
+        margin: 20px auto;
+      }
+
+      .tabs {
+        display: flex;
+        border-bottom: 2px solid #000;
+      }
+
+      .tab {
+        flex: 1;
+        text-align: center;
+        padding: 15px 0;
+        font-size: 24px;
+        cursor: pointer;
+        border: 2px solid #000;
+        border-bottom: none;
+        background-color: #f2f2f2;
+        transition: background-color 0.2s;
+      }
+
+      .tab.active {
+        background-color: #000;
+        color: #fff;
+      }
+
+      .tab:hover {
+        background-color: #000;
+        color: #fff;
+      }
+
+      .content {
+        border: 2px solid #000;
+        padding: 20px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      h2 {
+        font-size: 28px;
+        margin-top: 0;
+        border-bottom: 2px solid #000;
+        padding-bottom: 10px;
+      }
+
+      form {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        font-size: 18px;
+        margin-bottom: 5px;
+      }
+
+      input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 18px;
+        border: 2px solid #000;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        background-color: #fff;
+      }
+
+      button,
+      .window-button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 18px;
+        background-color: #000;
+        color: #fff;
+        border: 2px solid #000;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      button:hover,
+      .window-button:hover {
+        background-color: #fff;
+        color: #000;
+      }
+
+      .meta-list {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .meta-item {
+        border: 2px solid #000;
+        margin-bottom: 10px;
+        background-color: #f2f2f2;
+        position: relative;
+      }
+
+      .meta-header {
+        background-color: #ccc;
+        padding: 5px;
+        border-bottom: 2px solid #000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .meta-header .title {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .window-controls {
+        display: flex;
+      }
+
+      .window-button {
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        margin-left: 5px;
+        line-height: 16px;
+        text-align: center;
+        font-size: 16px;
+      }
+
+      .meta-content {
+        padding: 10px;
+      }
+
+      .minimized .meta-content {
+        display: none;
+      }
+
+      .chart-container {
+        width: 100%;
+        height: 400px;
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      #desempenhoValue {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 48px;
+        font-weight: bold;
+      }
+
+      /* Destaque para perdas em alto peso e excessos em baixo peso */
+      .critical {
+        border-color: red;
+      }
+
+      .critical .meta-header {
+        background-color: red;
+        color: #fff;
+      }
+
+      .warning {
+        border-color: orange;
+      }
+
+      .warning .meta-header {
+        background-color: orange;
+        color: #fff;
+      }
+
+      /* Responsividade */
+      @media (min-width: 768px) {
+        .flex-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+
+        .flex-column {
+          flex: 1;
+          margin-right: 20px;
+        }
+
+        .flex-column:last-child {
+          margin-right: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>DASHBOARD DE DESEMPENHO</header>
+
+    <div class="container">
+      <!-- Abas -->
+      <div class="tabs">
+        <div class="tab active" data-tab="metas">METAS</div>
+        <div class="tab" data-tab="desempenho">DESEMPENHO</div>
+      </div>
+
+      <!-- Conteúdo das Abas -->
+      <div id="metas" class="content">
+        <div class="flex-row">
+          <!-- Formulário de Adição de Metas -->
+          <div class="flex-column">
+            <h2>Adicionar Meta</h2>
+            <form id="metaForm">
+              <label for="peso">Peso</label>
+              <input type="number" id="peso" required />
+              <label for="realizado">Realizado</label>
+              <input type="number" id="realizado" required />
+              <label for="meta">Meta Planejada</label>
+              <input type="number" id="meta" required />
+              <button type="submit">Adicionar Meta</button>
+            </form>
+          </div>
+          <!-- Lista de Metas -->
+          <div class="flex-column">
+            <h2>Metas</h2>
+            <ul id="metasList" class="meta-list"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div id="desempenho" class="content hidden">
+        <h2>Desempenho Total</h2>
+        <div class="chart-container">
+          <canvas id="desempenhoChart"></canvas>
+          <div id="desempenhoValue"></div>
+        </div>
+
+        <h2>Desempenho por Meta</h2>
+        <div class="chart-container">
+          <canvas id="metasChart"></canvas>
+        </div>
+
+        <h2>Perdas e Excessos (Dimensionados pelo Peso)</h2>
+        <div class="chart-container">
+          <canvas id="perdasExcessosChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Script -->
+    <script>
+      // Controle das Abas
+      const tabs = document.querySelectorAll(".tab");
+      const contents = document.querySelectorAll(".content");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((t) => t.classList.remove("active"));
+          contents.forEach((c) => c.classList.add("hidden"));
+
+          tab.classList.add("active");
+          document
+            .getElementById(tab.getAttribute("data-tab"))
+            .classList.remove("hidden");
+        });
+      });
+
+      // Aplicação
+      let metas = [];
+      let chartDesempenhoTotal;
+      let chartMetas;
+      let chartPerdasExcessos;
+
+      document
+        .getElementById("metaForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          adicionarMeta();
+        });
+
+      function adicionarMeta() {
+        const peso = parseFloat(document.getElementById("peso").value);
+        const realizado = parseFloat(
+          document.getElementById("realizado").value
+        );
+        const meta = parseFloat(document.getElementById("meta").value);
+
+        if (isNaN(peso) || isNaN(realizado) || isNaN(meta) || meta === 0) {
+          alert("Por favor, preencha todos os campos com valores válidos.");
+          return;
+        }
+
+        metas.push({ p: peso, r: realizado, m: meta });
+        atualizarListaMetas();
+        renderizarGraficos();
+
+        // Limpar Campos
+        document.getElementById("metaForm").reset();
+      }
+
+      function atualizarListaMetas() {
+        const metasList = document.getElementById("metasList");
+        metasList.innerHTML = "";
+
+        metas.forEach((meta, index) => {
+          const li = document.createElement("li");
+          li.className = "meta-item";
+          li.setAttribute("data-index", index);
+
+          // Identificar cenários indesejáveis
+          const desempenhoPercentual = (meta.r / meta.m) * 100;
+          const perdaExcesso = meta.r - meta.m;
+
+          if (meta.p >= pesoMedio() && perdaExcesso < 0) {
+            // Perda em meta de alto peso
+            li.classList.add("critical");
+          } else if (meta.p <= pesoMedio() && perdaExcesso > 0) {
+            // Excesso em meta de baixo peso
+            li.classList.add("warning");
+          }
+
+          li.innerHTML = `
+          <div class="meta-header">
+            <span class="title">Meta ${index + 1}</span>
+            <div class="window-controls">
+              <button class="window-button" onclick="minimizarMeta(${index})">_</button>
+              <button class="window-button" onclick="maximizarMeta(${index})">☐</button>
+              <button class="window-button" onclick="removerMeta(${index})">X</button>
+            </div>
+          </div>
+          <div class="meta-content">
+            Peso: ${meta.p}<br>
+            Realizado: ${meta.r}<br>
+            Meta Planejada: ${meta.m}<br>
+            Perda/Excesso: ${perdaExcesso}
+          </div>
+        `;
+          metasList.appendChild(li);
+        });
+      }
+
+      function removerMeta(index) {
+        metas.splice(index, 1);
+        atualizarListaMetas();
+        renderizarGraficos();
+      }
+
+      function minimizarMeta(index) {
+        const metaItem = document.querySelector(
+          `.meta-item[data-index="${index}"]`
+        );
+        metaItem.classList.toggle("minimized");
+      }
+
+      function maximizarMeta(index) {
+        const metaItem = document.querySelector(
+          `.meta-item[data-index="${index}"]`
+        );
+        metaItem.classList.remove("minimized");
+      }
+
+      function pesoMedio() {
+        if (metas.length === 0) return 0;
+        const totalPeso = metas.reduce((acc, meta) => acc + meta.p, 0);
+        return totalPeso / metas.length;
+      }
+
+      function calcularDesempenho() {
+        if (metas.length === 0) return 0;
+
+        const totalPeso = metas.reduce((acc, meta) => acc + meta.p, 0);
+        let desempenhoTotal = 0;
+
+        metas.forEach((meta) => {
+          const desempenhoMeta = Math.min((meta.r / meta.m) * 100, 100);
+          desempenhoTotal += desempenhoMeta * (meta.p / totalPeso);
+        });
+
+        return Number(desempenhoTotal.toFixed(2));
+      }
+
+      function calcularDesempenhoPorMeta() {
+        return metas.map((meta) => {
+          const desempenhoPercentual = Math.min((meta.r / meta.m) * 100, 100);
+          return Number(desempenhoPercentual.toFixed(2));
+        });
+      }
+
+      function calcularPerdasExcessosPorMeta() {
+        return metas.map((meta) => {
+          return Number((meta.r - meta.m).toFixed(2));
+        });
+      }
+
+      function calcularPesos() {
+        return metas.map((meta) => meta.p);
+      }
+
+      function renderizarGraficos() {
+        renderizarGraficoDesempenhoTotal();
+        renderizarGraficoDesempenhoMetas();
+        renderizarGraficoPerdasExcessos();
+      }
+
+      function renderizarGraficoDesempenhoTotal() {
+        const ctx = document.getElementById("desempenhoChart");
+        const desempenhoFinal = calcularDesempenho();
+
+        if (chartDesempenhoTotal) {
+          chartDesempenhoTotal.destroy();
+        }
+
+        chartDesempenhoTotal = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: ["Desempenho Total", "Faltante"],
+            datasets: [
+              {
+                data: [desempenhoFinal, 100 - desempenhoFinal],
+                backgroundColor: ["#000", "#ccc"],
+                borderWidth: 2,
+                borderColor: "#000",
+              },
+            ],
+          },
+          options: {
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+          },
+        });
+
+        // Exibir o desempenho no centro do gráfico
+        const desempenhoValue = document.getElementById("desempenhoValue");
+        desempenhoValue.textContent = `${desempenhoFinal}%`;
+      }
+
+      function renderizarGraficoDesempenhoMetas() {
+        const ctx = document.getElementById("metasChart");
+        const desempenhoMetas = calcularDesempenhoPorMeta();
+        const labels = metas.map((_, index) => `Meta ${index + 1}`);
+
+        if (chartMetas) {
+          chartMetas.destroy();
+        }
+
+        chartMetas = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Desempenho (%)",
+                data: desempenhoMetas,
+                backgroundColor: "#000",
+                borderWidth: 2,
+                borderColor: "#000",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+          },
+        });
+      }
+
+      function renderizarGraficoPerdasExcessos() {
+        const ctx = document.getElementById("perdasExcessosChart");
+        const perdasExcessos = calcularPerdasExcessosPorMeta();
+        const pesos = calcularPesos();
+        const labels = metas.map((_, index) => `Meta ${index + 1}`);
+
+        if (chartPerdasExcessos) {
+          chartPerdasExcessos.destroy();
+        }
+
+        // Identificar cenários indesejáveis e definir cores
+        const backgroundColors = perdasExcessos.map((valor, index) => {
+          const pesoMedioValor = pesoMedio();
+          if (pesos[index] >= pesoMedioValor && valor < 0) {
+            // Perda em meta de alto peso
+            return "red";
+          } else if (pesos[index] <= pesoMedioValor && valor > 0) {
+            // Excesso em meta de baixo peso
+            return "orange";
+          } else {
+            // Outros casos
+            return valor >= 0 ? "#090" : "#900";
+          }
+        });
+
+        chartPerdasExcessos = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Perdas e Excessos (Dimensionados pelo Peso)",
+                data: perdasExcessos,
+                backgroundColor: backgroundColors,
+                borderWidth: 2,
+                borderColor: "#000",
+                barPercentage: 1,
+                categoryPercentage: 1,
+                // Dimensionar as barras pelo peso
+                weight: pesos,
+              },
+            ],
+          },
+          options: {
+            indexAxis: "y",
+            scales: {
+              x: {
+                beginAtZero: true,
+              },
+              y: {
+                stacked: true,
+                ticks: {
+                  autoSkip: false,
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    return `Perda/Excesso: ${context.parsed.x}, Peso: ${
+                      pesos[context.dataIndex]
+                    }`;
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+
+      // Inicializar gráficos vazios
+      renderizarGraficos();
+    </script>
+  </body>
+</html>

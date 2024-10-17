@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>App de Desempenho Aprimorado</title>
+    <!-- Importando Google Fontes -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Importando Materialize CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+
+    <!-- Estilos Personalizados -->
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: #f9fbfd;
+      }
+
+      nav {
+        background-color: #2196f3;
+      }
+
+      .nav-wrapper .brand-logo {
+        font-weight: bold;
+      }
+
+      .tabs .tab a {
+        color: #2196f3;
+      }
+
+      .tabs .tab a.active {
+        color: #2196f3;
+      }
+
+      .tabs .indicator {
+        background-color: #2196f3;
+      }
+
+      .card {
+        margin-top: 20px;
+        border-radius: 10px;
+      }
+
+      .card .card-content {
+        padding: 20px;
+      }
+
+      .card .card-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #424242;
+      }
+
+      .input-field input[type="number"],
+      .input-field input[type="text"],
+      .input-field select {
+        color: #424242;
+      }
+
+      .input-field label {
+        color: #757575;
+      }
+
+      .input-field input:focus + label,
+      .input-field select:focus + label {
+        color: #2196f3 !important;
+      }
+
+      .input-field input:focus,
+      .input-field select:focus {
+        border-bottom: 1px solid #2196f3 !important;
+        box-shadow: 0 1px 0 0 #2196f3 !important;
+      }
+
+      .btn {
+        background-color: #2196f3;
+      }
+
+      .btn:hover {
+        background-color: #1976d2;
+      }
+
+      .collection .collection-item .title {
+        font-weight: bold;
+        color: #2196f3;
+      }
+
+      .team-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 12px;
+        color: #fff;
+        background-color: #00796b;
+        font-size: 12px;
+        margin-left: 10px;
+      }
+
+      /* Estilos para tabelas */
+      table.striped th,
+      table.striped td {
+        padding: 15px;
+        font-size: 14px;
+      }
+
+      table.striped th {
+        background-color: #e3f2fd;
+        color: #000;
+      }
+
+      table.striped {
+        margin-bottom: 30px;
+      }
+
+      /* Ajustes para responsividade */
+      @media screen and (max-width: 600px) {
+        .tabs .tab {
+          width: 25%;
+        }
+      }
+
+      /* Coloração suave e elegante */
+      .light-background {
+        background-color: #ffffff;
+      }
+
+      .priority-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 12px;
+        margin-left: 10px;
+      }
+
+      .priority-high {
+        background-color: #e53935;
+      }
+
+      .priority-medium {
+        background-color: #fb8c00;
+      }
+
+      .priority-low {
+        background-color: #43a047;
+      }
+
+      .status-icon {
+        vertical-align: middle;
+      }
+
+      .table-title {
+        font-weight: bold;
+        font-size: 18px;
+        margin: 20px 0 10px;
+      }
+
+      /* Estilo para hierarquia de metas */
+      .meta-item {
+        margin-left: 20px;
+      }
+
+      .icon-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        margin-left: 5px;
+      }
+
+      .icon-button i {
+        font-size: 18px;
+      }
+
+      .icon-button:hover i {
+        color: #e53935;
+      }
+
+      .waiting {
+        opacity: 0.5;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav>
+      <div class="nav-wrapper">
+        <a href="#" class="brand-logo center">App de Desempenho</a>
+      </div>
+    </nav>
+    <!-- Conteúdo Principal -->
+    <div class="container">
+      <!-- Abas -->
+      <!-- Abas -->
+      <div class="row">
+        <div class="col s12">
+          <ul class="tabs tabs-fixed-width">
+            <li class="tab col s3">
+              <a class="active" href="#metas">Metas</a>
+            </li>
+            <li class="tab col s3"><a href="#desempenho">Desempenho</a></li>
+            <li class="tab col s3"><a href="#modelos">Modelos</a></li>
+            <li class="tab col s3"><a href="#equipes">Equipes</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Aba Metas -->
+      <div id="metas" class="col s12">
+        <div class="row">
+          <!-- Formulário de Adição de Metas -->
+          <div class="col s12 m6">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title">Adicionar Meta</span>
+                <div class="row">
+                  <form id="metaForm" class="col s12">
+                    <div class="row">
+                      <div class="input-field col s12">
+                        <input id="nome_meta" type="text" required />
+                        <label for="nome_meta">Nome da Meta</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <select id="equipesMeta" required>
+                          <option value="" disabled selected>
+                            Selecione a Equipe
+                          </option>
+                          <!-- Equipes serão adicionadas dinamicamente -->
+                        </select>
+                        <label for="equipesMeta">Equipe</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <select id="prioridade" required>
+                          <option value="" disabled selected>
+                            Selecione a Prioridade
+                          </option>
+                          <option value="3">Alta</option>
+                          <option value="2">Média</option>
+                          <option value="1">Baixa</option>
+                        </select>
+                        <label for="prioridade">Prioridade</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <input id="realizado" type="number" required />
+                        <label for="realizado">Realizado</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <input id="meta" type="number" required />
+                        <label for="meta">Meta Planejada</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <select id="metaPai">
+                          <option value="" disabled selected>
+                            Selecione uma Meta Pai (opcional)
+                          </option>
+                          <!-- Opções adicionadas dinamicamente -->
+                        </select>
+                        <label for="metaPai">Meta Pai</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <select id="metaDependente">
+                          <option value="" disabled selected>
+                            Selecione uma Meta Dependente (opcional)
+                          </option>
+                          <!-- Opções adicionadas dinamicamente -->
+                        </select>
+                        <label for="metaDependente">Meta Dependente</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <select id="tipoMeta" required>
+                          <option value="" disabled selected>
+                            Selecione o Tipo
+                          </option>
+                          <option value="now">Now (Agora)</option>
+                          <option value="scheduled">
+                            Scheduled (Agendada)
+                          </option>
+                        </select>
+                        <label for="tipoMeta">Tipo de Meta</label>
+                      </div>
+                    </div>
+                    <button class="btn waves-effect waves-light" type="submit">
+                      Adicionar Meta
+                    </button>
+                  </form>
+                  <!-- Botões adicionais -->
+                  <div class="col s12" style="margin-top: 20px">
+                    <button
+                      class="btn waves-effect waves-light"
+                      onclick="abrirModalModelos()"
+                    >
+                      Usar Modelo de Meta
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Lista de Metas -->
+          <div class="col s12 m6">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title">Metas por Equipe</span>
+                <ul class="collapsible" id="equipesMetasList">
+                  <!-- Equipes e metas listadas dinamicamente -->
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aba Desempenho -->
+      <div id="desempenho" class="col s12">
+        <div class="row">
+          <!-- Desempenho Total -->
+          <div class="col s12">
+            <div class="card white light-background">
+              <div class="card-content center-align">
+                <span class="card-title">Desempenho Total</span>
+                <h4 id="desempenhoTotalValue">0%</h4>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desempenho por Meta -->
+          <div class="col s12">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title">Desempenho por Meta</span>
+                <table class="striped" id="desempenhoMetasTable">
+                  <thead>
+                    <tr>
+                      <th>Meta</th>
+                      <th>Desempenho (%)</th>
+                      <th>Conclusão</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Dados inseridos dinamicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Perdas e Excessos -->
+          <div class="col s12">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title">Perdas e Excessos</span>
+                <table class="striped" id="perdasExcessosTable">
+                  <thead>
+                    <tr>
+                      <th>Meta</th>
+                      <th>Perda/Excesso</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Dados inseridos dinamicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aba Modelos de Meta -->
+      <div id="modelos" class="col s12">
+        <div class="row">
+          <!-- Modelos de Meta -->
+          <div class="col s12">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title">Modelos de Meta</span>
+                <button
+                  class="btn waves-effect waves-light"
+                  onclick="abrirModalNovoModelo()"
+                >
+                  Criar Novo Modelo
+                </button>
+                <ul class="collection" id="listaModelos">
+                  <!-- Modelos de meta serão listados aqui -->
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aba Equipes -->
+      <div id="equipes" class="col s12">
+        <div class="row">
+          <!-- Equipes -->
+          <div class="col s12">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title">Equipes</span>
+                <button
+                  class="btn waves-effect waves-light"
+                  onclick="abrirModalNovaEquipe()"
+                >
+                  Criar Nova Equipe
+                </button>
+                <ul class="collection" id="listaEquipes">
+                  <!-- Equipes serão listadas aqui -->
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modais -->
+    <!-- Modal para Adicionar Lote de Metas -->
+    <div id="modalBatch" class="modal">
+      <div class="modal-content">
+        <h4>Adicionar Lote de Metas</h4>
+        <div class="row">
+          <form id="batchForm" class="col s12">
+            <div id="batchContainer">
+              <!-- Campos para metas em lote serão adicionados aqui -->
+            </div>
+            <button
+              class="btn waves-effect waves-light"
+              type="button"
+              onclick="adicionarCampoLote()"
+            >
+              <i class="material-icons left">add</i>Adicionar Meta
+            </button>
+            <button class="btn waves-effect waves-light" type="submit">
+              Adicionar Metas ao Lote
+              <i class="material-icons right">send</i>
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat"
+          >Fechar</a
+        >
+      </div>
+    </div>
+
+    <!-- Modal para Novo Modelo de Meta -->
+    <div id="modalNovoModelo" class="modal">
+      <div class="modal-content">
+        <h4>Criar Novo Modelo de Meta</h4>
+        <div class="row">
+          <form id="modeloForm" class="col s12">
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="nome_modelo" type="text" required />
+                <label for="nome_modelo">Nome do Modelo</label>
+              </div>
+              <div class="input-field col s12">
+                <select id="prioridade_modelo" required>
+                  <option value="" disabled selected>
+                    Selecione a Prioridade
+                  </option>
+                  <option value="3">Alta</option>
+                  <option value="2">Média</option>
+                  <option value="1">Baixa</option>
+                </select>
+                <label for="prioridade_modelo">Prioridade</label>
+              </div>
+              <div class="input-field col s12">
+                <input id="realizado_modelo" type="number" required />
+                <label for="realizado_modelo">Realizado</label>
+              </div>
+              <div class="input-field col s12">
+                <input id="meta_modelo" type="number" required />
+                <label for="meta_modelo">Meta Planejada</label>
+              </div>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">
+              Criar Modelo
+              <i class="material-icons right">save</i>
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat"
+          >Fechar</a
+        >
+      </div>
+    </div>
+
+    <!-- Importando Materialize JS e jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Seu Script -->
+    <script>
+      $(document).ready(function () {
+        $(".tabs").tabs();
+        $("select").formSelect();
+        $(".collapsible").collapsible();
+        $(".modal").modal();
+      });
+
+      let metas = [];
+      let historicoMetas = [];
+      let modelosMetas = [];
+      let equipes = [];
+
+      // Carregar modelos de metas, equipes e histórico do localStorage
+      if (localStorage.getItem("modelosMetas")) {
+        modelosMetas = JSON.parse(localStorage.getItem("modelosMetas"));
+      }
+
+      if (localStorage.getItem("historicoMetas")) {
+        historicoMetas = JSON.parse(localStorage.getItem("historicoMetas"));
+        atualizarHistoricoMetas();
+      }
+
+      if (localStorage.getItem("equipes")) {
+        equipes = JSON.parse(localStorage.getItem("equipes"));
+        atualizarListaEquipes();
+        atualizarSelectEquipes();
+      }
+
+      atualizarListaModelos();
+
+      // Função encontrarMetaPorId
+      function encontrarMetaPorId(id, lista) {
+        for (const meta of lista) {
+          if (meta.id === id) {
+            return meta;
+          } else if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+            const encontrada = encontrarMetaPorId(id, meta.metasFilhas);
+            if (encontrada) return encontrada;
+          }
+        }
+        return null;
+      }
+
+      // Manipulação do formulário de equipes
+      $("#equipeForm").submit(function (e) {
+        e.preventDefault();
+        const nomeEquipe = $("#nome_equipe").val();
+        if (!nomeEquipe) {
+          M.toast({
+            html: "Por favor, insira o nome da equipe.",
+            classes: "red",
+          });
+          return;
+        }
+        const novaEquipe = {
+          id: Date.now(),
+          nome: nomeEquipe,
+          metas: [],
+        };
+        equipes.push(novaEquipe);
+        localStorage.setItem("equipes", JSON.stringify(equipes));
+        atualizarListaEquipes();
+        atualizarSelectEquipes();
+        M.toast({ html: "Equipe criada com sucesso!", classes: "green" });
+        $("#equipeForm")[0].reset();
+        $("#modalNovaEquipe").modal("close");
+      });
+
+      function atualizarListaEquipes() {
+        $("#listaEquipes").empty();
+        equipes.forEach((equipe) => {
+          const listItem = $(`
+          <li class="collection-item">
+            ${equipe.nome}
+          </li>
+        `);
+          $("#listaEquipes").append(listItem);
+        });
+      }
+
+      function atualizarSelectEquipes() {
+        $("#equipesMeta").empty();
+        $("#equipesMeta").append(
+          '<option value="" disabled selected>Selecione a Equipe</option>'
+        );
+        equipes.forEach((equipe) => {
+          $("#equipesMeta").append(
+            `<option value="${equipe.id}">${equipe.nome}</option>`
+          );
+        });
+        $("#equipesMeta").formSelect();
+      }
+
+      function abrirModalNovaEquipe() {
+        $("#modalNovaEquipe").modal("open");
+      }
+
+      // Manipulação do formulário de metas
+      $("#metaForm").submit(function (e) {
+        e.preventDefault();
+        adicionarMeta();
+      });
+
+      function adicionarMeta(metaObj) {
+        let nomeMeta,
+          prioridade,
+          realizado,
+          metaPlanejada,
+          metaPaiId,
+          metaDependenteId,
+          tipoMeta,
+          equipeId;
+
+        if (metaObj) {
+          // Dados vindos de um modelo
+          nomeMeta = metaObj.nome;
+          prioridade = metaObj.prioridade;
+          realizado = metaObj.realizado;
+          metaPlanejada = metaObj.planejado;
+          metaPaiId = metaObj.metaPaiId || null;
+          metaDependenteId = metaObj.metaDependenteId || null;
+          tipoMeta = metaObj.tipo || "now";
+          equipeId = metaObj.equipeId || null;
+        } else {
+          // Dados vindos do formulário
+          nomeMeta = $("#nome_meta").val();
+          prioridade = parseInt($("#prioridade").val());
+          realizado = parseFloat($("#realizado").val());
+          metaPlanejada = parseFloat($("#meta").val());
+          metaPaiId = $("#metaPai").val();
+          metaDependenteId = $("#metaDependente").val();
+          tipoMeta = $("#tipoMeta").val();
+          equipeId = $("#equipesMeta").val();
+        }
+
+        if (
+          !nomeMeta ||
+          isNaN(prioridade) ||
+          isNaN(realizado) ||
+          isNaN(metaPlanejada) ||
+          !tipoMeta ||
+          !equipeId
+        ) {
+          M.toast({
+            html: "Por favor, preencha todos os campos.",
+            classes: "red",
+          });
+          return;
+        }
+
+        if (metaPlanejada === 0) {
+          M.toast({
+            html: "A meta planejada não pode ser zero.",
+            classes: "red",
+          });
+          return;
+        }
+
+        const novaMeta = {
+          id: Date.now() + Math.floor(Math.random() * 1000), // Garantir ID único
+          nome: nomeMeta,
+          prioridade: prioridade,
+          realizado: realizado,
+          planejado: metaPlanejada,
+          metaPaiId: metaPaiId ? parseInt(metaPaiId) : null,
+          metaDependenteId: metaDependenteId
+            ? parseInt(metaDependenteId)
+            : null,
+          metasFilhas: [],
+          status: "Ativa", // Status pode ser 'Ativa', 'Concluída' ou 'Aguardando'
+          tipo: tipoMeta,
+          equipeId: parseInt(equipeId),
+        };
+
+        // Determinar status com base na dependência
+        if (novaMeta.metaDependenteId) {
+          const metaDependente = encontrarMetaPorId(
+            novaMeta.metaDependenteId,
+            metas
+          );
+          if (metaDependente && metaDependente.status !== "Concluída") {
+            novaMeta.status = "Aguardando";
+          }
+        }
+
+        // Adicionar a meta na equipe
+        const equipe = equipes.find((e) => e.id === parseInt(equipeId));
+        if (!equipe) {
+          M.toast({ html: "Equipe não encontrada.", classes: "red" });
+          return;
+        }
+
+        // Adicionar como filha na meta pai, se aplicável
+        if (novaMeta.metaPaiId) {
+          const metaPai = encontrarMetaPorId(novaMeta.metaPaiId, equipe.metas);
+          if (metaPai) {
+            metaPai.metasFilhas.push(novaMeta);
+          } else {
+            M.toast({
+              html: "Meta Pai não encontrada na equipe selecionada.",
+              classes: "red",
+            });
+            return;
+          }
+        } else {
+          equipe.metas.push(novaMeta);
+        }
+
+        atualizarTudo();
+
+        // Limpar campos se for do formulário
+        if (!metaObj) {
+          $("#metaForm")[0].reset();
+          $("select").formSelect();
+        }
+
+        // Notificações inteligentes
+        const desempenhoIndividual = calcularDesempenhoIndividual(novaMeta);
+        if (desempenhoIndividual < 50) {
+          M.toast({
+            html: `Atenção! O desempenho da meta "${nomeMeta}" está abaixo de 50%.`,
+            classes: "orange",
+          });
+        }
+      }
+
+      function atualizarTudo() {
+        atualizarStatusMetas();
+        atualizarListaMetas();
+        atualizarSelects();
+        atualizarDesempenho();
+        atualizarDesempenhoMetas();
+        atualizarPerdasExcessos();
+        atualizarHistoricoMetas();
+      }
+
+      function atualizarListaMetas() {
+        $("#equipesMetasList").empty();
+        equipes.forEach((equipe) => {
+          // Só mostrar equipes que têm metas
+          if (equipe.metas && equipe.metas.length > 0) {
+            const equipeItem = $(`
+            <li>
+              <div class="collapsible-header">
+                <i class="material-icons">people</i>
+                ${equipe.nome}
+              </div>
+              <div class="collapsible-body">
+                <ul class="collapsible">
+                  <!-- Metas da equipe serão adicionadas aqui -->
+                </ul>
+              </div>
+            </li>
+          `);
+            const metasList = equipeItem.find(
+              ".collapsible-body > .collapsible"
+            );
+            equipe.metas.forEach((meta) => {
+              adicionarMetaNaLista(meta, metasList);
+            });
+            $("#equipesMetasList").append(equipeItem);
+          }
+        });
+
+        // Inicializar o collapsible
+        $(".collapsible").collapsible();
+      }
+
+      // As demais funções (adicionarMetaNaLista, atualizarStatusMetas, calcularDesempenhoTotal, etc.) precisam ser adaptadas para trabalhar com as metas dentro das equipes.
+
+      // Modifique a função encontrarMetaPorId para incluir o parâmetro 'lista'
+      function encontrarMetaPorId(id, lista) {
+        for (const meta of lista) {
+          if (meta.id === id) {
+            return meta;
+          } else if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+            const encontrada = encontrarMetaPorId(id, meta.metasFilhas);
+            if (encontrada) return encontrada;
+          }
+        }
+        return null;
+      }
+
+      // Modificar as funções de cálculo e exibição para percorrer as metas em equipes
+
+      function atualizarStatusMetas() {
+        equipes.forEach((equipe) => {
+          equipe.metas.forEach((meta) => {
+            atualizarStatusMeta(meta);
+          });
+        });
+      }
+
+      function atualizarStatusMeta(meta) {
+        if (meta.metaDependenteId) {
+          const metaDependente = encontrarMetaPorId(
+            meta.metaDependenteId,
+            equipes.flatMap((e) => e.metas)
+          );
+          if (metaDependente && metaDependente.status !== "Concluída") {
+            meta.status = "Aguardando";
+          } else {
+            meta.status = "Ativa";
+          }
+        }
+        if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+          meta.metasFilhas.forEach((metaFilha) => {
+            atualizarStatusMeta(metaFilha);
+          });
+        }
+      }
+
+      function adicionarMetaNaLista(meta, lista) {
+        // Código semelhante ao anterior, adaptado para trabalhar com as metas dentro das equipes
+        // Use os emojis ou entidades HTML conforme solicitado
+        const prioridadeTexto = obterTextoPrioridade(meta.prioridade);
+        const prioridadeClasse = obterClassePrioridade(meta.prioridade);
+
+        const itemClasse = meta.status === "Aguardando" ? "waiting" : "";
+
+        let realizadoExibido = meta.realizado;
+        let planejadoExibido = meta.planejado;
+        if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+          const indicadores = calcularIndicadoresMetaPai(meta);
+          realizadoExibido = indicadores.realizado;
+          planejadoExibido = indicadores.planejado;
+        }
+
+        const emojiTipo = meta.tipo === "now" ? "⚡" : "⏳";
+
+        const listItem = $(`
+        <li class="${itemClasse}">
+          <div class="collapsible-header">
+            ${emojiTipo} ${meta.nome}
+            <span class="priority-badge ${prioridadeClasse}">${prioridadeTexto}</span>
+            <button class="icon-button right" onclick="removerMeta(${meta.id})">
+              <i class="material-icons red-text">delete</i>
+            </button>
+          </div>
+          <div class="collapsible-body">
+            <p>Realizado: ${realizadoExibido}</p>
+            <p>Planejado: ${planejadoExibido}</p>
+            <p>Perda/Excesso: ${(realizadoExibido - planejadoExibido).toFixed(
+              2
+            )}</p>
+            <p>Status: ${meta.status}</p>
+          </div>
+        </li>
+      `);
+        lista.append(listItem);
+
+        // Inicializar o item collapsible
+        $(".collapsible").collapsible();
+
+        // Adicionar metas filhas
+        if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+          const sublist = $('<ul class="collapsible"></ul>');
+          meta.metasFilhas.forEach(function (metaFilha) {
+            adicionarMetaNaLista(metaFilha, sublist);
+          });
+          listItem.find(".collapsible-body").append(sublist);
+
+          // Inicializar o sublist collapsible
+          sublist.collapsible();
+        }
+      }
+
+      function calcularDesempenhoTotal() {
+        // Calcular o desempenho total considerando todas as metas de todas as equipes
+        let totalPeso = 0;
+        let desempenhoTotal = 0;
+
+        equipes.forEach((equipe) => {
+          equipe.metas.forEach((meta) => {
+            const resultado = calcularDesempenhoMeta(meta);
+            desempenhoTotal += resultado.desempenho;
+            totalPeso += resultado.peso;
+          });
+        });
+
+        if (totalPeso === 0) return 0;
+        return Number((desempenhoTotal / totalPeso).toFixed(2));
+      }
+
+      function calcularDesempenhoMeta(meta) {
+        if (meta.status === "Aguardando") return { desempenho: 0, peso: 0 };
+
+        let desempenhoMeta =
+          Math.min((meta.realizado / meta.planejado) * 100, 100) *
+          meta.prioridade;
+        let pesoTotal = meta.prioridade;
+
+        if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+          let desempenhoFilhas = 0;
+          let pesoFilhas = 0;
+          meta.metasFilhas.forEach((metaFilha) => {
+            const resultadoFilha = calcularDesempenhoMeta(metaFilha);
+            desempenhoFilhas += resultadoFilha.desempenho;
+            pesoFilhas += resultadoFilha.peso;
+          });
+          desempenhoMeta += desempenhoFilhas;
+          pesoTotal += pesoFilhas;
+        }
+
+        return { desempenho: desempenhoMeta, peso: pesoTotal };
+      }
+
+      function atualizarDesempenhoMetas() {
+        const desempenhoMetasTableBody = $("#desempenhoMetasTable tbody");
+        desempenhoMetasTableBody.empty();
+
+        const desempenhoMetas = calcularDesempenhoPorMeta();
+
+        desempenhoMetas.forEach((item) => {
+          const row = $(`
+          <tr>
+            <td>${item.nome}</td>
+            <td>${item.desempenho}%</td>
+            <td>${item.conclusao}</td>
+          </tr>
+        `);
+          desempenhoMetasTableBody.append(row);
+        });
+      }
+
+      function calcularDesempenhoPorMeta() {
+        let desempenhoMetas = [];
+
+        function adicionarDesempenho(meta) {
+          const desempenhoIndividual = calcularDesempenhoIndividual(meta);
+          const conclusao =
+            ((meta.realizado / meta.planejado) * 100).toFixed(2) + "%";
+
+          desempenhoMetas.push({
+            nome: meta.nome,
+            desempenho: desempenhoIndividual,
+            conclusao: conclusao,
+          });
+
+          if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+            meta.metasFilhas.forEach((metaFilha) => {
+              adicionarDesempenho(metaFilha);
+            });
+          }
+        }
+
+        metas.forEach((meta) => {
+          adicionarDesempenho(meta);
+        });
+
+        return desempenhoMetas;
+      }
+
+      function atualizarPerdasExcessos() {
+        const perdasExcessosTableBody = $("#perdasExcessosTable tbody");
+        perdasExcessosTableBody.empty();
+
+        function adicionarPerdaExcesso(meta) {
+          if (meta.status === "Aguardando") return;
+
+          const diferenca = (meta.realizado - meta.planejado).toFixed(2);
+          const status = diferenca >= 0 ? "Excesso" : "Perda";
+          const colorClass = diferenca >= 0 ? "green-text" : "red-text";
+
+          const row = $(`
+          <tr>
+            <td>${meta.nome}</td>
+            <td class="${colorClass}">${status}: ${diferenca}</td>
+          </tr>
+        `);
+          perdasExcessosTableBody.append(row);
+
+          if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+            meta.metasFilhas.forEach((metaFilha) => {
+              adicionarPerdaExcesso(metaFilha);
+            });
+          }
+        }
+
+        metas.forEach((meta) => {
+          adicionarPerdaExcesso(meta);
+        });
+      }
+
+      function atualizarHistoricoMetas() {
+        const historicoTableBody = $("#historicoMetasTable tbody");
+        historicoTableBody.empty();
+
+        historicoMetas.forEach((meta) => {
+          const prioridadeTexto = obterTextoPrioridade(meta.prioridade);
+          const row = $(`
+          <tr>
+            <td>${meta.nome}</td>
+            <td>${prioridadeTexto}</td>
+            <td>${meta.realizado}</td>
+            <td>${meta.planejado}</td>
+            <td>${meta.data}</td>
+          </tr>
+        `);
+          historicoTableBody.append(row);
+        });
+      }
+
+      function baixarHistorico() {
+        const historicoJson = JSON.stringify(historicoMetas, null, 2);
+        const blob = new Blob([historicoJson], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "historico_metas.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      function importarHistorico() {
+        const fileInput = document.getElementById("importHistoricoInput");
+        const file = fileInput.files[0];
+        if (!file) {
+          M.toast({ html: "Por favor, selecione um arquivo.", classes: "red" });
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          try {
+            historicoMetas = JSON.parse(event.target.result);
+            localStorage.setItem(
+              "historicoMetas",
+              JSON.stringify(historicoMetas)
+            );
+            atualizarHistoricoMetas();
+            M.toast({
+              html: "Histórico importado com sucesso!",
+              classes: "green",
+            });
+          } catch (e) {
+            M.toast({
+              html: "Erro ao importar o arquivo. Certifique-se de que é um arquivo JSON válido.",
+              classes: "red",
+            });
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      // Funções para gerenciar modelos de metas
+      function atualizarListaModelos() {
+        $("#listaModelos").empty();
+        modelosMetas.forEach((modelo, index) => {
+          const listItem = $(`
+          <li class="collection-item">
+            <span class="title">${modelo.nome}</span>
+            <p>Prioridade: ${obterTextoPrioridade(modelo.prioridade)}<br>
+            Realizado: ${modelo.realizado}<br>
+            Planejado: ${modelo.planejado}</p>
+            <button class="btn-small" onclick="usarModelo(${index})">Usar Modelo</button>
+            <button class="btn-small red" onclick="removerModelo(${index})">Excluir</button>
+          </li>
+        `);
+          $("#listaModelos").append(listItem);
+        });
+      }
+
+      function usarModelo(index) {
+        const modelo = modelosMetas[index];
+
+        // Preencher o formulário com os dados do modelo
+        $("#nome_meta").val(modelo.nome);
+        $("#prioridade").val(modelo.prioridade);
+        $("#realizado").val(modelo.realizado);
+        $("#meta").val(modelo.planejado);
+        $("select").formSelect(); // Atualizar selects
+        M.updateTextFields(); // Atualizar labels flutuantes
+
+        M.toast({
+          html: `Modelo "${modelo.nome}" carregado no formulário.`,
+          classes: "green",
+        });
+
+        // Fechar o modal
+        $("#modalModelos").modal("close");
+      }
+
+      function removerModelo(index) {
+        modelosMetas.splice(index, 1);
+        localStorage.setItem("modelosMetas", JSON.stringify(modelosMetas));
+        atualizarListaModelos();
+        M.toast({ html: "Modelo excluído com sucesso!", classes: "green" });
+      }
+
+      // Função para abrir o Modal de Novo Modelo
+      function abrirModalNovoModelo() {
+        $("#modalNovoModelo").modal("open");
+      }
+
+      $("#modeloForm").submit(function (e) {
+        e.preventDefault();
+        const nomeModelo = $("#nome_modelo").val();
+        const prioridadeModelo = parseInt($("#prioridade_modelo").val());
+        const realizadoModelo = parseFloat($("#realizado_modelo").val());
+        const metaPlanejadaModelo = parseFloat($("#meta_modelo").val());
+
+        if (
+          !nomeModelo ||
+          isNaN(prioridadeModelo) ||
+          isNaN(realizadoModelo) ||
+          isNaN(metaPlanejadaModelo)
+        ) {
+          M.toast({
+            html: "Por favor, preencha todos os campos do modelo.",
+            classes: "red",
+          });
+          return;
+        }
+
+        const novoModelo = {
+          nome: nomeModelo,
+          prioridade: prioridadeModelo,
+          realizado: realizadoModelo,
+          planejado: metaPlanejadaModelo,
+        };
+
+        modelosMetas.push(novoModelo);
+        localStorage.setItem("modelosMetas", JSON.stringify(modelosMetas));
+        atualizarListaModelos();
+
+        M.toast({ html: "Modelo criado com sucesso!", classes: "green" });
+        $("#modeloForm")[0].reset();
+        $("select").formSelect();
+        $("#modalNovoModelo").modal("close");
+      });
+
+      // Funções para adicionar lote de metas
+      function abrirModalBatch() {
+        $("#batchContainer").empty();
+        adicionarCampoLote(); // Adicionar um campo inicialmente
+        $("#modalBatch").modal("open");
+      }
+
+      function adicionarCampoLote() {
+        const indice = $("#batchContainer .loteMeta").length;
+        const loteDiv = $(`
+        <div class="loteMeta">
+          <h6>Meta ${indice + 1}</h6>
+          <div class="input-field col s12">
+            <input type="text" class="nome_meta_lote" required>
+            <label>Nome da Meta</label>
+          </div>
+          <div class="input-field col s12">
+            <select class="prioridade_lote" required>
+              <option value="" disabled selected>Selecione a Prioridade</option>
+              <option value="3">Alta</option>
+              <option value="2">Média</option>
+              <option value="1">Baixa</option>
+            </select>
+            <label>Prioridade</label>
+          </div>
+          <div class="input-field col s12">
+            <input type="number" class="realizado_lote" required>
+            <label>Realizado</label>
+          </div>
+          <div class="input-field col s12">
+            <input type="number" class="planejado_lote" required>
+            <label>Meta Planejada</label>
+          </div>
+          <div class="divider"></div>
+        </div>
+      `);
+        $("#batchContainer").append(loteDiv);
+        $("select").formSelect();
+        M.updateTextFields();
+      }
+
+      $("#batchForm").submit(function (e) {
+        e.preventDefault();
+        const metasLote = [];
+        let erro = false;
+
+        $(".loteMeta").each(function () {
+          const nome = $(this).find(".nome_meta_lote").val();
+          const prioridade = parseInt($(this).find(".prioridade_lote").val());
+          const realizado = parseFloat($(this).find(".realizado_lote").val());
+          const planejado = parseFloat($(this).find(".planejado_lote").val());
+
+          if (
+            !nome ||
+            isNaN(prioridade) ||
+            isNaN(realizado) ||
+            isNaN(planejado)
+          ) {
+            M.toast({
+              html: "Por favor, preencha todos os campos das metas em lote.",
+              classes: "red",
+            });
+            erro = true;
+            return false; // Interrompe o loop each
+          }
+
+          metasLote.push({
+            nome: nome,
+            prioridade: prioridade,
+            realizado: realizado,
+            planejado: planejado,
+          });
+        });
+
+        if (erro) return;
+
+        metasLote.forEach((metaObj) => {
+          adicionarMeta(metaObj);
+        });
+
+        M.toast({
+          html: "Metas adicionadas em lote com sucesso!",
+          classes: "green",
+        });
+        $("#modalBatch").modal("close");
+      });
+
+      // Função para remover meta
+      function removerMeta(id) {
+        function removerRecursivo(id, lista) {
+          for (let i = 0; i < lista.length; i++) {
+            const meta = lista[i];
+            if (meta.id === id) {
+              // Verificar se outras metas dependem desta meta
+              const metasDependentes = encontrarMetasDependentes(meta.id);
+              if (metasDependentes.length > 0) {
+                M.toast({
+                  html: `Não é possível remover a meta "${meta.nome}" pois outras metas dependem dela.`,
+                  classes: "red",
+                });
+                return false;
+              }
+              // Adicionar meta removida ao histórico
+              meta.data = new Date().toLocaleString();
+              historicoMetas.push(meta);
+              localStorage.setItem(
+                "historicoMetas",
+                JSON.stringify(historicoMetas)
+              );
+
+              lista.splice(i, 1);
+              return true;
+            } else if (meta.metasFilhas && meta.metasFilhas.length > 0) {
+              if (removerRecursivo(id, meta.metasFilhas)) return true;
+            }
+          }
+          return false;
+        }
+
+        removerRecursivo(id, metas);
+
+        atualizarTudo();
+      }
+
+      function atualizarTudo() {
+        atualizarStatusMetas();
+        atualizarListaMetas();
+        atualizarSelectMetaPai();
+        atualizarSelectMetaDependente();
+        atualizarDesempenho();
+        atualizarDesempenhoMetas();
+        atualizarPerdasExcessos();
+        atualizarHistoricoMetas();
+      }
+
+      function obterTextoPrioridade(prioridade) {
+        switch (prioridade) {
+          case 3:
+            return "Alta";
+          case 2:
+            return "Média";
+          case 1:
+            return "Baixa";
+          default:
+            return "";
+        }
+      }
+
+      function obterClassePrioridade(prioridade) {
+        switch (prioridade) {
+          case 3:
+            return "priority-high";
+          case 2:
+            return "priority-medium";
+          case 1:
+            return "priority-low";
+          default:
+            return "";
+        }
+      }
+
+      // Chamar atualizarTudo após a página carregar
+      $(document).ready(function () {
+        atualizarTudo();
+      });
+    </script>
+  </body>
+</html>

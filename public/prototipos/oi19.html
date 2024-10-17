@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard de Desempenho</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(135deg, #121212 0%, #0e0e1b 100%);
+        color: #fff;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #ff0080; /* Cor de neon para o título */
+      }
+
+      .container {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px; /* Espaço entre as colunas */
+      }
+
+      .input-container,
+      .result-container {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.1); /* Fundo semi-transparente */
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 0 20px rgba(255, 0, 132, 0.5);
+      }
+
+      .progress-container {
+        margin: 20px 0;
+      }
+
+      .progressBar {
+        height: 20px;
+        background: linear-gradient(90deg, #ff0080, #00eaff);
+        color: white;
+        text-align: center;
+        line-height: 20px;
+        width: 0;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(255, 0, 132, 0.5);
+      }
+
+      .meta-card {
+        background-color: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 0 10px rgba(255, 0, 132, 0.5);
+      }
+
+      button {
+        padding: 10px 15px;
+        background-color: #ff0080; /* Cor de neon */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+        width: 100%; /* Botão ocupa toda a largura */
+        box-shadow: 0 0 10px rgba(255, 0, 132, 0.5);
+      }
+
+      button:hover {
+        background-color: #e60074; /* Tom mais escuro no hover */
+      }
+
+      input[type="number"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+      }
+
+      .influencia-container {
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px;
+      }
+
+      .influecia-metas {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .influencia-card {
+        flex: 1;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 5px;
+        margin-right: 10px;
+        box-shadow: 0 0 10px rgba(255, 0, 132, 0.5);
+      }
+
+      .meta-detalhes {
+        margin-top: 5px;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.3
+        ); /* Azul claro para diferenciar */
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Dashboard de Desempenho</h1>
+    <div class="container">
+      <div class="input-container">
+        <h2>Adicionar Meta</h2>
+        <label for="peso">Peso:</label>
+        <input type="number" id="peso" placeholder="Peso" required />
+        <br />
+        <label for="realizado">Realizado:</label>
+        <input type="number" id="realizado" placeholder="Realizado" required />
+        <br />
+        <label for="meta">Meta Planejada:</label>
+        <input type="number" id="meta" placeholder="Meta Planejada" required />
+        <br />
+        <button onclick="adicionarMeta()">Adicionar Meta</button>
+        <h2>Metas</h2>
+        <ul id="metasList"></ul>
+      </div>
+      <div class="result-container">
+        <h2>Resultado</h2>
+        <div class="progress-container">
+          <div id="progressBarTotal" class="progressBar">0%</div>
+        </div>
+        <div class="progress-container">
+          <div
+            id="progressBarPerdas"
+            class="progressBar"
+            style="background: linear-gradient(90deg, #ff4081, #ff5858)"
+          >
+            0%
+          </div>
+        </div>
+        <div id="resultado"></div>
+        <div id="detalhesResultado"></div>
+        <h2>Influência de Cada Meta</h2>
+        <div id="influenciaMetas" class="influencia-container"></div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      let metas = [];
+
+      function adicionarMeta() {
+        const peso = parseFloat(document.getElementById("peso").value);
+        const realizado = parseFloat(
+          document.getElementById("realizado").value
+        );
+        const meta = parseFloat(document.getElementById("meta").value);
+
+        if (isNaN(peso) || isNaN(realizado) || isNaN(meta)) {
+          alert("Por favor, insira valores válidos para todos os campos.");
+          return;
+        }
+
+        if (meta === 0) {
+          alert("A meta planejada não pode ser zero.");
+          return;
+        }
+
+        metas.push({ p: peso, r: realizado, m: meta });
+
+        atualizarListaMetas();
+        calcularDesempenho();
+      }
+
+      function atualizarListaMetas() {
+        const metasList = document.getElementById("metasList");
+        metasList.innerHTML = "";
+
+        metas.forEach(function (meta, i) {
+          const listItem = document.createElement("li");
+          listItem.classList.add("meta-card");
+          listItem.innerHTML = `
+            Meta ${i + 1}: 
+            <div class="meta-detalhes">Peso = ${meta.p}</div>
+            <div class="meta-detalhes" style="color: #4caf50;">Realizado = ${
+              meta.r
+            }</div>
+            <div class="meta-detalhes" style="color: #ff9800;">Meta Planejada = ${
+              meta.m
+            }</div>
+          `;
+          metasList.appendChild(listItem);
+        });
+      }
+
+      function calcularDesempenho() {
+        const totalPeso = metas.reduce((acc, meta) => acc + meta.p, 0); // Total de pesos
+        let desempenhoTotal = 0; // Desempenho total
+        let perdas = 0; // Total de perdas
+
+        // Calcular o desempenho de cada meta e somar
+        metas.forEach((meta) => {
+          const desempenhoMeta =
+            Math.min((meta.r / meta.m) * 100, 100) * (meta.p / totalPeso); // Limitar a 100% e ponderar pelo peso
+          desempenhoTotal += desempenhoMeta; // Acumula o desempenho ponderado
+          perdas += Math.max(0, meta.p - (meta.r / meta.m) * meta.p); // Perdas são o que não foi atingido
+        });
+
+        // Normaliza o desempenho total para não exceder 100%
+        const desempenhoFinal = Math.min(desempenhoTotal, 100);
+
+        // Exibir resultado
+        document.getElementById(
+          "resultado"
+        ).innerHTML = `Desempenho Total: ${desempenhoFinal.toFixed(2)}%`;
+        document.getElementById(
+          "detalhesResultado"
+        ).innerHTML = `Desempenho por Meta: ${metas
+          .map((meta, index) => {
+            const desempenhoPorMeta = Math.min((meta.r / meta.m) * 100, 100); // Limitar a 100%
+            return `Meta ${index + 1}: ${desempenhoPorMeta.toFixed(2)}%`;
+          })
+          .join(", ")}`;
+
+        // Atualiza a barra de progresso
+        const progressBarTotal = document.getElementById("progressBarTotal");
+        progressBarTotal.style.width = `${desempenhoFinal}%`;
+        progressBarTotal.innerHTML = `${desempenhoFinal.toFixed(2)}%`;
+
+        // Calcular e atualizar as perdas
+        const perdasPercent = (perdas / totalPeso) * 100; // Percentagem de perdas
+        const progressBarPerdas = document.getElementById("progressBarPerdas");
+        progressBarPerdas.style.width = `${perdasPercent}%`;
+        progressBarPerdas.innerHTML = `${perdasPercent.toFixed(2)}%`;
+
+        // Atualiza a influência de cada meta
+        atualizarInfluenciaMetas();
+      }
+
+      function atualizarInfluenciaMetas() {
+        const influenciaContainer = document.getElementById("influenciaMetas");
+        influenciaContainer.innerHTML = "";
+
+        metas.forEach((meta, index) => {
+          const card = document.createElement("div");
+          card.classList.add("influencia-card");
+          const percentualInfluencia =
+            (meta.p / metas.reduce((acc, m) => acc + m.p, 0)) * 100;
+          card.innerHTML = `Meta ${index + 1}: ${percentualInfluencia.toFixed(
+            2
+          )}%`;
+          influenciaContainer.appendChild(card);
+        });
+      }
+    </script>
+  </body>
+</html>

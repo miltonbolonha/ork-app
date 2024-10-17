@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>App de Desempenho - Simples</title>
+    <!-- Importando Google Fontes -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Importando Materialize CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+
+    <!-- Estilos Personalizados -->
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: #f4f6f8;
+      }
+
+      nav {
+        background-color: #1976d2;
+      }
+
+      .nav-wrapper .brand-logo {
+        font-weight: bold;
+      }
+
+      .tabs .tab a {
+        color: #1976d2;
+      }
+
+      .tabs .tab a.active {
+        color: #1976d2;
+      }
+
+      .tabs .indicator {
+        background-color: #1976d2;
+      }
+
+      .card {
+        margin-top: 20px;
+        border-radius: 10px;
+      }
+
+      .card .card-content {
+        padding: 20px;
+      }
+
+      .card .card-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #424242;
+      }
+
+      .input-field input[type="number"],
+      .input-field input[type="range"],
+      .input-field select {
+        color: #424242;
+      }
+
+      .input-field label {
+        color: #757575;
+      }
+
+      .btn {
+        background-color: #1976d2;
+      }
+
+      .btn:hover {
+        background-color: #1565c0;
+      }
+
+      .collection .collection-item .title {
+        font-weight: bold;
+        color: #1976d2;
+      }
+
+      /* Estilos para tabelas */
+      table.striped th,
+      table.striped td {
+        padding: 15px;
+      }
+
+      table.striped th {
+        background-color: #e3f2fd;
+        color: #000;
+      }
+
+      table.striped {
+        margin-bottom: 30px;
+      }
+
+      .light-background {
+        background-color: #ffffff;
+      }
+
+      .priority-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 12px;
+      }
+
+      .priority-high {
+        background-color: #e53935;
+      }
+
+      .priority-medium {
+        background-color: #fb8c00;
+      }
+
+      .priority-low {
+        background-color: #43a047;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav>
+      <div class="nav-wrapper">
+        <a href="#" class="brand-logo center">App de Desempenho</a>
+      </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <div class="container">
+      <!-- Abas -->
+      <div class="row">
+        <div class="col s12">
+          <ul class="tabs tabs-fixed-width">
+            <li class="tab col s6">
+              <a class="active" href="#metas">Metas</a>
+            </li>
+            <li class="tab col s6"><a href="#desempenho">Desempenho</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Aba Metas -->
+      <div id="metas" class="col s12">
+        <div class="row">
+          <!-- Formulário de Adição de Metas -->
+          <div class="col s12 m6">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title">Adicionar Meta</span>
+                <div class="row">
+                  <form id="metaForm" class="col s12">
+                    <div class="row">
+                      <div class="input-field col s12">
+                        <input id="nome_meta" type="text" required />
+                        <label for="nome_meta">Nome da Meta</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <p class="range-field">
+                          <label for="prioridade">
+                            Prioridade:
+                            <span id="valorPrioridade">2</span></label
+                          >
+                          <input
+                            type="range"
+                            id="prioridade"
+                            min="1"
+                            max="3"
+                            value="2"
+                          />
+                        </p>
+                      </div>
+                      <div class="input-field col s12">
+                        <input id="realizado" type="number" required />
+                        <label for="realizado">Realizado</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <input id="meta" type="number" required />
+                        <label for="meta">Meta Planejada</label>
+                      </div>
+                    </div>
+                    <button class="btn waves-effect waves-light" type="submit">
+                      Adicionar Meta
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Lista de Metas -->
+          <div class="col s12 m6">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title">Metas</span>
+                <ul class="collection" id="metasList">
+                  <!-- Metas listadas dinamicamente -->
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aba Desempenho -->
+      <div id="desempenho" class="col s12">
+        <div class="row">
+          <!-- Desempenho Total -->
+          <div class="col s12">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title">Desempenho Total</span>
+                <h4 id="desempenhoTotalValue">0%</h4>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desempenho por Meta -->
+          <div class="col s12">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title">Desempenho por Meta</span>
+                <table class="striped" id="desempenhoMetasTable">
+                  <thead>
+                    <tr>
+                      <th>Meta</th>
+                      <th>Desempenho (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Dados inseridos dinamicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Histórico de Metas -->
+          <div class="col s12">
+            <div class="card white light-background">
+              <div class="card-content">
+                <span class="card-title">Histórico de Metas</span>
+                <table class="striped" id="historicoMetasTable">
+                  <thead>
+                    <tr>
+                      <th>Meta</th>
+                      <th>Prioridade</th>
+                      <th>Realizado</th>
+                      <th>Meta Planejada</th>
+                      <th>Data</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Dados do histórico -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Importando Materialize JS e jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $(".tabs").tabs();
+        $("select").formSelect();
+
+        $("#prioridade").on("input change", function () {
+          $("#valorPrioridade").text($(this).val());
+        });
+      });
+
+      let metas = [];
+      let historicoMetas = [];
+
+      $("#metaForm").submit(function (e) {
+        e.preventDefault();
+        adicionarMeta();
+      });
+
+      function adicionarMeta() {
+        const nomeMeta = $("#nome_meta").val();
+        const prioridade = parseInt($("#prioridade").val());
+        const realizado = parseFloat($("#realizado").val());
+        const metaPlanejada = parseFloat($("#meta").val());
+
+        if (
+          !nomeMeta ||
+          isNaN(prioridade) ||
+          isNaN(realizado) ||
+          isNaN(metaPlanejada)
+        ) {
+          M.toast({
+            html: "Por favor, preencha todos os campos.",
+            classes: "red",
+          });
+          return;
+        }
+
+        if (metaPlanejada === 0) {
+          M.toast({
+            html: "A meta planejada não pode ser zero.",
+            classes: "red",
+          });
+          return;
+        }
+
+        const novaMeta = {
+          id: Date.now(),
+          nome: nomeMeta,
+          prioridade: prioridade,
+          realizado: realizado,
+          meta: metaPlanejada,
+        };
+
+        metas.push(novaMeta);
+        historicoMetas.push({
+          ...novaMeta,
+          data: new Date().toLocaleString(),
+        });
+
+        atualizarUI();
+        $("#metaForm")[0].reset();
+        $("#valorPrioridade").text("2");
+      }
+
+      function atualizarUI() {
+        const listaMetas = $("#metasList");
+        listaMetas.empty();
+
+        metas.forEach((meta) => {
+          const li = $(`
+            <li class="collection-item avatar">
+              <i class="material-icons circle blue">assignment</i>
+              <span class="title">${meta.nome}</span>
+              <p>
+                Realizado: ${meta.realizado} / Meta: ${meta.meta} <br />
+                Prioridade:
+                <span class="priority-badge ${
+                  meta.prioridade === 1
+                    ? "priority-high"
+                    : meta.prioridade === 2
+                    ? "priority-medium"
+                    : "priority-low"
+                }">
+                  ${
+                    meta.prioridade === 1
+                      ? "Alta"
+                      : meta.prioridade === 2
+                      ? "Média"
+                      : "Baixa"
+                  }
+                </span>
+              </p>
+            </li>
+          `);
+          listaMetas.append(li);
+        });
+
+        calcularDesempenho();
+        atualizarHistorico();
+      }
+
+      function calcularDesempenho() {
+        const totalPeso = metas.reduce((total, meta) => total + meta.meta, 0);
+        const totalRealizado = metas.reduce(
+          (total, meta) => total + meta.realizado,
+          0
+        );
+        const desempenhoTotal =
+          totalPeso > 0 ? (totalRealizado / totalPeso) * 100 : 0;
+
+        $("#desempenhoTotalValue").text(`${desempenhoTotal.toFixed(2)}%`);
+
+        const desempenhoMetasTable = $("#desempenhoMetasTable tbody");
+        desempenhoMetasTable.empty();
+
+        metas.forEach((meta) => {
+          const desempenhoMeta = (meta.realizado / meta.meta) * 100;
+          desempenhoMetasTable.append(`
+            <tr>
+              <td>${meta.nome}</td>
+              <td>${desempenhoMeta.toFixed(2)}%</td>
+            </tr>
+          `);
+        });
+      }
+
+      function atualizarHistorico() {
+        const historicoTable = $("#historicoMetasTable tbody");
+        historicoTable.empty();
+
+        historicoMetas.forEach((meta) => {
+          historicoTable.append(`
+            <tr>
+              <td>${meta.nome}</td>
+              <td>${meta.prioridade}</td>
+              <td>${meta.realizado}</td>
+              <td>${meta.meta}</td>
+              <td>${meta.data}</td>
+            </tr>
+          `);
+        });
+      }
+    </script>
+  </body>
+</html>

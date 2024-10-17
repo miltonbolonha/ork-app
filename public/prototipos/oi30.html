@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>App de Desempenho - Mobile Style</title>
+    <!-- Importando Google Fontes -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Importando Materialize CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+
+    <!-- Estilos Personalizados -->
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: #f5f5f5;
+      }
+
+      nav {
+        background-color: #2196f3;
+      }
+
+      .nav-wrapper .brand-logo {
+        font-weight: bold;
+      }
+
+      .tabs .tab a {
+        color: #2196f3;
+      }
+
+      .tabs .tab a.active {
+        color: #2196f3;
+      }
+
+      .tabs .indicator {
+        background-color: #2196f3;
+      }
+
+      .card {
+        margin-top: 20px;
+        border-radius: 10px;
+      }
+
+      .card .card-content {
+        padding: 20px;
+      }
+
+      .card .card-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #424242;
+      }
+
+      .input-field input[type="number"] {
+        color: #424242;
+      }
+
+      .input-field label {
+        color: #757575;
+      }
+
+      .input-field input[type="number"]:focus + label {
+        color: #2196f3 !important;
+      }
+
+      .input-field input[type="number"]:focus {
+        border-bottom: 1px solid #2196f3 !important;
+        box-shadow: 0 1px 0 0 #2196f3 !important;
+      }
+
+      .btn {
+        background-color: #2196f3;
+      }
+
+      .btn:hover {
+        background-color: #1e88e5;
+      }
+
+      .collection .collection-item .title {
+        font-weight: bold;
+        color: #2196f3;
+      }
+
+      /* Ajustes para tabelas */
+      table.striped th,
+      table.striped td {
+        padding: 15px;
+      }
+
+      table.striped th {
+        background-color: #e3f2fd;
+        color: #000;
+      }
+
+      table.striped {
+        margin-bottom: 30px;
+      }
+
+      /* Ajustes para responsividade */
+      @media screen and (max-width: 600px) {
+        .tabs .tab {
+          width: 50%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav>
+      <div class="nav-wrapper">
+        <a href="#" class="brand-logo center">App de Desempenho</a>
+      </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <div class="container">
+      <!-- Abas -->
+      <div class="row">
+        <div class="col s12">
+          <ul class="tabs tabs-fixed-width">
+            <li class="tab col s6">
+              <a class="active" href="#metas">Metas</a>
+            </li>
+            <li class="tab col s6"><a href="#desempenho">Desempenho</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Aba Metas -->
+      <div id="metas" class="col s12">
+        <div class="row">
+          <!-- Formulário de Adição de Metas -->
+          <div class="col s12 m6">
+            <div class="card white">
+              <div class="card-content">
+                <span class="card-title"
+                  ><i class="material-icons left">add</i>Adicionar Meta</span
+                >
+                <div class="row">
+                  <form id="metaForm" class="col s12">
+                    <div class="row">
+                      <div class="input-field col s12">
+                        <input
+                          id="peso"
+                          type="number"
+                          class="validate"
+                          required
+                        />
+                        <label for="peso">Peso</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <input
+                          id="realizado"
+                          type="number"
+                          class="validate"
+                          required
+                        />
+                        <label for="realizado">Realizado</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <input
+                          id="meta"
+                          type="number"
+                          class="validate"
+                          required
+                        />
+                        <label for="meta">Meta Planejada</label>
+                      </div>
+                    </div>
+                    <button class="btn waves-effect waves-light" type="submit">
+                      Adicionar Meta
+                      <i class="material-icons right">send</i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Lista de Metas -->
+          <div class="col s12 m6">
+            <div class="card white">
+              <div class="card-content">
+                <span class="card-title"
+                  ><i class="material-icons left">list</i>Metas</span
+                >
+                <ul class="collection" id="metasList"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aba Desempenho -->
+      <div id="desempenho" class="col s12">
+        <div class="row">
+          <!-- Desempenho Total -->
+          <div class="col s12">
+            <div class="card white">
+              <div class="card-content">
+                <span class="card-title"
+                  ><i class="material-icons left">equalizer</i>Desempenho
+                  Total</span
+                >
+                <h4 id="desempenhoTotalValue">0%</h4>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desempenho por Meta -->
+          <div class="col s12">
+            <div class="card white">
+              <div class="card-content">
+                <span class="card-title"
+                  ><i class="material-icons left">assignment</i>Desempenho por
+                  Meta</span
+                >
+                <table class="striped" id="desempenhoMetasTable">
+                  <thead>
+                    <tr>
+                      <th>Meta</th>
+                      <th>Desempenho (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Dados são inseridos dinamicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Perdas e Excessos -->
+          <div class="col s12">
+            <div class="card white">
+              <div class="card-content">
+                <span class="card-title"
+                  ><i class="material-icons left">trending_down</i>Perdas e
+                  Excessos</span
+                >
+                <table class="striped" id="perdasExcessosTable">
+                  <thead>
+                    <tr>
+                      <th>Meta</th>
+                      <th>Perda/Excesso</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Dados são inseridos dinamicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Importando Materialize JS e jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Seu Script -->
+    <script>
+      $(document).ready(function () {
+        $(".tabs").tabs();
+      });
+
+      let metas = [];
+
+      // Manipulação do formulário
+      $("#metaForm").submit(function (e) {
+        e.preventDefault();
+        adicionarMeta();
+      });
+
+      function adicionarMeta() {
+        const peso = parseFloat($("#peso").val());
+        const realizado = parseFloat($("#realizado").val());
+        const meta = parseFloat($("#meta").val());
+
+        if (isNaN(peso) || isNaN(realizado) || isNaN(meta)) {
+          M.toast({
+            html: "Por favor, insira valores válidos para todos os campos.",
+            classes: "red",
+          });
+          return;
+        }
+
+        if (meta === 0) {
+          M.toast({
+            html: "A meta planejada não pode ser zero.",
+            classes: "red",
+          });
+          return;
+        }
+
+        metas.push({ p: peso, r: realizado, m: meta });
+
+        atualizarListaMetas();
+        atualizarDesempenho();
+        atualizarDesempenhoMetas();
+        atualizarPerdasExcessos();
+
+        // Limpar campos
+        $("#metaForm")[0].reset();
+      }
+
+      function atualizarListaMetas() {
+        const metasList = $("#metasList");
+        metasList.empty();
+
+        metas.forEach(function (meta, i) {
+          const listItem = $(`
+          <li class="collection-item avatar">
+            <i class="material-icons circle blue">trending_up</i>
+            <span class="title">Meta ${i + 1}</span>
+            <p>Peso: ${meta.p}<br>
+               Realizado: ${meta.r}<br>
+               Meta Planejada: ${meta.m}
+            </p>
+            <a href="#!" class="secondary-content" onclick="removerMeta(${i})"><i class="material-icons red-text">delete</i></a>
+          </li>
+        `);
+          metasList.append(listItem);
+        });
+      }
+
+      function removerMeta(index) {
+        metas.splice(index, 1);
+        atualizarListaMetas();
+        atualizarDesempenho();
+        atualizarDesempenhoMetas();
+        atualizarPerdasExcessos();
+        M.toast({ html: "Meta removida com sucesso!", classes: "green" });
+      }
+
+      function calcularDesempenho() {
+        if (metas.length === 0) return 0;
+
+        const totalPeso = metas.reduce((acc, meta) => acc + meta.p, 0);
+        let desempenhoTotal = 0;
+
+        metas.forEach((meta) => {
+          const desempenhoMeta =
+            Math.min((meta.r / meta.m) * 100, 100) * (meta.p / totalPeso);
+          desempenhoTotal += desempenhoMeta;
+        });
+
+        return Number(desempenhoTotal.toFixed(2));
+      }
+
+      function atualizarDesempenho() {
+        const desempenhoTotal = calcularDesempenho();
+        $("#desempenhoTotalValue").text(`${desempenhoTotal}%`);
+      }
+
+      function atualizarDesempenhoMetas() {
+        const desempenhoMetasTableBody = $("#desempenhoMetasTable tbody");
+        desempenhoMetasTableBody.empty();
+
+        metas.forEach((meta, i) => {
+          const desempenhoPercentual = Math.min(
+            (meta.r / meta.m) * 100,
+            100
+          ).toFixed(2);
+          const row = $(`
+          <tr>
+            <td>Meta ${i + 1}</td>
+            <td>${desempenhoPercentual}%</td>
+          </tr>
+        `);
+          desempenhoMetasTableBody.append(row);
+        });
+      }
+
+      function atualizarPerdasExcessos() {
+        const perdasExcessosTableBody = $("#perdasExcessosTable tbody");
+        perdasExcessosTableBody.empty();
+
+        metas.forEach((meta, i) => {
+          const diferenca = (meta.r - meta.m).toFixed(2);
+          const status = diferenca >= 0 ? "Excesso" : "Perda";
+          const colorClass = diferenca >= 0 ? "green-text" : "red-text";
+          const row = $(`
+          <tr>
+            <td>Meta ${i + 1}</td>
+            <td class="${colorClass}">${status}: ${diferenca}</td>
+          </tr>
+        `);
+          perdasExcessosTableBody.append(row);
+        });
+      }
+
+      $(document).ready(function () {
+        atualizarDesempenho();
+        atualizarDesempenhoMetas();
+        atualizarPerdasExcessos();
+      });
+    </script>
+  </body>
+</html>

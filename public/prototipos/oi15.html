@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard de Desempenho</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin: 10px;
+        width: 300px;
+        text-align: center;
+      }
+
+      .input-field {
+        margin-bottom: 15px;
+      }
+
+      .input-field label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .input-field input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      #metasList {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .progressContainer {
+        margin-top: 10px;
+      }
+
+      .progressBar {
+        height: 20px;
+        border-radius: 5px;
+        color: white;
+        text-align: center;
+        line-height: 20px;
+        font-weight: bold;
+        margin: 5px 0;
+      }
+
+      #circularProgress {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background-color: #eaeaea;
+      }
+
+      #circularProgress::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background-color: #fff;
+        transform: translate(-50%, -50%);
+      }
+
+      .titulo-circular {
+        position: absolute;
+        font-size: 24px;
+        color: #333;
+      }
+
+      #resultado {
+        margin-top: 20px;
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      #detalhesResultado {
+        margin-top: 10px;
+        font-size: 16px;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Dashboard de Desempenho</h1>
+    <div class="container">
+      <div class="card">
+        <div class="input-field">
+          <label for="peso">Peso:</label>
+          <input type="number" id="peso" placeholder="Digite o peso da meta" />
+        </div>
+        <div class="input-field">
+          <label for="realizado">Realizado:</label>
+          <input
+            type="number"
+            id="realizado"
+            placeholder="Digite o valor realizado"
+          />
+        </div>
+        <div class="input-field">
+          <label for="meta">Meta Planejada:</label>
+          <input
+            type="number"
+            id="meta"
+            placeholder="Digite a meta planejada"
+          />
+        </div>
+        <button onclick="adicionarMeta()">Adicionar Meta</button>
+      </div>
+
+      <div id="resultado"></div>
+      <div id="detalhesResultado"></div>
+
+      <div id="circularProgress">
+        <div class="titulo-circular" id="circularTitle">0%</div>
+      </div>
+
+      <div class="progressContainer">
+        <h3>Influência de Cada Meta</h3>
+        <div id="influenciaMetas"></div>
+      </div>
+
+      <ul id="metasList"></ul>
+    </div>
+
+    <script type="text/javascript">
+      let metas = [];
+
+      function adicionarMeta() {
+        const peso = parseFloat(document.getElementById("peso").value);
+        const realizado = parseFloat(
+          document.getElementById("realizado").value
+        );
+        const meta = parseFloat(document.getElementById("meta").value);
+
+        if (isNaN(peso) || isNaN(realizado) || isNaN(meta)) {
+          alert("Por favor, insira valores válidos para todos os campos.");
+          return;
+        }
+
+        if (meta === 0) {
+          alert("A meta planejada não pode ser zero.");
+          return;
+        }
+
+        metas.push({ p: peso, r: realizado, m: meta });
+
+        atualizarListaMetas();
+        calcularDesempenho();
+      }
+
+      function atualizarListaMetas() {
+        const metasList = document.getElementById("metasList");
+        metasList.innerHTML = "";
+
+        metas.forEach(function (meta, i) {
+          const listItem = document.createElement("li");
+          listItem.textContent = `Meta ${i + 1}: Peso = ${
+            meta.p
+          }, Realizado = ${meta.r}, Meta Planejada = ${meta.m}`;
+          metasList.appendChild(listItem);
+        });
+      }
+
+      function calcularDesempenho() {
+        const totalPeso = metas.reduce((acc, meta) => acc + meta.p, 0); // Total de pesos
+        let desempenhoTotal = 0; // Desempenho total
+        let perdas = 0; // Total de perdas
+
+        // Calcular o desempenho de cada meta e somar
+        metas.forEach((meta) => {
+          const desempenhoMeta =
+            Math.min((meta.r / meta.m) * 100, 100) * (meta.p / totalPeso); // Limitar a 100% e ponderar pelo peso
+          desempenhoTotal += desempenhoMeta; // Acumula o desempenho ponderado
+          perdas += Math.max(0, meta.p - (meta.r / meta.m) * meta.p); // Perdas são o que não foi atingido
+        });
+
+        // Normaliza o desempenho total para não exceder 100%
+        const desempenhoFinal = Math.min(desempenhoTotal, 100);
+
+        // Exibir resultado
+        document.getElementById(
+          "resultado"
+        ).innerHTML = `Desempenho Total: ${desempenhoFinal.toFixed(2)}%`;
+        document.getElementById(
+          "detalhesResultado"
+        ).innerHTML = `Desempenho por Meta: ${metas
+          .map((meta, index) => {
+            const desempenhoPorMeta = Math.min((meta.r / meta.m) * 100, 100); // Limitar a 100%
+            return `Meta ${index + 1}: ${desempenhoPorMeta.toFixed(2)}%`;
+          })
+          .join(", ")}`;
+
+        // Atualizar a barra de progresso do desempenho total
+        document.getElementById(
+          "circularTitle"
+        ).textContent = `${desempenhoFinal.toFixed(2)}%`;
+
+        // Mostrar influência de cada meta
+        mostrarInfluenciaMetas();
+      }
+
+      function mostrarInfluenciaMetas() {
+        const influenciaMetas = document.getElementById("influenciaMetas");
+        influenciaMetas.innerHTML = "";
+
+        metas.forEach((meta, i) => {
+          const progressContainer = document.createElement("div");
+          progressContainer.classList.add("progressContainer");
+
+          const progressoMeta = Math.min((meta.r / meta.m) * 100, 100);
+          const progressBarMeta = document.createElement("div");
+          progressBarMeta.classList.add("progressBar");
+          progressBarMeta.style.width = `${progressoMeta}%`;
+          progressBarMeta.style.backgroundColor = `hsl(${
+            (meta.p / metas.length) * 100
+          }, 70%, 50%)`;
+          progressBarMeta.textContent = `Meta ${i + 1}: ${progressoMeta.toFixed(
+            2
+          )}%`;
+          progressContainer.appendChild(progressBarMeta);
+          influenciaMetas.appendChild(progressContainer);
+        });
+      }
+    </script>
+  </body>
+</html>
