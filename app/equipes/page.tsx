@@ -10,7 +10,7 @@ import { Modal } from "@/components/ui/modal";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatarMod";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+// import { cn } from "@/lib/utils";
 import {
   Table,
   TableHeader,
@@ -26,7 +26,7 @@ import {
   useOKR,
   Membro,
   Equipe,
-  Indicador,
+  // Indicador,
   ValoresMembroIndicador,
 } from "@/context/OKRContext";
 
@@ -99,7 +99,7 @@ export default function EquipesPage() {
     return valoresMembroIndicador.filter((meta) => meta.membroId === membroId);
   };
   // Lista de setores existentes
-  const setores = Array.from(new Set(equipes.map((equipe) => equipe.setor)));
+  // const setores = Array.from(new Set(equipes.map((equipe) => equipe.setor)));
 
   const openEditModal = (equipe: Equipe) => {
     setEquipeEmEdicao(equipe);

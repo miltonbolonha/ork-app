@@ -20,7 +20,7 @@ import { CardStackPlusIcon } from "@radix-ui/react-icons";
 
 import {
   Membro,
-  Indicador,
+  // Indicador,
   ValoresMembroIndicador,
 } from "@/context/OKRContext";
 

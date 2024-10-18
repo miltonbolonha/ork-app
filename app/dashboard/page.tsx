@@ -1,18 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
 
-import { Indicador, Equipe, Membro, useOKR } from "@/context/OKRContext";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+import { Indicador, useOKR } from "@/context/OKRContext";
+// import { Indicador, Equipe, Membro, useOKR } from "@/context/OKRContext";
+// import { Input } from "@/components/ui/input";
+// import { Checkbox } from "@/components/ui/checkbox";
+// import { Label } from "@/components/ui/label";
+// import {
+//   Select,
+//   SelectTrigger,
+//   SelectContent,
+//   SelectItem,
+//   SelectValue,
+// } from "@/components/ui/select";
+// import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 
 // Import Chart components dynamically to prevent hydration errors
@@ -52,40 +53,40 @@ export default function DashboardPage() {
     valoresMembroIndicador,
     calcularDesempenhoIndicador,
     calcularDesempenhoTotal,
-    adicionarIndicador,
+    // adicionarIndicador,
     membroAtual,
     podeVisualizarIndicador: podeVisualizarIndicadorFn,
   } = useOKR();
 
-  const [nomeIndicador, setNomeIndicador] = useState("");
-  const [peso, setPeso] = useState<number>(1);
-  const [penalidade, setPenalidade] = useState<boolean>(false);
-  const [importancia, setImportancia] = useState<number>(3); // Padrão operacional/tático
+  // const [nomeIndicador, setNomeIndicador] = useState("");
+  // const [peso, setPeso] = useState<number>(1);
+  // const [penalidade, setPenalidade] = useState<boolean>(false);
+  // const [importancia, setImportancia] = useState<number>(3); // Padrão operacional/tático
   const [desempenhoTotal, setDesempenhoTotal] = useState<number>(0);
 
   useEffect(() => {
     // Calculate desempenhoTotal only on client side to prevent hydration errors
     const total = calcularDesempenhoTotal() * 100; // Convert to percentage
     setDesempenhoTotal(total);
-  }, [indicadores, valoresMembroIndicador]);
+  }, [calcularDesempenhoTotal, indicadores, valoresMembroIndicador]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (nomeIndicador && peso && importancia) {
-      const novoIndicador: Indicador = {
-        id: Date.now(),
-        nome: nomeIndicador,
-        peso: peso,
-        penalidade: penalidade,
-        importancia: importancia,
-      };
-      adicionarIndicador(novoIndicador);
-      setNomeIndicador("");
-      setPeso(1);
-      setPenalidade(false);
-      setImportancia(3);
-    }
-  };
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (nomeIndicador && peso && importancia) {
+  //     const novoIndicador: Indicador = {
+  //       id: Date.now(),
+  //       nome: nomeIndicador,
+  //       peso: peso,
+  //       penalidade: penalidade,
+  //       importancia: importancia,
+  //     };
+  //     adicionarIndicador(novoIndicador);
+  //     setNomeIndicador("");
+  //     setPeso(1);
+  //     setPenalidade(false);
+  //     setImportancia(3);
+  //   }
+  // };
 
   // Filtrar indicadores que o membro atual pode visualizar
   const indicadoresVisiveis = indicadores.filter((indicador) =>

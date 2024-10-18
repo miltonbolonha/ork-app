@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from "react";
@@ -16,14 +17,14 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import {
   Table,
   TableBody,
-  TableCell,
+  // TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { useOKR } from "@/context/OKRContext";
 import { Indicador } from "@/context/OKRContext";
-import IndicadorModal from "@/components/IndicadorModal";
+// import IndicadorModal from "@/components/IndicadorModal";
 
 // Importações para o Chart
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
@@ -42,8 +43,7 @@ export default function IndicadoresPage() {
   const [peso, setPeso] = useState<number>(1);
   const [penalidade, setPenalidade] = useState(false);
   const [indicadorPaiId, setIndicadorPaiId] = useState<number | null>(null);
-  const [indicadorSelecionado, setIndicadorSelecionado] =
-    useState<Indicador | null>(null);
+  // const [setIndicadorSelecionado] = useState<Indicador | null>(null);
 
   // Estado para mensagens de alerta
   const [alerta, setAlerta] = useState<{
@@ -79,6 +79,7 @@ export default function IndicadoresPage() {
         penalidade: penalidade,
         indicadorPaiId: indicadorPaiId || undefined,
         indicadoresFilhosIds: [],
+        importancia: 0,
       };
       adicionarIndicador(novoIndicador);
       // Limpar os campos
@@ -150,7 +151,7 @@ export default function IndicadoresPage() {
       .filter((indicador) => indicador.indicadorPaiId === indicadorPaiId)
       .map((indicador) => (
         <React.Fragment key={indicador.id}>
-          <TableRow
+          {/* <TableRow
             className="cursor-pointer hover:bg-gray-100"
             onClick={() => setIndicadorSelecionado(indicador)}
           >
@@ -161,7 +162,7 @@ export default function IndicadoresPage() {
             <TableCell className="w-1/4">
               {indicador.penalidade ? "Sim" : "Não"}
             </TableCell>
-          </TableRow>
+          </TableRow> */}
           {renderizarIndicadores(indicadores, indicador.id, nivel + 1)}
         </React.Fragment>
       ));
@@ -305,12 +306,12 @@ export default function IndicadoresPage() {
         </div>
       </div>
 
-      {indicadorSelecionado && (
+      {/* {indicadorSelecionado && (
         <IndicadorModal
           indicador={indicadorSelecionado}
           onClose={() => setIndicadorSelecionado(null)}
         />
-      )}
+      )} */}
     </div>
   );
 }

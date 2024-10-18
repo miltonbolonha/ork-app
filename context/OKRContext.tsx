@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { createContext, useState, useContext, ReactNode, useMemo } from "react";
@@ -5,7 +6,7 @@ import { createContext, useState, useContext, ReactNode, useMemo } from "react";
 // Interfaces
 
 export interface Indicador {
-  tipo?: any;
+  tipo?: unknown;
   id: number;
   nome: string;
   peso: number; // Peso w_k personalizado
@@ -17,7 +18,7 @@ export interface Indicador {
 }
 
 export interface Membro {
-  avatarUrl: any;
+  avatarUrl: unknown;
   id: number;
   nome: string;
   equipeId?: number; // Para relacionar o membro a uma equipe

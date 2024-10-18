@@ -52,6 +52,7 @@ export default function IndicadoresPage() {
   // Estado para indicador selecionado (para hierarquia)
   const [indicadorSelecionado, setIndicadorSelecionado] =
     useState<Indicador | null>(null);
+  console.log(indicadorSelecionado);
 
   const openEditModal = (indicador: Indicador) => {
     setIndicadorEmEdicao(indicador);
@@ -136,6 +137,8 @@ export default function IndicadoresPage() {
             alert("O arquivo JSON deve conter um array de indicadores.");
           }
         } catch (err) {
+          console.log(err);
+
           alert("Erro ao ler o arquivo JSON.");
         }
       };
